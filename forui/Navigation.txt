@@ -1,0 +1,1477 @@
+import {Callout} from "nextra/components";
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Bottom Navigation Bar
+
+A bottom navigation bar is usually present at the bottom of root pages.
+It is used to navigate between a small number of views, typically between three and five.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.bottom_navigation_bar/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='bottom-navigation-bar' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+      ```dart copy
+      class Application extends StatefulWidget {
+        const Application({super.key});
+
+        @override
+        State<Application> createState() => _ApplicationState();
+      }
+
+      class _ApplicationState extends State<Application> {
+        int index = 1;
+
+        @override
+        Widget build(BuildContext context) => FBottomNavigationBar(
+              index: index,
+              onChange: (index) => setState(() => this.index = index),
+              children: [
+                FBottomNavigationBarItem(
+                  icon: Icon(FIcons.house),
+                  label: const Text('Home'),
+                ),
+                FBottomNavigationBarItem(
+                  icon: Icon(FIcons.layoutGrid),
+                  label: const Text('Browse'),
+                ),
+                FBottomNavigationBarItem(
+                  icon: Icon(FIcons.radio),
+                  label: const Text('Radio'),
+                ),
+                FBottomNavigationBarItem(
+                  icon: Icon(FIcons.libraryBig),
+                  label: const Text('Library'),
+                ),
+                FBottomNavigationBarItem(
+                  icon: Icon(FIcons.search),
+                  label: const Text('Search'),
+                ),
+              ],
+            );
+      }
+      ```
+    </Tabs.Tab>
+
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create bottom-navigation-bar 
+```
+
+## Usage
+
+<Callout type="info">
+    A bottom navigation bar is typically used with `FScaffold`. A working example can be found [here](/docs/layout/scaffold).
+</Callout>
+
+### `FBottomNavigationBar(...)`
+
+```dart copy
+FBottomNavigationBar(
+  style: FBottomNavigationBarStyle(...),
+  index: 0,
+  onChange: (index) => {},
+  children: [
+    FBottomNavigationBarItem(
+      icon: Icon(FIcons.house),
+      label: const Text('Home'),
+      autofocus: false,
+      focusNode: FocusNode(),
+      onFocusChange: (focused) {},
+      onHoverChange: (hovered) {},
+      onStateChange: (delta) {},
+    ),
+  ],
+);
+```
+
+
+
+widgets/bottom_navigation_bar library Widgets
+A bottom navigation bar.
+
+See https://forui.dev/docs/navigation/bottom-navigation-bar for working examples.
+
+Classes
+FBottomNavigationBar
+A bottom navigation bar.
+FBottomNavigationBarData
+A FBottomNavigationBar's data.
+FBottomNavigationBarItem
+A FBottomNavigationBar item.
+FBottomNavigationBarItemStyle
+FBottomNavigationBarItem's style.
+FBottomNavigationBarStyle
+FBottomNavigationBar's style.
+Extensions
+$FBottomNavigationBarItemStyleTransformations on FBottomNavigationBarItemStyle
+Provides copyWith and lerp methods.
+$FBottomNavigationBarStyleTransformations on FBottomNavigationBarStyle
+Provides copyWith and lerp methods.
+
+
+---------------------------------------------------------------
+
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Breadcrumb
+
+Displays a list of links that help visualize a page's location within a site's hierarchical structure.
+It allows navigation up to any of the ancestors.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.breadcrumb/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='breadcrumb' variant='default' height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FBreadcrumb(
+          children: [
+            FBreadcrumbItem(onPress: () {}, child: const Text('Forui')),
+            FBreadcrumbItem.collapsed(
+              menu: [
+                FItemGroup(
+                  children: [
+                    FItem(
+                      title: const Text('Documentation'),
+                      onPress: () {},
+                    ),
+                    FItem(
+                      title: const Text('Themes'),
+                      onPress: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            FBreadcrumbItem(onPress: () {}, child: const Text('Layout')),
+            FBreadcrumbItem(current: true, child: const Text('Widgets')),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create breadcrumb 
+```
+
+## Usage
+
+### `FBreadcrumb(...)`
+
+```dart copy
+FBreadcrumb(
+  style: FBreadcrumbStyle(...),
+  children: [
+    FBreadcrumbItem(onPress: () {}, child: const Text('Forui')),
+    FBreadcrumbItem.collapsed(
+      menu: [
+        FTileGroup(
+          children: [
+            FTile(
+              title: const Text('Documentation'),
+              onPress: () {},
+            ),
+            FTile(
+              title: const Text('Themes'),
+              onPress: () {},
+            ),
+          ],
+        ),
+      ],
+      spacing: const FPortalSpacing(4),
+      offset: Offset.zero,
+      traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+    ),
+    FBreadcrumbItem(onPress: () {}, child: const Text('Themes')),
+    FBreadcrumbItem(current: true, child: const Text('Widgets')),
+  ],
+);
+```
+
+## Examples
+
+### Tiles
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='breadcrumb' variant='tiles' height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {4} copy
+        FBreadcrumb(
+          children: [
+            FBreadcrumbItem(onPress: () {}, child: const Text('Forui')),
+            FBreadcrumbItem.collapsedTiles(
+              menu: [
+                FTileGroup(
+                  children: [
+                    FTile(
+                      title: const Text('Documentation'),
+                      onPress: () {},
+                    ),
+                    FTile(
+                      title: const Text('Themes'),
+                      onPress: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            FBreadcrumbItem(onPress: () {}, child: const Text('Layout')),
+            FBreadcrumbItem(current: true, child: const Text('Widgets')),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Custom Divider
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='breadcrumb' variant='divider' height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FBreadcrumb(
+          divider: Transform.rotate(
+            angle: -60,
+            child: Icon(
+              FIcons.slash,
+              size: 14,
+            ),
+          ),
+          children: [
+            FBreadcrumbItem(onPress: () {}, child: const Text('Forui')),
+            FBreadcrumbItem.collapsed(
+              menu: [
+                FItemGroup(
+                  children: [
+                    FItem(
+                      title: const Text('Documentation'),
+                      onPress: () {},
+                    ),
+                    FItem(
+                      title: const Text('Themes'),
+                      onPress: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            FBreadcrumbItem(onPress: () {}, child: const Text('Themes')),
+            FBreadcrumbItem(current: true, child: const Text('Widgets')),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+
+widgets/breadcrumb library Widgets
+A breadcrumb.
+
+See https://forui.dev/docs/navigation/breadcrumb for working examples.
+
+Classes
+FBreadcrumb
+A breadcrumb.
+FBreadcrumbItem
+A breadcrumb item.
+FBreadcrumbStyle
+The FBreadcrumb styles.
+Extensions
+$FBreadcrumbStyleTransformations on FBreadcrumbStyle
+Provides copyWith and lerp methods.
+
+
+
+
+
+
+
+--------------------------------------------------------
+
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Header
+
+A header contains the page's title and navigation actions.
+It is typically used on pages at the root of the navigation stack.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.header/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='header'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart copy
+        FHeader(
+          title: const Text('Edit Alarm'),
+          suffixes: [
+            FHeaderAction(
+              icon: Icon(FIcons.alarmClock),
+              onPress: () {},
+            ),
+            FHeaderAction(
+              icon: Icon(FIcons.plus),
+              onPress: () {},
+            ),
+          ],
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+## Nested Header
+
+It is typically used on nested pages or sheets.
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='header' variant='nested'/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FHeader.nested(
+          title: const Text('Appointment'),
+          prefixes: [
+            FHeaderAction.back(onPress: () {}),
+          ],
+          suffixes: [
+            FHeaderAction(
+              icon: Icon(FIcons.info),
+              onPress: () {},
+            ),
+            FHeaderAction(
+              icon: Icon(FIcons.plus),
+              onPress: () {},
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create headers 
+```
+
+## Usage
+
+<Callout type="info">
+    A header is typically used with `FScaffold`. A working example can be found [here](/docs/layout/scaffold).
+</Callout>
+
+### `FHeader(...)`
+
+```dart copy
+FHeader(
+  style: FHeaderStyle(...),
+  title: const Text('Title'),
+  suffixes: [
+    FHeaderAction(
+      style: FHeaderActionStyle(...),
+      icon: Icon(FIcons.alarmClock),
+      onPress: () {},
+      onHoverChange: (hovered) {},
+      onStateChange: (delta) {},
+    ),
+    FHeaderAction(
+      icon: Icon(FIcons.plus),
+      onPress: () {},
+    ),
+  ],
+);
+```
+
+### `FHeader.nested(...)`
+
+```dart copy
+FHeader.nested(
+  style: FHeaderStyle(...),
+  title: const Text('Title'),
+  titleAlignment: Alignment.center,
+  prefixes: [
+    FHeaderAction.back(
+      onPress: () {},
+      onHoverChange: (hovered) {},
+      onStateChange: (delta) {},
+    ),
+  ],
+  suffixes: [
+    FHeaderAction(
+      style: FHeaderActionStyle(...),
+      icon: Icon(FIcons.info),
+      onPress: () {},
+    ),
+    FHeaderAction.x(
+      onPress: () {},
+      onHoverChange: (hovered) {},
+      onStateChange: (delta) {},
+    ),
+  ],
+);
+```
+
+## Examples
+
+### Header
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='header'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart copy
+        FHeader(
+          title: const Text('Edit Alarm'),
+          suffixes: [
+            FHeaderAction(
+              icon: Icon(FIcons.alarmClock),
+              onPress: () {},
+            ),
+            FHeaderAction(
+              icon: Icon(FIcons.plus),
+              onPress: () {},
+            ),
+          ],
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+### Nested Header with Back Icon
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='header' variant='nested' />
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {4} copy
+        FHeader.nested(
+          title: const Text('Appointment'),
+          prefixes: [
+            FHeaderAction.back(onPress: () {}),
+          ],
+          suffixes: [
+            FHeaderAction(
+              icon: Icon(FIcons.info),
+              onPress: () {},
+            ),
+            FHeaderAction(
+              icon: Icon(FIcons.plus),
+              onPress: () {},
+            ),
+          ],
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+### Nested Header with X Icon
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='header' variant='nested-x' />
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {14} copy
+        FHeader.nested(
+          title: const Text('Climate'),
+          prefixes: [
+            FHeaderAction(
+              icon: Icon(FIcons.thermometer),
+              onPress: () {},
+            ),
+            FHeaderAction(
+              icon: Icon(FIcons.wind),
+              onPress: null,
+            ),
+          ],
+          suffixes: [
+            FHeaderAction.x(onPress: () {}),
+          ],
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+widgets/header library Widgets
+A header.
+
+See https://forui.dev/docs/navigation/header for working examples.
+
+Classes
+FHeader
+A header contains the page's title and actions.
+FHeaderAction
+A FHeader action.
+FHeaderActionStyle
+FHeaderAction's style.
+FHeaderData
+A header's data.
+FHeaderStyle
+A header's style.
+FHeaderStyles
+FHeader's styles.
+Extensions
+$FHeaderActionStyleTransformations on FHeaderActionStyle
+Provides copyWith and lerp methods.
+$FHeaderStylesTransformations on FHeaderStyles
+Provides copyWith and lerp methods.
+$FHeaderStyleTransformations on FHeaderStyle
+Provides copyWith and lerp methods.
+
+
+------------------------------------------------------------------
+
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Pagination
+
+Display the current active page and enable navigation between multiple pages.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.pagination/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='pagination' height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FPagination(pages: 10);
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create pagination 
+```
+
+## Usage
+
+### `FPagination(...)`
+
+```dart copy
+FPagination(
+  controller: FPaginationController(
+    pages: 20,
+    initialPage: 4,
+    showEdges: false,
+    siblings: 2,
+  ),
+  style: FPaginationStyle(...),
+  initialPage: 1,
+  pages: 20,
+  onChange: () {},
+);
+```
+
+## Examples
+
+### Siblings
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='pagination' query={{controller: 'siblings'}} height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {5} copy
+        FPagination(
+          controller: FPaginationController(
+            pages: 20,
+            initialPage: 9,
+            siblings: 2,
+          ),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Hide Edges
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='pagination' query={{controller: 'hide-edges'}} height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {4} copy
+        FPagination(
+          controller: FPaginationController(
+            pages: 8,
+            showEdges: false,
+          ),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Custom Icons
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='pagination' variant='custom-icon' height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FPagination(
+            controller: FPaginationController(pages: 10, initialPage: 4),
+            next: Padding(
+              padding: style.itemPadding,
+              child: ConstrainedBox(
+                constraints: style.itemConstraints,
+                child: FButton.icon(
+                  style: FButtonStyle.ghost(),
+                  onPress: controller.next,
+                  child: IconTheme(data: style.itemIconStyle.resolve({}), child: Icon(FIcons.bird)),
+                ),
+              ),
+            ),
+            previous: Padding(
+              padding: style.itemPadding,
+              child: ConstrainedBox(
+                constraints: style.itemConstraints,
+                child: FButton.icon(
+                  style: FButtonStyle.ghost(),
+                  onPress: controller.previous,
+                  child: IconTheme(data: style.itemIconStyle.resolve({}), child: Icon(FIcons.anchor)),
+                ),
+              ),
+            ),
+          );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### With a `PageView`
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='pagination' variant='page-view' height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {11} {73} copy
+        class PageViewExample extends StatefulWidget {
+          const PageViewExample({super.key});
+
+          @override
+          State<PageViewExample> createState() => _PageViewExampleState();
+        }
+
+        class _PageViewExampleState extends State<PageViewExample>{
+          int pages = 10;
+          PageController controller = PageController();
+          late FPaginationController paginationController = FPaginationController(pages: pages);
+
+          @override
+          void didChangeDependencies() {
+            super.didChangeDependencies();
+            final value = PageStorage.maybeOf(context)?.readState(context) ?? 0;
+            paginationController.page = value;
+          }
+
+          void _handlePageChange(int page) {
+            final old = controller.page?.round();
+            if (old case final old when old != page) {
+              if (page == old! + 1 || page == old - 1) {
+                setState(() {
+                  controller.animateToPage(page, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                });
+              } else {
+                setState(() {
+                  controller.jumpToPage(page);
+                });
+              }
+            }
+          }
+
+          @override
+          Widget build(BuildContext context) {
+            final style = context.theme.colors;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: SizedBox(
+                    height: 300,
+                    width: 300,
+                    child: NotificationListener(
+                      onNotification: (notification) {
+                        if (notification is ScrollEndNotification) {
+                          if (controller.hasClients) {
+                            paginationController.page = controller.page!.round();
+                            return true;
+                          }
+                        }
+                        return false;
+                      },
+                      child: PageView.builder(
+                        itemCount: pages,
+                        controller: controller,
+                        itemBuilder:(context, index) => ColoredBox(
+                          color: index.isEven ? style.hover(style.primary) : style.mutedForeground,
+                          child: Center(
+                            child: DefaultTextStyle(
+                              style: TextStyle(fontSize: 45, color: style.primaryForeground),
+                              child: Text('Page ${index + 1}'),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                FPagination(controller: paginationController, onChange: _handlePageChange),
+              ],
+            );
+          }
+
+          @override
+          void dispose() {
+            paginationController.dispose();
+            controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### Usage
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='pagination' query={{controller: 'simplified'}} height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FPagination(
+          pages: 15,
+          initialPage: 7,
+          onChange: (page) {
+            print('Current page: $page');
+          },
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+widgets/pagination library Widgets
+A pagination enables the user to select a specific page from a range of pages.
+
+See https://forui.dev/docs/navigation/pagination for working examples.
+
+Classes
+FPagination
+A pagination allows the user to select a specific page from a range of pages.
+FPaginationController
+A controller that controls which page is selected.
+FPaginationStyle
+The FPagination styles.
+Extensions
+$FPaginationStyleTransformations on FPaginationStyle
+Provides copyWith and lerp methods.
+
+
+
+
+
+
+
+
+------------------------------------------------------------------
+
+import { Callout } from 'nextra/components';
+import { Tabs } from 'nextra/components';
+import { Steps } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+
+# Sidebar
+
+A sidebar widget that provides an opinionated layout for navigation on the side of the screen.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.sidebar/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+    A sidebar is typically used with `FScaffold`. Usage of `FScaffold` can be found [here](/docs/layout/scaffold).
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='sidebar' variant='default' height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+      ```dart copy
+      FScaffold(
+        sidebar: FSidebar(
+          header: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  child: SvgPicture.network(
+                    theme.colors.brightness == Brightness.light
+                        ? 'https://forui.dev/light_logo.svg'
+                        : 'https://forui.dev/dark_logo.svg',
+                    height: 24,
+                    colorFilter: ColorFilter.mode(context.theme.colors.foreground, BlendMode.srcIn),
+                  ),
+                ),
+                FDivider(style: context.theme.dividerStyles.horizontalStyle.copyWith(padding: EdgeInsets.zero)),
+              ],
+            ),
+          ),
+          footer: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: FCard.raw(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                child: Row(
+                  spacing: 10,
+                  children: [
+                    FAvatar.raw(child: Icon(FIcons.userRound, size: 18, color: context.theme.colors.mutedForeground)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 2,
+                        children: [
+                          Text(
+                            'Dash',
+                            style: context.theme.typography.sm.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: context.theme.colors.foreground,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'dash@forui.dev',
+                            style: context.theme.typography.xs.copyWith(color: context.theme.colors.mutedForeground),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          children: [
+            FSidebarGroup(
+              label: const Text('Overview'),
+              children: [
+                FSidebarItem(
+                  icon: const Icon(FIcons.school),
+                  label: const Text('Getting Started'),
+                  initiallyExpanded: true,
+                  onPress: () {},
+                  children: [
+                    FSidebarItem(label: const Text('Installation'), selected: true, onPress: () {}),
+                    FSidebarItem(label: const Text('Themes'), onPress: () {}),
+                    FSidebarItem(label: const Text('Typography'), onPress: () {}),
+                  ],
+                ),
+                FSidebarItem(icon: const Icon(FIcons.code), label: const Text('API Reference'), onPress: () {}),
+                FSidebarItem(icon: const Icon(FIcons.box), label: const Text('Pub Dev'), onPress: () {}),
+              ],
+            ),
+            FSidebarGroup(
+              action: const Icon(FIcons.plus),
+              onActionPress: () {},
+              label: const Text('Widgets'),
+              children: [
+                FSidebarItem(icon: const Icon(FIcons.circleSlash), label: const Text('Divider'), onPress: () {}),
+                FSidebarItem(icon: const Icon(FIcons.scaling), label: const Text('Resizable'), onPress: () {}),
+                FSidebarItem(icon: const Icon(FIcons.layoutDashboard), label: const Text('Scaffold'), onPress: () {}),
+              ],
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12,
+            children: [
+              FBreadcrumb(
+                children: [
+                  FBreadcrumbItem(onPress: () {}, child: const Text('Forui')),
+                  FBreadcrumbItem.collapsed(
+                    menu: [
+                      FItemGroup(
+                        children: [
+                          FItem(title: const Text('Documentation'), onPress: () {}),
+                          FFItemTile(title: const Text('Themes'), onPress: () {}),
+                        ],
+                      ),
+                    ],
+                  ),
+                  FBreadcrumbItem(onPress: () {}, child: const Text('Overview')),
+                  const FBreadcrumbItem(current: true, child: Text('Installation')),
+                ],
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: context.theme.colors.muted,
+                    borderRadius: context.theme.style.borderRadius,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: context.theme.colors.muted,
+                    borderRadius: context.theme.style.borderRadius,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      ```
+    </Tabs.Tab>
+</Tabs>
+
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create sidebar
+```
+
+
+## Anatomy
+
+This segment describes the anatomy of the various elements of a sidebar.
+
+### `FSidebar`
+
+The widget that provides an opinionated layout on the side of the screen. The widget has the following sections:
+
+| Name    | Parameter      | Position   | Optional |
+|:--------|:---------------|:-----------|:---------|
+| header  | header         | sticky     | ✅       |
+| content | child/children | scrollable | ❌       |
+| footer  | footer         | sticky     | ✅       |
+
+### `FSidebarGroup`
+
+A widget that is used to group several `FSidebarItem`s.
+
+### `FSidebarItem`
+
+Represents an item on the sidebar. May be nested in `FSidebarItem.children` to create nested items.
+
+
+## Usage
+
+### `FSidebar(...)`
+
+```dart copy
+FSidebar(
+  style: FSidebarStyle(...),
+  width: 250,
+  header: const Text('Header'),
+  footer: const Text('Footer'),
+  children: [FSidebarGroup(...)],
+);
+```
+
+### `FSidebar.builder(...)`
+
+```dart copy
+FSidebar.builder(
+  style: FSidebarStyle(...),
+  width: 250,
+  header: const Text('Header'),
+  footer: const Text('Footer'),
+  itemCount: 5,
+  itemBuilder: (context, index) => FSidebarGroup(...),
+);
+```
+
+### `FSidebar.raw(...)`
+
+```dart copy
+FSidebar.raw(
+  style: FSidebarStyle(...),
+  width: 250,
+  header: const Text('Header'),
+  footer: const Text('Footer'),
+  child: SizedBox(),
+);
+```
+
+### `FSidebarGroup(...)`
+
+```dart copy
+FSidebarGroup(
+  style: FSidebarGroupStyle(...),
+  label: const Text('Group'),
+  action: const Icon(FIcons.plus),
+  onActionPress: () {},
+  children: [FSidebarItem(...)],
+);
+```
+
+### `FSidebarItem(...)`
+
+```dart copy
+FSidebarItem(
+  style: FSidebarItemStyle(...),
+  icon: const Icon(FIcons.box),
+  label: const Text('Item'),
+  selected: false,
+  initiallyExpanded: false,
+  onPress: () {},
+  onLongPress: () {},
+  onHoverChange: (hovered) {},
+  onStateChange: (delta) {},
+  children: [FSidebarItem(...)],
+);
+```
+
+
+## Examples
+
+### Sheet Sidebar
+
+Suited for devices with limited screen space.
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='sidebar' variant='sheet' height={500} />
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        Widget _sidebar(BuildContext context) => DecoratedBox(
+          decoration: BoxDecoration(color: context.theme.colors.background),
+          child: FSidebar(
+            width: 300,
+            header: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                    child: SvgPicture.network(
+                      theme.colors.brightness == Brightness.light
+                          ? 'https://forui.dev/light_logo.svg'
+                          : 'https://forui.dev/dark_logo.svg',
+                      height: 24,
+                      colorFilter: ColorFilter.mode(context.theme.colors.foreground, BlendMode.srcIn),
+                    ),
+                  ),
+                  FDivider(style: context.theme.dividerStyles.horizontalStyle.copyWith(padding: EdgeInsets.zero)),
+                ],
+              ),
+            ),
+            footer: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FCard.raw(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      FAvatar.raw(child: Icon(FIcons.userRound, size: 18, color: context.theme.colors.mutedForeground)),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 2,
+                          children: [
+                            Text(
+                              'Dash',
+                              style: context.theme.typography.sm.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: context.theme.colors.foreground,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              'dash@forui.dev',
+                              style: context.theme.typography.xs.copyWith(color: context.theme.colors.mutedForeground),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            children: [
+              FSidebarGroup(
+                label: const Text('Overview'),
+                children: [
+                  FSidebarItem(
+                    icon: const Icon(FIcons.school),
+                    label: const Text('Getting Started'),
+                    initiallyExpanded: true,
+                    onPress: () {},
+                    children: [
+                      FSidebarItem(label: const Text('Installation'), selected: true, onPress: () {}),
+                      FSidebarItem(label: const Text('Themes'), onPress: () {}),
+                      FSidebarItem(label: const Text('Typography'), onPress: () {}),
+                    ],
+                  ),
+                  FSidebarItem(icon: const Icon(FIcons.code), label: const Text('API Reference'), onPress: () {}),
+                  FSidebarItem(icon: const Icon(FIcons.box), label: const Text('Pub Dev'), onPress: () {}),
+                ],
+              ),
+              FSidebarGroup(
+                action: const Icon(FIcons.plus),
+                onActionPress: () {},
+                label: const Text('Widgets'),
+                children: [
+                  FSidebarItem(icon: const Icon(FIcons.circleSlash), label: const Text('Divider'), onPress: () {}),
+                  FSidebarItem(icon: const Icon(FIcons.scaling), label: const Text('Resizable'), onPress: () {}),
+                  FSidebarItem(icon: const Icon(FIcons.layoutDashboard), label: const Text('Scaffold'), onPress: () {}),
+                ],
+              ),
+            ],
+          ),
+        );
+
+        @override
+        Widget build(BuildContext context) => Center(
+          child: FButton(
+            child: const Text('Open Sidebar'),
+            onPress: () => showFSheet(context: context, side: FLayout.ltr, builder: _sidebar),
+          ),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Custom Width
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='sidebar' variant='custom-width' height={300} />
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {2} copy
+        FSidebar(
+          width: 500,
+          children: [
+            FSidebarGroup(
+              children: [
+                FSidebarItem(
+                  icon: const Icon(FIcons.layoutDashboard),
+                  label: const Text('Dashboard'),
+                  selected: true,
+                  onPress: () {},
+                ),
+                FSidebarItem(icon: const Icon(FIcons.chartLine), label: const Text('Analytics'), onPress: () {}),
+                FSidebarItem(
+                  icon: const Icon(FIcons.chartBar),
+                  label: const Text('Reports'),
+                  initiallyExpanded: true,
+                  children: [
+                    FSidebarItem(label: const Text('Daily'), onPress: () {}),
+                    FSidebarItem(label: const Text('Weekly'), onPress: () {}),
+                    FSidebarItem(label: const Text('Monthly'), onPress: () {}),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Nested `FSidebarItem`
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='sidebar' variant='nested' height={500} />
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FSidebar(
+        width: 300,
+        children: [
+          FSidebarGroup(
+            children: [
+              FSidebarItem(
+                icon: const Icon(FIcons.userRound),
+                label: const Text('Account'),
+                initiallyExpanded: true,
+                children: [
+                  FSidebarItem(
+                    label: const Text('Profile'),
+                    children: [
+                      FSidebarItem(label: const Text('Personal Info'), onPress: () {}),
+                      FSidebarItem(label: const Text('Preferences'), onPress: () {}),
+                    ],
+                  ),
+                  FSidebarItem(
+                    label: const Text('Security'),
+                    initiallyExpanded: true,
+                    children: [
+                      FSidebarItem(
+                        label: const Text('Password'),
+                        initiallyExpanded: true,
+                        children: [
+                          FSidebarItem(label: const Text('Change Password'), onPress: () {}),
+                          FSidebarItem(label: const Text('Password History'), onPress: () {}),
+                        ],
+                      ),
+                      FSidebarItem(label: const Text('Two-Factor Authentication'), onPress: () {}),
+                      FSidebarItem(label: const Text('Device History'), onPress: () {}),
+                    ],
+                  ),
+                  FSidebarItem(label: const Text('Notifications'), onPress: () {}),
+                ],
+              ),
+              FSidebarItem(icon: const Icon(FIcons.palette), label: const Text('Appearance'), onPress: () {}),
+              FSidebarItem(icon: const Icon(FIcons.settings), label: const Text('System'), onPress: () {}),
+            ],
+          ),
+        ],
+      );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+
+
+widgets/sidebar library Widgets
+A sidebar widget that usually resides on the side of the screen for navigation.
+
+See:
+
+https://forui.dev/docs/navigation/sidebar for working examples of a sidebar.
+Classes
+FSidebar
+A sidebar widget that provides an opinionated layout on the side of the screen.
+FSidebarData
+A FSidebar's data.
+FSidebarGroup
+A group of FSidebarItems.
+FSidebarGroupData
+A FSidebarGroup's data.
+FSidebarGroupStyle
+The style for a FSidebarGroup.
+FSidebarItem
+A sidebar item.
+FSidebarItemMotion
+The motion-related properties for a FSidebarItem.
+FSidebarItemStyle
+The style for a FSidebarItem.
+FSidebarStyle
+A FSidebar's style.
+Extensions
+$FSidebarGroupStyleTransformations on FSidebarGroupStyle
+Provides copyWith and lerp methods.
+$FSidebarItemMotionTransformations on FSidebarItemMotion
+Provides copyWith and lerp methods.
+$FSidebarItemStyleTransformations on FSidebarItemStyle
+Provides copyWith and lerp methods.
+$FSidebarStyleTransformations on FSidebarStyle
+Provides copyWith and lerp methods.
+
+
+
+---------------------------------------------------------------------
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Tabs
+
+A set of layered sections of content—known as tab entries—that are displayed one at a time.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.tabs/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='tabs' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FTabs(
+      children: [
+        FTabEntry(
+          label: const Text('Account'),
+          child: FCard(
+            title: const Text('Account'),
+            subtitle: const Text('Make changes to your account here. Click save when you are done.'),
+            child: Column(
+              children: [
+                const FTextField(
+                  label: Text('Name'),
+                  hint: 'John Renalo',
+                ),
+                const SizedBox(height: 10),
+                const FTextField(
+                  label: Text('Email'),
+                  hint: 'john@doe.com',
+                ),
+                const SizedBox(height: 16),
+                FButton(
+                  onPress: () {},
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        FTabEntry(
+          label: const Text('Password'),
+          child: FCard(
+            title: const Text('Password'),
+            subtitle: const Text('Change your password here. After saving, you will be logged out.'),
+            child: Column(
+              children: [
+                const FTextField(label: Text('Current password')),
+                const SizedBox(height: 10),
+                const FTextField(label: Text('New password')),
+                const SizedBox(height: 16),
+                FButton(
+                  onPress: () {},
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create tabs 
+```
+
+## Usage
+
+### `FTabs(...)`
+
+```dart copy
+FTabs(
+  style: FTabsStyle(...),
+  initialIndex: 1,
+  onPress: (index) {},
+  children: const [
+    FTabEntry(label: Text('Account'), child: Placeholder()),
+    FTabEntry(label: Text('Password'), child: Placeholder()),
+  ],
+);
+```
+
+
+widgets/tabs library Widgets
+Allows switching between widgets through tabs.
+
+See https://forui.dev/docs/navigation/tabs for working examples.
+
+Classes
+FTabController
+A controller that controls selection in a FTabs.
+FTabEntry
+An object that represents a tab entry in a group of tabs.
+FTabMotion
+Motion-related properties for FTabs.
+FTabs
+Allows switching between widgets through tabs.
+FTabsStyle
+FTabs's style.
+Enums
+FTabBarIndicatorSize
+Defines how the bounds of the selected tab indicator are computed.
+Extensions
+$FTabMotionTransformations on FTabMotion
+Provides copyWith and lerp methods.
+$FTabsStyleTransformations on FTabsStyle
+Provides copyWith and lerp methods.
+
+
+---------------------------------------------------------------------------
+
+
+

@@ -1,0 +1,5418 @@
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Autocomplete
+
+An autocomplete provides a list of suggestions based on the user's input and shows typeahead text for the first match.
+
+It is a form-field and can therefore be used in a form.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.autocomplete/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    const features = [
+      'Keyboard navigation',
+      'Typeahead suggestions',
+      'Tab to complete',
+    ];
+
+    class AutocompletePage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FAutocomplete(
+        label: Text('Autocomplete'),
+        hint: 'What can it do?',
+        items: features,
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create autocomplete
+```
+
+## Usage
+
+### `FAutocomplete(...)`
+
+```dart copy
+FAutocomplete(
+  controller: FAutocompleteController(vsync: this),
+  style: (style) => style,
+  label: const Text('Country'),
+  description: const Text('Select your country of residence'),
+  hint: 'Type to search countries',
+  onChange: (value) => print('Selected country: $value'),
+  onSaved: (value) => print('Saved country: $value'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUserInteraction,
+  builder: (context, styles, child) => child!,
+  prefixBuilder: (context, style, states) => Icon(FIcons.globe),
+  suffixBuilder: (context, style, states) => Icon(FIcons.search),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: (value) => value.text.isNotEmpty,
+  rightArrowToComplete: true,
+  initialText: 'Canada',
+  items: [
+    'United States',
+    'Canada', 
+    'Japan',
+    'United Kingdom',
+    'Germany',
+    'France',
+    'Australia',
+  ],
+);
+```
+
+### `FAutocomplete.builder(...)`
+
+```dart copy
+FAutocomplete.builder(
+  filter: (text) async {
+    const countries = ['United States', 'Canada', 'Japan'];
+    return countries.where((country) => country.toLowerCase().contains(query.toLowerCase()));
+  },
+  contentBuilder: (context, text, suggestions) => [
+    for (final suggestion in suggestions) FAutocompleteItem(value: suggestion)
+  ],
+  controller: FAutocompleteController(vsync: this),
+  style: (style) => style,
+  label: const Text('Country'),
+  description: const Text('Select your country of residence'),
+  hint: 'Type to search countries',
+  onChange: (value) => print('Selected country: $value'),
+  onSaved: (value) => print('Saved country: $value'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUserInteraction,
+  builder: (context, styles, child) => child!,
+  prefixBuilder: (context, style, states) => Icon(FIcons.globe),
+  suffixBuilder: (context, style, states) => Icon(FIcons.search),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 300),
+  rightArrowToComplete: true,
+  clearable: (value) => value.text.isNotEmpty,
+);
+```
+
+## Examples
+
+### Detailed
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='detailed' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class DetailedAutocompletePage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FAutocomplete.builder(
+        hint: 'Type to search',
+        filter: (query) {
+          const items = ['Bug', 'Feature', 'Question'];
+          return items.where((item) => item.toLowerCase().contains(query.toLowerCase()));
+        },
+        contentBuilder: (context, query, suggestions) => [
+          for (final suggestion in suggestions)
+            switch (suggestion) {
+              'Bug' => FAutocompleteItem(
+                value: 'Bug',
+                prefix: const Icon(FIcons.bug),
+                title: const Text('Bug'),
+                subtitle: const Text('An unexpected problem or behavior'),
+              ),
+              'Feature' => FAutocompleteItem(
+                value: 'Feature',
+                prefix: const Icon(FIcons.filePlus2),
+                title: const Text('Feature'),
+                subtitle: const Text('A new feature or enhancement'),
+              ),
+              'Question' => FAutocompleteItem(
+                value: 'Question',
+                prefix: const Icon(FIcons.messageCircleQuestionMark),
+                title: const Text('Question'),
+                subtitle: const Text('A question or clarification'),
+              ),
+              _ => FAutocompleteItem(suggestion),
+            }
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Sections
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='section' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class SectionAutocompletePage extends StatelessWidget {
+      static const _timezones = {
+        'North America': [
+          'Eastern Standard Time (EST)',
+          'Central Standard Time (CST)',
+          'Mountain Standard Time (MST)',
+          'Pacific Standard Time (PST)',
+          'Alaska Standard Time (AKST)',
+          'Hawaii Standard Time (HST)',
+        ],
+        'South America': [
+          'Argentina Time (ART)',
+          'Bolivia Time (BOT)',
+          'Brasilia Time (BRT)',
+          'Chile Standard Time (CLT)',
+        ],
+        'Europe & Africa': [
+          'Greenwich Mean Time (GMT)',
+          'Central European Time (CET)',
+          'Eastern European Time (EET)',
+          'Western European Summer Time (WEST)',
+          'Central Africa Time (CAT)',
+          'Eastern Africa Time (EAT)',
+        ],
+        'Asia': [
+          'Moscow Time (MSK)',
+          'India Standard Time (IST)',
+          'China Standard Time (CST)',
+          'Japan Standard Time (JST)',
+          'Korea Standard Time (KST)',
+          'Indonesia Standard Time (IST)',
+        ],
+        'Australia & Pacific': [
+          'Australian Western Standard Time (AWST)',
+          'Australian Central Standard Time (ACST)',
+          'Australian Eastern Standard Time (AEST)',
+          'New Zealand Standard Time (NZST)',
+          'Fiji Time (FJT)',
+        ],
+      };
+
+      @override
+      Widget build(BuildContext context) => FAutocomplete.builder(
+        hint: 'Type to search timezones',
+        filter: (query) => timezones.values
+            .expand((list) => list)
+            .where((timezone) => timezone.toLowerCase().contains(query.toLowerCase())),
+        contentBuilder: (context, query, suggestions) {
+          final sections = <FAutocompleteSection>[];
+
+          for (final MapEntry(key: label, value: zones) in timezones.entries) {
+            final items = zones.where(suggestions.contains).toList();
+            if (items.isNotEmpty) {
+              sections.add(FAutocompleteSection(label: Text(label), items: items));
+            }
+          }
+
+          return sections;
+        },
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Dividers
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='divider' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5} copy
+    class DividerAutocompletePage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FAutocomplete.builder(
+        hint: 'Type to search levels',
+        contentDivider: FItemDivider.none,
+        filter: (query) {
+          final items = ['1A', '1B', '2A', '2B', '3', '4'];
+          return items.where((item) => item.toLowerCase().contains(query.toLowerCase()));
+        },
+        contentBuilder: (context, query, suggestions) => <FAutocompleteItemMixin>[
+          FAutocompleteSection.rich(
+            label: const Text('Level 1'),
+            divider: FItemDivider.indented,
+            children: [
+              if (suggestions.contains('1A')) FAutocompleteItem(value: '1A'),
+              if (suggestions.contains('1B')) FAutocompleteItem(value: ''1B'),
+            ],
+          ),
+          FAutocompleteSection(
+            label: const Text('Level 2'),
+            items: ['2A', '2B'].where(suggestions.contains).toList(),
+          ),
+          if (suggestions.contains('3')) FAutocompleteItem(value: ''3'),
+          if (suggestions.contains('4')) FAutocompleteItem(value: ''4'),
+        ].where((item) => 
+          item is FAutocompleteSection ? item.children.isNotEmpty : true
+        ).toList(),
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Behavior
+
+#### Async
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='async' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class AsyncAutocompletePage extends StatelessWidget {
+      static const fruits = ['Apple', 'Banana', 'Orange', 'Grape', 'Strawberry', 'Pineapple'];
+
+      @override
+      Widget build(BuildContext context) => FAutocomplete.builder(
+        hint: 'Type to search fruits',
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 3));
+          return query.isEmpty ? fruits : fruits.where((fruit) => fruit.toLowerCase().startsWith(query.toLowerCase()));
+        },
+        contentBuilder: (context, query, suggestions) => [
+          for (final suggestion in suggestions) FAutocompleteItem(value: suggestion)
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async with Custom Loading
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='async-loading' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {11-14} copy
+    class AsyncLoadingAutocompletePage extends StatelessWidget {
+      static const fruits = ['Apple', 'Banana', 'Orange', 'Grape', 'Strawberry', 'Pineapple'];
+
+      @override
+      Widget build(BuildContext context) => FAutocomplete.builder(
+        hint: 'Type to search fruits',
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 3));
+          return query.isEmpty ? fruits : fruits.where((fruit) => fruit.toLowerCase().startsWith(query.toLowerCase()));
+        },
+        contentLoadingBuilder: (context, style) => Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Text('Here be dragons...', style: style.emptyTextStyle),
+        ),
+        contentBuilder: (context, query, suggestions) => [
+          for (final suggestion in suggestions) FAutocompleteItem(value: suggestion)
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async with Custom Error Handling
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='async-error' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {12-17} copy
+    class AsyncErrorAutocompletePage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FAutocomplete.builder(
+        hint: 'Type to search fruits',
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 3));
+          throw StateError('Error loading data');
+        },
+        contentBuilder: (context, query, suggestions) => [
+          for (final suggestion in suggestions) FAutocompleteItem(value: suggestion)
+        ],
+        contentErrorBuilder: (context, error, trace) {
+          return Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Icon(FIcons.circleX, size: 15, color: context.theme.colors.primary),
+          );
+        },
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Clearable
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='clearable' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {7} copy
+    class ClearableAutocompletePage extends StatelessWidget {
+      static const fruits = ['Apple', 'Banana', 'Orange', 'Grape', 'Strawberry', 'Pineapple'];
+
+      @override
+      Widget build(BuildContext context) => FAutocomplete(
+        hint: 'Type to search fruits',
+        clearable: (value) => value.text.isNotEmpty,
+        items: fruits,
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='autocomplete' variant='form' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class FormAutocompletePage extends StatefulWidget {
+
+      @override
+      State<FormAutocompletePage> createState() => _FormAutocompletePageState();
+    }
+
+    class _FormAutocompletePageState extends State<FormAutocompletePage> with SingleTickerProviderStateMixin {
+      static const _departments = ['Engineering', 'Marketing', 'Sales', 'Human Resources', 'Finance'];
+
+      final _formKey = GlobalKey<FormState>();
+      late final _departmentController = FAutocompleteController(vsync: this);
+
+      @override
+      Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FAutocomplete(
+                controller: _departmentController,
+                label: const Text('Department'),
+                description: const Text('Type to search your dream department'),
+                hint: 'Search departments',
+                validator: _validateDepartment,
+                items: _departments,
+              ),
+              const SizedBox(height: 25),
+              FButton(
+                child: const Text('Submit'),
+                onPress: () {
+                  if (_formKey.currentState!.validate()) {
+                    // Form is valid, do something with department.
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+      String? _validateDepartment(String? department) {
+        if (department == null || department.isEmpty) {
+          return 'Please select a department';
+        }
+        return null;
+      }
+
+      @override
+      void dispose() {
+        _departmentController.dispose();
+        super.dispose();
+      }
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+widgets/autocomplete library Widgets
+An autocomplete provides a list of suggestions based on the user's input and shows typeahead text for the first match.
+
+See https://forui.dev/docs/form/autocomplete for working examples.
+
+Classes
+FAutocomplete
+An autocomplete provides a list of suggestions based on the user's input and shows typeahead text for the first match.
+FAutocompleteContentStyle
+An FAutocomplete's content style.
+FAutocompleteController
+A controller for managing autocomplete functionality in a text field.
+FAutocompleteItem
+A suggestion in a FAutocomplete that can optionally be nested in a FAutocompleteSection.
+FAutocompleteSection
+A section in a FAutocomplete that can contain multiple FAutocompleteItems.
+FAutocompleteSectionStyle
+A FAutocompleteSection's style.
+FAutocompleteStyle
+An FAutocomplete's style.
+Mixins
+FAutocompleteItemMixin
+A marker interface which denotes that mixed-in widgets can be used in a FAutocomplete.
+Extensions
+$FAutocompleteContentStyleTransformations on FAutocompleteContentStyle
+Provides copyWith and lerp methods.
+$FAutocompleteSectionStyleTransformations on FAutocompleteSectionStyle
+Provides copyWith and lerp methods.
+$FAutocompleteStyleTransformations on FAutocompleteStyle
+Provides copyWith and lerp methods.
+Typedefs
+FAutoCompleteContentBuilder = List<FAutocompleteItemMixin> Function(BuildContext context, String query, Iterable<String> values)
+A builder for FAutocomplete's results.
+
+
+
+
+-------------------------------------------------------
+
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Button
+
+A button.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.button/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='text' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FButton(
+      onPress: () {},
+      child: const Text('Button'),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create button 
+```
+
+## Usage
+
+### `FButton(...)`
+
+```dart copy
+FButton(
+  style: FButtonStyle(...),
+  mainAxisSize: MainAxisSize.min,
+  onPress: () {},
+  onSecondaryPress: () {},
+  onSecondaryLongPress: () {},
+  shortcuts: { SingleActivator(LogicalKeyboardKey.enter): ActivateIntent() },
+  actions: { ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {}) },
+  child: const Text('Button'),
+);
+```
+
+### `FButton.raw(...)`
+
+```dart copy
+FButton.raw(
+  style: FButtonStyle(...),
+  onPress: () {},
+  onSecondaryPress: () {},
+  onSecondaryLongPress: () {},
+  shortcuts: { SingleActivator(LogicalKeyboardKey.enter): ActivateIntent() },
+  actions: { ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {}) },
+  child: const Text('Button'),
+);
+```
+
+## Examples
+
+### Appearance
+
+#### Primary
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='text' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FButton(
+      onPress: () {},
+      child: const Text('Button'),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Secondary
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='text' query={{style: 'secondary'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FButton(
+      style: FButtonStyle.secondary(),
+      onPress: () {},
+      child: const Text('Button'),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Destructive
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='text' query={{style: 'destructive'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FButton(
+      style: FButtonStyle.destructive(),
+      onPress: () {},
+      child: const Text('Button'),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Outline
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='text' query={{style: 'outline'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FButton(
+      style: FButtonStyle.outline(),
+      onPress: () {},
+      child: const Text('Button'),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Ghost
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='text' query={{style: 'ghost'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FButton(
+      style: FButtonStyle.ghost(),
+      onPress: () {},
+      child: const Text('Button'),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Content
+
+#### With Text and Icon
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='icon' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FButton(
+      prefix: Icon(FIcons.mail),
+      onPress: () {},
+      child: const Text('Login with Email'),
+    ),
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### With Only Icon
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='only-icon' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {3} copy
+    FButton.icon(
+      onPress: () {},
+      child: Icon(FIcons.chevronRight),
+    ),
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### With Circular Progress
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='button' variant='circular-progress' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FButton(
+      prefix: const FCircularProgress(),
+      onPress: null,
+      child: const Text('Please wait'),
+    ),
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/button library Widgets
+A button.
+
+See https://forui.dev/docs/form/button for working examples.
+
+Classes
+FBaseButtonStyle
+A FButton's style.
+FButton
+A button.
+FButtonContentStyle
+FButton content's style.
+FButtonData
+A button's data.
+FButtonIconContentStyle
+FButton icon content's style.
+FButtonStyle
+A FButton's style.
+FButtonStyles
+FButtonStyle's style.
+Extensions
+$FButtonContentStyleTransformations on FButtonContentStyle
+Provides copyWith and lerp methods.
+$FButtonIconContentStyleTransformations on FButtonIconContentStyle
+Provides copyWith and lerp methods.
+$FButtonStylesTransformations on FButtonStyles
+Provides copyWith and lerp methods.
+$FButtonStyleTransformations on FButtonStyle
+Provides copyWith and lerp methods.
+
+
+
+
+--------------------------------------------------------
+
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Checkbox
+
+A control that allows the user to toggle between checked and not checked.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.checkbox/"/>
+</LinkBadgeGroup>
+
+<div className="pb-5">
+    <Callout type="info">
+        For touch devices, a [switch](/docs/form/switch) is generally recommended over this.
+    </Callout>
+
+    <Callout type="info">
+        We recommend using a [select group](/docs/form/select-group#checkbox-form) to create a group of checkboxes.
+    </Callout>
+
+</div>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='checkbox' query={{enabled: 'true'}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        class Page extends StatefulWidget {
+          const Page({super.key});
+
+          @override
+          State<Page> createState() => PageState();
+        }
+
+        class PageState extends State<Page> {
+          bool state = false;
+
+          @override
+          Widget build(BuildContext context) => FCheckbox(
+            label: const Text('Accept terms and conditions'),
+            description: const Text('You agree to our terms and conditions.'),
+            semanticsLabel: 'Accept terms and conditions',
+            value: state,
+            onChange: (value) => setState(() => state = value),
+          );
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create checkbox 
+```
+
+## Usage
+
+### `FCheckbox(...)`
+
+```dart copy
+FCheckbox(
+  style: FCheckboxStyle(...),
+  label: const Text('Accept terms and conditions'),
+  description: const Text('You agree to our terms and conditions.'),
+  error: const Text('Please accept the terms and conditions.'),
+  semanticsLabel: 'Accept terms and conditions',
+  value: true,
+  onChange: (value) {},
+  enabled: true,
+  autofocus: true,
+);
+```
+
+## Examples
+
+### Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='checkbox' query={{initialValue: 'true', enabled: 'false'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {18} copy
+    class Page extends StatefulWidget {
+      const Page({super.key});
+
+      @override
+      State<Page> createState() => PageState();
+    }
+
+    class PageState extends State<Page> {
+      bool state =  true;
+
+      @override
+      Widget build(BuildContext context) => FCheckbox(
+        label: const Text('Accept terms and conditions'),
+        description: const Text('You agree to our terms and conditions.'),
+        semanticsLabel: 'Accept terms and conditions',
+        value: state,
+        onChange: (value) => setState(() => state = value),
+        enabled: false,
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Error
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='checkbox' query={{ error: 'Please accept the terms and conditions.' }}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {15} copy
+    class Page extends StatefulWidget {
+      const Page({super.key});
+
+      @override
+      State<Page> createState() => PageState();
+    }
+
+    class PageState extends State<Page> {
+      bool state = false;
+
+      @override
+      Widget build(BuildContext context) => FCheckbox(
+        label: const Text('Accept terms and conditions'),
+        description: const Text('You agree to our terms and conditions.'),
+        error: const Text('Please accept the terms and conditions.'),
+        semanticsLabel: 'Accept terms and conditions',
+        value: state,
+        onChange: (value) => setState(() => state = value),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Without Label
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='checkbox' variant='raw' query={{ }}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {12-17} copy
+        class Page extends StatefulWidget {
+          const Page({super.key});
+
+          @override
+          State<Page> createState() => PageState();
+        }
+
+        class PageState extends State<Page> {
+          bool state = false;
+
+          @override
+          Widget build(BuildContext context) => FCheckbox(
+            value: state,
+            onChange: (value) {
+              setState(() => state = value);
+            },
+          );
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='checkbox' variant='form' query={{}} height={550}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {27-40} copy
+    class RegisterForm extends StatefulWidget {
+      const RegisterForm({super.key});
+
+      @override
+      State<RegisterForm> createState() => _RegisterFormState();
+    }
+
+    class _RegisterFormState extends State<RegisterForm> {
+      final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+      @override
+      Widget build(BuildContext context) => Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FTextFormField.email(
+                  hint: 'janedoe@foruslabs.com',
+                  validator: (value) => (value?.contains('@') ?? false) ? null : 'Please enter a valid email.',
+                ),
+                const SizedBox(height: 12),
+                FTextFormField.password(
+                  validator: (value) => 8 <= (value?.length ?? 0) ? null : 'Password must be at least 8 characters long.',
+                ),
+                const SizedBox(height: 15),
+                FormField(
+                  initialValue: false,
+                  onSaved: (value) {
+                    // Save values somewhere.
+                  },
+                  validator: (value) => (value ?? false) ? null : 'Please accept the terms and conditions.',
+                  builder: (state) => FCheckbox(
+                    label: const Text('Accept terms and conditions'),
+                    description: const Text('You agree to our terms and conditions.'),
+                    error: state.errorText != null ? Text(state.errorText!) : null,
+                    value: state.value ?? false,
+                    onChange: (value) => state.didChange(value),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                FButton(
+                  onPress: () {
+                    if (!_formKey.currentState!.validate()) {
+                      // Handle errors here.
+                      return;
+                    }
+
+                    _formKey.currentState!.save();
+                    // Do something.
+                  },
+                  child: const Text('Register'),
+                ),
+              ],
+            ),
+          );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/checkbox library Widgets
+A checkbox control that allows the user to toggle between checked and not checked.
+
+See https://forui.dev/docs/form/checkbox for working examples.
+
+Classes
+FCheckbox
+A checkbox control that allows the user to toggle between checked and not checked.
+FCheckboxMotion
+The motion-related properties for a FCheckbox.
+FCheckboxStyle
+A checkboxes style.
+Extensions
+$FCheckboxMotionTransformations on FCheckboxMotion
+Provides copyWith and lerp methods.
+$FCheckboxStyleTransformations on FCheckboxStyle
+Provides copyWith and lerp methods.
+
+
+
+
+--------------------------------------------------------------
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Date Field
+
+A date field allows a date to be selected from a calendar or input field.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.date_field/"/>
+</LinkBadgeGroup>
+
+<div className="pb-5">
+    <Callout type="info">
+        It is recommended to use [FDateField.calendar](#fdatefieldcalendar) on touch devices and
+        [FDateField.new](#fdatefield)/[FDateField.input](#fdatefieldinput) on non-primarily touch devices.
+    </Callout>
+</div>
+
+The input field supports both arrow key navigation:
+
+- Up/Down arrows: Increment/decrement values
+- Left/Right arrows: Move between date segments
+
+The input field does not support the following locales that use non-western numerals, it will default to English:
+
+- Arabic (العربية)
+- Assamese (অসমীয়া)
+- Bengali (বাংলা)
+- Persian/Farsi (فارسی)
+- Marathi (मराठी)
+- Burmese (မြန်မာ)
+- Nepali (नेपाली)
+- Pashto (پښتو)
+- Tamil (தமிழ்)
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='date-field' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FDateField(
+          label: Text('Appointment Date'),
+          description: Text('Select a date for your appointment'),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create date-field 
+```
+
+## Usage
+
+### `FDateField(...)`
+
+```dart copy
+FDateField(
+  controller: FDateFieldController(
+    vsync: this,
+    initialDate: DateTime(2024, 1, 1),
+    validator: (date) => date?.isBefore(DateTime.now()) ?? false ? 'Date must be in the future' : null,
+  ),
+  style: FDateFieldStyle(...),
+  initialDate: DateTime(2024, 1, 1),
+  textAlign: TextAlign.start,
+  textAlignVertical: TextAlignVertical.center,
+  autofocus: false,
+  expands: false,
+  onEditingComplete: () => print('Editing complete'),
+  onSubmit: (date) => print('Date submitted: $date'),
+  mouseCursor: SystemMouseCursors.text,
+  canRequestFocus: true,
+  baselineInputYear: 2000,
+  builder: (context, style, states, child) => child!,
+  prefixBuilder: (context, style, states) => Icon(Icons.calendar_today),
+  suffixBuilder: (context, style, states) => Icon(Icons.calendar_today),
+  clearable: true,
+  calendar: FDateFieldCalendarProperties(),
+  label: Text('Select Date'),
+  description: Text('Choose a date from the calendar or input field'),
+  enabled: true,
+  onChange: (date) => print('Date changed: $date'),
+  onSaved: (date) => print('Date saved: $date'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUnfocus,
+  forceErrorText: null,
+  errorBuilder: (context, error) => Text(error, style: TextStyle(color: Colors.red)),
+);
+```
+
+### `FDateField.calendar(...)`
+
+```dart copy
+FDateField.calendar(
+  controller: FDateFieldController(
+    vsync: this,
+    initialDate: DateTime(2024, 1, 1),
+  ),
+  style: FDateFieldStyle(...),
+  initialDate: DateTime(2024, 1, 1),
+  format: DateFormat('d MMM y'),
+  textAlign: TextAlign.start,
+  textAlignVertical: TextAlignVertical.center,
+  expands: false,
+  mouseCursor: SystemMouseCursors.text,
+  canRequestFocus: true,
+  clearable: true,
+  onChange: (date) => print('Date changed: $date'),
+  hint: 'Select a date',
+  start: DateTime(2024),
+  end: DateTime(2025),
+  today: DateTime.now(),
+  initialType: FCalendarPickerType.yearMonth,
+  autoHide: true,
+  anchor: Alignment.topLeft,
+  inputAnchor: Alignment.bottomLeft,
+  spacing: FPortalSpacing(4),
+  shift: FPortalShift.flip,
+  offset: Offset.zero,
+  hideRegion: FPopoverHideRegion.none,
+  label: Text('Calendar Date'),
+  description: Text('Select a date from the calendar'),
+  builder: (context, style, states, child) => child!,
+  prefixBuilder: (context, style, states) => Icon(Icons.calendar_today),
+  suffixBuilder: (context, style, states) => Icon(Icons.calendar_today),
+  forceErrorText: null,
+  errorBuilder: (context, error) => Text(error, style: TextStyle(color: Colors.red)),
+);
+```
+
+### `FDateField.input(...)`
+
+```dart copy
+FDateField.input(
+  controller: FDateFieldController(
+    vsync: this,
+    initialDate: DateTime(2024, 1, 1),
+  ),
+  style: FDateFieldStyle(...),
+  initialDate: DateTime(2024, 1, 1),
+  format: DateFormat('d MMM y'),
+  textAlign: TextAlign.start,
+  textAlignVertical: TextAlignVertical.center,
+  expands: false,
+  mouseCursor: SystemMouseCursors.text,
+  canRequestFocus: true,
+  clearable: true,
+  onChange: (date) => print('Date changed: $date'),
+  hint: 'Select a date',
+  start: DateTime(2024),
+  end: DateTime(2025),
+  today: DateTime.now(),
+  initialType: FCalendarPickerType.yearMonth,
+  autoHide: true,
+  anchor: Alignment.topLeft,
+  inputAnchor: Alignment.bottomLeft,
+  hideRegion: FPopoverHideRegion.none,
+  label: Text('Calendar Date'),
+  description: Text('Select a date from the calendar'),
+  builder: (context, style, states, child) => child!,
+  prefixBuilder: (context, style, states) => Icon(Icons.calendar_today),
+  suffixBuilder: (context, style, states) => Icon(Icons.calendar_today),
+  forceErrorText: null,
+  errorBuilder: (context, error) => Text(error, style: TextStyle(color: Colors.red)),
+);
+```
+
+## Examples
+
+### Calendar Only
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='date-field' variant='calendar' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FDateField.calendar(
+          label: Text('Appointment Date'),
+          description: Text('Select a date for your appointment'),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Input Only
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='date-field' variant='input' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FDateField.input(
+          label: Text('Appointment Date'),
+          description: Text('Select a date for your appointment'),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Clearable
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='date-field' variant='clearable' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {16} copy
+        class ClearableDateField extends StatefulWidget {
+          @override
+          State<ClearableDateField> createState() => _State();
+        }
+
+        class _State extends State<ClearableDateField> with SingleTickerProviderStateMixin {
+          late final FDateFieldController _controller = FDateFieldController(vsync: this, initialDate: DateTime.now());
+
+          @override
+          Widget build(BuildContext context) => Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: FDateField(
+              controller: _controller,
+              label: const Text('Appointment Date'),
+              description: const Text('Select a date for your appointment'),
+              clearable: true,
+            ),
+          );
+
+          @override
+          void dispose() {
+            _controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### Custom Validation
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='date-field' variant='validator' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        class ValidatorDateFieldPage extends StatefulWidget {
+          @override
+          State<ValidatorDateFieldPage> createState() => _ValidationDateFieldPageState();
+        }
+
+        class _ValidationDateFieldPageState extends State<ValidatorDateFieldPage> with SingleTickerProviderStateMixin {
+          late final FDateFieldController _controller;
+
+          @override
+          void initState() {
+            super.initState();
+            _controller = FDateFieldController(vsync: this, validator: _validate);
+          }
+
+          String? _validate(DateTime? date) => date?.weekday == 6 || date?.weekday == 7 ? 'Date cannot be a weekend.' : null;
+
+          @override
+          Widget build(BuildContext context) => FDateField(
+                controller: _controller,
+                label: const Text('Appointment Date'),
+              );
+
+          @override
+          void dispose() {
+            _controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='date-field' variant='form' query={{}} height={600}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        class FormDateFieldPage extends StatefulWidget {
+          @override
+          State<FormDateFieldPage> createState() => _FormDateFieldPageState();
+        }
+
+        class _FormDateFieldPageState extends State<FormDateFieldPage> with TickerProviderStateMixin {
+          final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+          late final FDateFieldController _startDateController;
+          late final FDateFieldController _endDateController;
+
+          @override
+          void initState() {
+            super.initState();
+            _startDateController = FDateFieldController(
+              vsync: this,
+              validator: _validateStartDate,
+            );
+            _endDateController = FDateFieldController(
+              vsync: this,
+              validator: _validateEndDate,
+            );
+          }
+
+          String? _validateStartDate(DateTime? date) {
+            if (date == null) {
+              return 'Please select a start date';
+            }
+            if (date.isBefore(DateTime.now())) {
+              return 'Start date must be in the future';
+            }
+            return null;
+          }
+
+          String? _validateEndDate(DateTime? date) {
+            if (date == null) {
+              return 'Please select an end date';
+            }
+            if (_startDateController.value != null && date.isBefore(_startDateController.value!)) {
+              return 'End date must be after start date';
+            }
+            return null;
+          }
+
+          @override
+          Widget build(BuildContext context) => Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  FDateField(
+                    controller: _startDateController,
+                    label: const Text('Start Date'),
+                    description: const Text('Select a start date'),
+                    autovalidateMode: AutovalidateMode.disabled,
+                  ),
+                  const SizedBox(height: 20),
+                  FDateField(
+                    controller: _endDateController,
+                    label: const Text('End Date'),
+                    description: const Text('Select an end date'),
+                    autovalidateMode: AutovalidateMode.disabled,
+                  ),
+                  const SizedBox(height: 25),
+                  FButton(
+                    onPress: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Form is valid, process the dates
+                      }
+                    },
+                    child: const Text('Submit'),
+                  ),
+                ],
+              ),
+            ),
+          );
+
+          @override
+          void dispose() {
+            _startDateController.dispose();
+            _endDateController.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+
+
+widgets/date_field library Widgets
+A date field allows a date to be selected from a calendar or input field.
+
+See https://forui.dev/docs/form/date-field for working examples.
+
+Classes
+FDateField
+A date field allows a date to be selected from a calendar, input field, or both.
+FDateFieldCalendarProperties
+A date picker calendar popover's properties.
+FDateFieldController
+The date field's controller.
+FDateFieldStyle
+A date field's style.
+Extensions
+$FDateFieldStyleTransformations on FDateFieldStyle
+Provides copyWith and lerp methods.
+
+
+--------------------------------------------------
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Label
+
+Describes a form field with a label, description, and error message (if any). This widget is usually used for custom
+form fields. All form fields in Forui come with this widget wrapped.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.label/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='label' variant='horizontal' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FLabel(
+        axis: Axis.horizontal,
+        label: const Text('Accept terms and conditions'),
+        description: const Text('You agree to our terms and conditions.'),
+        child: const DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Colors.grey,
+          ),
+          child: SizedBox(width: 16, height: 16),
+        ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create label 
+```
+
+## Usage
+
+### `FLabel(...)`
+
+```dart copy
+FLabel(
+  style: FLabelStyle(...),
+  axis: Axis.horizontal,
+  label: const Text('Accept terms and conditions'),
+  description: const Text('You agree to our terms and conditions.'),
+  error: const Text('Please accept the terms and conditions.'),
+  states: { WidgetState.error },
+  child: const Placeholder(),
+);
+```
+
+## Examples
+
+### Vertical
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='label' variant='vertical' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {2} copy
+        FLabel(
+            axis: Axis.vertical,
+            label: const Text('Email'),
+            description: const Text('Enter your email address.'),
+            child: const DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                color: Colors.grey,
+              ),
+              child: SizedBox(width: 250, height: 30),
+            ),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='label' variant='horizontal' query={{ state: 'disabled' }}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5} copy
+    FLabel(
+        axis: Axis.horizontal,
+        label: const Text('Accept terms and conditions'),
+        description: const Text('You agree to our terms and conditions.'),
+        states: { WidgetState.disabled },
+        child: const DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Colors.grey,
+          ),
+          child: SizedBox(width: 16, height: 16),
+        ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Error
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='label' variant='horizontal' query={{ state: 'error' }}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {6} copy
+    FLabel(
+        axis: Axis.horizontal,
+        label: const Text('Accept terms and conditions'),
+        description: const Text('You agree to our terms and conditions.'),
+        error: const Text('Please accept the terms.'),
+        states: { WidgetState.error },
+        child: const DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            color: Colors.grey,
+          ),
+          child: SizedBox(width: 16, height: 16),
+        ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+widgets/label library Widgets
+A label that describes a form field with a label, description, and error message (if any).
+
+See https://forui.dev/docs/form/label for working examples.
+
+Classes
+FLabel
+A component that describes a form field with a label, description, and error message (if any).
+FLabelStyle
+The FLabel's style.
+FLabelStyles
+The FLabel's styles.
+Extensions
+$FLabelStylesTransformations on FLabelStyles
+Provides copyWith and lerp methods.
+$FLabelStyleTransformations on FLabelStyle
+Provides copyWith and lerp methods.
+
+
+
+
+---------------------------------------
+
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Multi Select
+
+A multi select displays a list of drop-down options for the user to pick from.
+
+It is a form-field and can therefore be used in a form.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.select/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+    For single selections, consider using a [select](/docs/form/select).
+
+    For touch devices, a [select tile group](/docs/tile/select-tile-group) or
+    [select menu tile](/docs/tile/select-menu-tile) is generally recommended over this.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    const fruits = [
+      'Apple',
+      'Banana',
+      'Blueberry',
+      'Grapes',
+      'Lemon',
+      'Mango',
+      'Kiwi',
+      'Orange',
+      'Peach',
+      'Pear',
+      'Pineapple',
+      'Plum',
+      'Raspberry',
+      'Strawberry',
+      'Watermelon',
+    ];
+
+    class MultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+          hint: 'Select favorite fruits',
+          format: (s) => Text(s),
+          children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+        );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create multi-select
+```
+
+## Usage
+
+### `FMultiSelect(...)`
+
+```dart copy
+FMultiSelect<Locale>(
+  items: {
+    'United States': Locale('en', 'US'),
+    'Canada': Locale('en', 'CA'),
+    'Japan': Locale('ja', 'JP'),
+  },
+  controller: FMultiSelectController<Locale>(vsync: this, min: 1, max: 2),
+  style: FMultiSelectStyle.inherit(...),
+  label: const Text('Country'),
+  description: const Text('Select your country of residence'),
+  hint: Text('Choose a country'),
+  keepHint: true,
+  format: (value) => Text(value.toUpperCase()),
+  sort: (a, b) => a.compareTo(b),
+  onChange: (value) => print('Selected country: $value'),
+  onSaved: (value) => print('Saved country: $value'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUserInteraction,
+  prefixBuilder: (context, styles) => Icon(FIcons.globe),
+  suffixBuilder: (context, styles) => Icon(FIcons.arrowDown),
+  tagBuilder: (context, controller, styles, value, label) => FMultiSelectTag(label: label),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  contentScrollHandles: true,
+  min: 1,
+  max: 2,
+  initialValue: {Locale('en', 'US')},
+);
+```
+
+### `FMultiSelect.rich(...)`
+
+```dart copy
+FMultiSelect<String>.rich(
+  controller: FMultiSelectController<String>(vsync: this, min: 1, max: 2),
+  style: FMultiSelectStyle(...),
+  label: const Text('Country'),
+  description: const Text('Select your country of residence'),
+  hint: Text('Choose a country'),
+  keepHint: true,
+  format: (value) => Text(value.toUpperCase()),
+  sort: (a, b) => a.compareTo(b),
+  onChange: (value) => print('Selected country: $value'),
+  onSaved: (value) => print('Saved country: $value'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUserInteraction,
+  prefixBuilder: (context, styles) => Icon(FIcons.globe),
+  suffixBuilder: (context, styles) => Icon(FIcons.arrowDown),
+  tagBuilder: (context, controller, styles, value, label) => FMultiSelectTag( label: label),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  contentDivider: FItemDivider.none,
+  contentScrollHandles: true,
+  min: 1,
+  max: 2,
+  initialValue: {'ca'},
+  children: [
+    FSelectSection.rich(
+      label: const Text('North American Countries'),
+      divider: FItemDivider.none,
+      children: [
+        FSelectItem( title: const Text('United States'), value: 'us'),
+        FSelectItem(title: Text('Canada'), value: 'ca'),
+      ],
+    ),
+    FSelectItem(title: Text('Japan'), value: 'jp'),
+  ],
+);
+```
+
+### `FMultiSelect.search(...)`
+
+```dart copy
+FMultiSelect<User>.search(
+  items: {
+    'Bob Ross': User(firstName: 'Bob', lastName: 'Ross'),
+    'John Doe': User(firstName: 'John', lastName: 'Doe'),
+    'Mary Jane': User(firstName: 'Mary', lastName: 'Jane'),
+    'Peter Parker': User(firstName: 'Peter', lastName: 'Parker'),
+  },
+  controller: FMultiSelectController<User>(vsync: this, min: 1, max: 2),
+  style: FMultiSelectStyle.inherit(...),
+  label: const Text('User'),
+  description: const Text('Search and select a user'),
+  format: (user) => Text('${user.firstName} ${user.lastName}'),
+  sort: (a, b) => a.compareTo(b),
+  hint: Text('Search users...'),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  onChange: (value) => print('Selected country: $value'),
+  tagBuilder: (context, controller, styles, value, label) => FMultiSelectTag( label: label),
+  min: 1,
+  max: 2,
+  initialValue: {'value'},
+  contentDivider: FItemDivider.none,
+  contentScrollHandles: false,
+  contentPhysics: const BouncingScrollPhysics(),
+  contentEmptyBuilder: (context, style) => Text('No results'),
+  filter: (query) async {
+    // Fetch users based on search query
+    return fetchUsers(query);
+  },
+  contentBuilder: (context, _, users) => [
+    for (final user in users)
+      FSelectItem(title: Text('${user.firstName} ${user.lastName}'), value: user),
+  ],
+  searchFieldProperties: FSelectSearchFieldProperties(
+    autofocus: true,
+    hint: 'Type to search...',
+  ),
+  contentLoadingBuilder: (context, style) => Text('Loading...'),
+  contentErrorBuilder: (context, error, stackTrace) => Text('Error...'),
+);
+```
+
+### `FMultiSelect.searchBuilder(...)`
+
+```dart copy
+FMultiSelect<User>.search(
+  controller: FMultiSelectController<User>(vsync: this, min: 1, max: 2),
+  style: FMultiSelectStyle.inherit(...),
+  label: const Text('User'),
+  description: const Text('Search and select a user'),
+  format: (user) => Text('${user.firstName} ${user.lastName}'),
+  sort: (a, b) => a.compareTo(b),
+  hint: Text('Search users...'),
+  tagBuilder: (context, controller, styles, value, label) => FMultiSelectTag( label: label),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  onChange: (value) => print('Selected country: $value'),
+  min: 1,
+  max: 2,
+  initialValue: {'value'},
+  contentDivider: FItemDivider.none,
+  contentScrollHandles: false,
+  contentPhysics: const BouncingScrollPhysics(),
+  contentEmptyBuilder: (context, style) => Text('No results'),
+  filter: (query) async {
+    // Fetch users based on search query
+    return fetchUsers(query);
+  },
+  contentBuilder: (context, _, users) => [
+    for (final user in users)
+      FSelectItem(title: Text('${user.firstName} ${user.lastName}'), value: user),
+  ],
+  searchFieldProperties: FSelectSearchFieldProperties(
+    autofocus: true,
+    hint: 'Type to search...',
+  ),
+  contentLoadingBuilder: (context, style) => Text('Loading...'),
+  contentErrorBuilder: (context, error, stackTrace) => Text('Error...'),
+);
+```
+
+## Examples
+
+### Detailed
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='detailed' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class DetailedMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+        hint: Text('Type'),
+        format: (s) => Text(s),
+        children: [
+          FSelectItem(
+            prefix: const Icon(FIcons.bug),
+            title: const Text('Bug'),
+            subtitle: const Text('An unexpected problem or behavior'),
+            value: 'Bug',
+          ),
+          FSelectItem(
+            prefix: const Icon(FIcons.filePlus2),
+            title: const Text('Feature'),
+            subtitle: const Text('A new feature or enhancement'),
+            value: 'Feature',
+          ),
+          FSelectItem(
+            prefix: const Icon(FIcons.messageCircleQuestionMark),
+            title: const Text('Question'),
+            subtitle: const Text('A question or clarification'),
+            value: 'Question',
+          ),
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Sections
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='section' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class SectionMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+        hint: Text('Select a timezone'),
+        format: (s) => Text(s),
+        children: [
+          FSelectSection(
+            label: const Text('North America'),
+            items: {
+              for (final item in [
+                'Eastern Standard Time (EST)',
+                'Central Standard Time (CST)',
+                'Mountain Standard Time (MST)',
+                'Pacific Standard Time (PST)',
+                'Alaska Standard Time (AKST)',
+                'Hawaii Standard Time (HST)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('South America'),
+            items: {
+              for (final item in [
+                'Argentina Time (ART)',
+                'Bolivia Time (BOT)',
+                'Brasilia Time (BRT)',
+                'Chile Standard Time (CLT)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('Europe & Africa'),
+            items: {
+              for (final item in [
+                'Greenwich Mean Time (GMT)',
+                'Central European Time (CET)',
+                'Eastern European Time (EET)',
+                'Western European Summer Time (WEST)',
+                'Central Africa Time (CAT)',
+                'Eastern Africa Time (EAT)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('Asia'),
+            items: {
+              for (final item in [
+                'Moscow Time (MSK)',
+                'India Standard Time (IST)',
+                'China Standard Time (CST)',
+                'Japan Standard Time (JST)',
+                'Korea Standard Time (KST)',
+                'Indonesia Standard Time (IST)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('Australia & Pacific'),
+            items: {
+              for (final item in [
+                'Australian Western Standard Time (AWST)',
+                'Australian Central Standard Time (ACST)',
+                'Australian Eastern Standard Time (AEST)',
+                'New Zealand Standard Time (NZST)',
+                'Fiji Time (FJT)',
+              ])
+                item: item,
+            },
+          ),
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Dividers
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='divider' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5, 10} copy
+    class DividerMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+        hint: Text('Select a level'),
+        contentDivider: FItemDivider.none,
+        format: (s) => Text(s),
+        children: [
+          FSelectSection(
+            label: const Text('Level 1'),
+            divider: FItemDivider.indented,
+            items: {
+              for (final item in ['A', 'B']) item: '1$item',
+            },
+          ),
+          FSelectSection(
+            label: const Text('Level 2'),
+            items: {
+              for (final item in ['A', 'B']) item: '2$item',
+            },
+          ),
+          FSelectItem(title: Text('Level 3'), value: '3'),
+          FSelectItem(title: Text('Level 4'), value: '4'),
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+### Searchable
+
+#### Sync
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='sync' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class SyncMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.searchBuilder(
+        hint: Text('Select a fruit'),
+        format: (s) => Text(s),
+        filter: (query) => query.isEmpty ? fruits : fruits.where((f) => f.toLowerCase().startsWith(query.toLowerCase())),
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='async' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class AsyncMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.searchBuilder(
+        hint: Text('Select a fruit'),
+        format: (s) => Text(s),
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 1));
+          return query.isEmpty ? fruits : fruits.where((fruit) => fruit.toLowerCase().startsWith(query.toLowerCase()));
+        },
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async with Custom Loading
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='async-loading' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {10-13} copy
+    class AsyncLoadingMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.searchBuilder(
+        hint: Text('Select a fruit'),
+        format: (s) => Text(s),
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 1));
+          return query.isEmpty ? fruits : fruits.where((fruit) => fruit.toLowerCase().startsWith(query.toLowerCase()));
+        },
+        contentLoadingBuilder: (context, style) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Here be dragons...', style: style.textFieldStyle.contentTextStyle.maybeResolve({})),
+        ),
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async with Custom Error Handling
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='async-error' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {11-17} copy
+    class AsyncErrorMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.searchBuilder(
+        hint: Text('Select a fruit'),
+        format: (s) => Text(s),
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 1));
+          throw StateError('Error loading data');
+        },
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+        contentErrorBuilder: (context, error, trace) {
+          final style = context.theme.selectStyle.iconStyle;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(FIcons.messageCircleX, size: style.size, color: style.color),
+          );
+        },
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Behavior
+
+#### Clearable
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='clearable' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {6} copy
+    class ClearableMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+        hint: Text('Select a fruit'),
+        format: (s) => Text(s),
+        clearable: true, 
+        children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Custom Formatting
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='format' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {13} copy
+    class FormatMultiSelectPage extends StatelessWidget {
+      static const users = [
+        (firstName: 'Bob', lastName: 'Ross'),
+        (firstName: 'John', lastName: 'Doe'),
+        (firstName: 'Mary', lastName: 'Jane'),
+        (firstName: 'Peter', lastName: 'Parker'),
+      ];
+
+      @override
+      Widget build(BuildContext context) => FMultiSelect<({String firstName, String lastName})>.rich(
+        hint: Text('Select a user'),
+        format: (s) => Text(s),
+        format: (user) => '${user.firstName} ${user.lastName}',
+        children: [for (final user in users) FSelectItem(title: Text(user.firstName), value: user)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Min & Max
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='min-max' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {6} copy
+    class MinMaxMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+        hint: Text('Select a fruit'),
+        format: (s) => Text(s),
+        min: 1,
+        max: 3
+        children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### With Scroll Handles
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='scroll-handles' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {6} copy
+    class ScrollHandlesMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+        hint: Text('Select a fruit'),
+        format: (s) => Text(s),
+        contentScrollHandles: true,
+        children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Sorted
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='sorted' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {24} copy
+    const fruits = [
+      'Apple',
+      'Banana',
+      'Blueberry',
+      'Grapes',
+      'Lemon',
+      'Mango',
+      'Kiwi',
+      'Orange',
+      'Peach',
+      'Pear',
+      'Pineapple',
+      'Plum',
+      'Raspberry',
+      'Strawberry',
+      'Watermelon',
+    ];
+
+    class SortedMultiSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FMultiSelect<String>.rich(
+          hint: 'Select favorite fruits',
+          format: (s) => Text(s),
+          sort: (a, b) => a.compareTo(b),
+          children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+        );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='multi-select' variant='form' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class FormMultiSelectPage extends StatefulWidget {
+
+      @override
+      State<FormMultiSelectPage> createState() => _FormMultiSelectPageState();
+    }
+
+    class _FormMultiSelectPageState extends State<FormMultiSelectPage> with SingleTickerProviderStateMixin {
+      static const _departments = ['Engineering', 'Marketing', 'Sales', 'Human Resources', 'Finance'];
+
+      final _formKey = GlobalKey<FormState>();
+      late final _departmentController = FMultiSelectController<String>(vsync: this);
+
+      @override
+      Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FMultiSelect<String>.rich(
+                controller: _departmentController,
+                label: const Text('Department'),
+                description: const Text('Choose your dream department(s)'),
+                hint: const Text('Select departments'),
+                format: (s) => Text(s),
+                validator: _validateDepartment,
+                children: [for (final department in _departments) FSelectItem(title: Text(department), value: department)],
+              ),
+              const SizedBox(height: 25),
+              FButton(
+                child: const Text('Submit'),
+                onPress: () {
+                  if (_formKey.currentState!.validate()) {
+                    // Form is valid, do something with departments.
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+      String? _validateDepartment(Set<String> departments) {
+        if (departments.isEmpty) {
+          return 'Please select departments';
+        }
+        return null;
+      }
+
+      @override
+      void dispose() {
+        _departmentController.dispose();
+        super.dispose();
+      }
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/select library Widgets
+Displays a list of options for the user to pick from.
+
+See https://forui.dev/docs/form/select for working examples.
+
+Classes
+FMultiSelect<T>
+A multi-select displays a list of options for the user to pick from.
+FMultiSelectController<T>
+The FMultiSelect's controller.
+FMultiSelectFieldStyle
+A FMultiSelectFieldStyle's style.
+FMultiSelectStyle
+A FMultiSelect's style.
+FMultiSelectTag
+A tag in a FMultiSelect.
+FMultiSelectTagStyle
+A FMultiSelectTag's style.
+FSelect<T>
+A select displays a list of options for the user to pick from.
+FSelectContentStyle
+An FSelect's contents style.
+FSelectController<T>
+The FSelect's controller.
+FSelectItem<T>
+A selectable item in a FSelect that can optionally be nested in a FSelectSection.
+FSelectScrollHandleStyle
+A FSelect content scroll handle's style.
+FSelectSearchFieldProperties
+The search field's properties.
+FSelectSearchStyle
+A FSelect's search field style.
+FSelectSection<T>
+A section in a FSelect that can contain multiple FSelectItems.
+FSelectSectionStyle
+A FSelectSection's style.
+FSelectStyle
+A FSelect's style.
+Mixins
+FSelectItemMixin
+A marker interface which denotes that mixed-in widgets can be used in a FSelect.
+Extensions
+$FMultiSelectFieldStyleTransformations on FMultiSelectFieldStyle
+Provides copyWith and lerp methods.
+$FMultiSelectStyleTransformations on FMultiSelectStyle
+Provides copyWith and lerp methods.
+$FMultiSelectTagStyleTransformations on FMultiSelectTagStyle
+Provides copyWith and lerp methods.
+$FSelectContentStyleTransformations on FSelectContentStyle
+Provides copyWith and lerp methods.
+$FSelectScrollHandleStyleTransformations on FSelectScrollHandleStyle
+Provides copyWith and lerp methods.
+$FSelectSearchStyleTransformations on FSelectSearchStyle
+Provides copyWith and lerp methods.
+$FSelectSectionStyleTransformations on FSelectSectionStyle
+Provides copyWith and lerp methods.
+$FSelectStyleTransformations on FSelectStyle
+Provides copyWith and lerp methods.
+Typedefs
+FMultiSelectTagBuilder<T> = Widget Function(BuildContext context, FMultiSelectController<T> controller, FMultiSelectStyle style, T value, Widget label)
+A function that builds a tag in a FMultiSelect.
+FSelectSearchContentBuilder<T> = List<FSelectItemMixin> Function(BuildContext context, String query, Iterable<T> values)
+A builder for FSelect search results.
+
+
+
+---------------------------------------------------------
+
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Picker
+
+A generic picker that allows an item to be selected. It is composed of one or more wheels, optionally with separators
+between those wheels.
+
+The picker supports arrow key navigation:
+
+- Up/Down arrows: Increment/decrement selected value
+- Left/Right arrows: Move between wheels
+
+Recommended for touch devices.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.picker/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='picker' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        const FPicker(
+          children: [
+            FPickerWheel(
+              children: [
+                Text('January'),
+                Text('February'),
+                Text('March'),
+                Text('April'),
+                Text('May'),
+                Text('June'),
+                Text('July'),
+                Text('August'),
+                Text('September'),
+                Text('October'),
+                Text('November'),
+                Text('December'),
+              ],
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create picker 
+```
+
+## Usage
+
+### `FPicker(...)`
+
+```dart copy
+const FPicker(
+  controller: FPickerController(initialIndexes: []),
+  style: FPickerStyle(...),
+  onChange: (indexes) {},
+  children: [
+    FPickerWheel(
+      flex: 2,
+      loop: true,
+      itemExtent: 20,
+      autofocus: true,
+      focusNode: FocusNode(),
+      onFocusChange: (focused) {},
+      children: [
+        Text('1'),
+        Text('2'),
+      ],
+    ),
+    FPickerWheel.builder(
+      flex: 2,
+      itemExtent: 20,
+      autofocus: true,
+      focusNode: FocusNode(),
+      onFocusChange: (focused) {},
+      builder: (context, index) => Text('$index'),
+    ),
+  ],
+);
+```
+
+## Examples
+
+### Loop
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='picker' query={{loop: 'true'}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {4} copy
+        const FPicker(
+          children: [
+            FPickerWheel(
+              loop: true,
+              children: [
+                Text('January'),
+                Text('February'),
+                Text('March'),
+                Text('April'),
+                Text('May'),
+                Text('June'),
+                Text('July'),
+                Text('August'),
+                Text('September'),
+                Text('October'),
+                Text('November'),
+                Text('December'),
+              ],
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Lazy
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='picker' query={{builder: 'true'}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {3-5} copy
+        FPicker(
+          children: [
+            FPickerWheel.builder(
+              builder: (context, index) => Text('$index'),
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Multiple Wheels
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='picker' variant='multiple'/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        SizedBox(
+          width: 200,
+          child: FPicker(
+            children: [
+              const FPickerWheel(
+                flex: 3,
+                loop: true,
+                children: [
+                  Text('January'),
+                  Text('February'),
+                  Text('March'),
+                  Text('April'),
+                  Text('May'),
+                  Text('June'),
+                  Text('July'),
+                  Text('August'),
+                  Text('September'),
+                  Text('October'),
+                  Text('November'),
+                  Text('December'),
+                ],
+              ),
+              FPickerWheel.builder(
+                flex: 2,
+                builder: (context, index) => Text('${(index % 31) + 1}'),
+              ),
+            ],
+          ),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### With Separators
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='picker' variant='separator'/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {8} copy
+        SizedBox(
+          width: 200,
+          child: FPicker(
+            children: [
+              FPickerWheel.builder(
+                builder: (context, index) => Text((index % 12).toString().padLeft(2, '0')),
+              ),
+              const Text(':'),
+              FPickerWheel.builder(
+                builder: (context, index) => Text((index % 60).toString().padLeft(2, '0')),
+              ),
+              const FPickerWheel(
+                children: [
+                  Text('AM'),
+                  Text('PM'),
+                ],
+              ),
+            ],
+          ),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+widgets/picker library Widgets
+A generic picker that allows an item to be selected. It is composed of one or more wheels, optionally, with separators between those wheels.
+
+Recommended for touch devices.
+
+See https://forui.dev/docs/form/picker for working examples.
+
+Classes
+FPicker
+A generic picker that allows an item to be selected. It is composed of one or more FPickerWheels, optionally, with separators between those wheels.
+FPickerController
+A picker's controller.
+FPickerStyle
+FPickerStyle's style.
+FPickerWheel
+A picker wheel that displays a list of items that can be scrolled vertically.
+Mixins
+FPickerWheelMixin
+A marker interface that indicates that a widget is a picker wheel.
+Extensions
+$FPickerStyleTransformations on FPickerStyle
+Provides copyWith and lerp methods.
+
+
+
+------------------------------------------------------
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Radio
+
+A radio button that typically allows the user to choose only one of a predefined set of options.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.radio/"/>
+</LinkBadgeGroup>
+
+<div className="pb-5">
+    <Callout type="info">
+        We recommend using a [select group](/docs/form/select-group#radio-form) to create a group of radio buttons instead of using `FRadio` directly.
+    </Callout>
+</div>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='radio' variant='default' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FRadio(
+      label: const Text('Default'),
+      description: const Text('The description of the default option.'),
+      error: const Text('Please select the default option.'),
+      semanticsLabel: 'Default',
+      value: true,
+      onChange: (value) {},
+      enabled: true,
+      autofocus: true,
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create radio 
+```
+
+## Usage
+
+### `FRadio(...)`
+
+```dart copy
+FRadio(
+  style: FRadioStyle(...),
+  label: const Text('Default'),
+  description: const Text('The description of the default option.'),
+  error: const Text('Please select the default option.'),
+  semanticsLabel: 'Default',
+  value: true,
+  onChange: (value) {},
+  enabled: true,
+  autofocus: true,
+);
+```
+
+
+
+
+
+
+widgets/radio library Widgets
+A radio button that typically allows the user to choose only one of a predefined set of options.
+
+It is recommended to use FSelectGroup in conjunction with FRadio.grouped to create a group of radio buttons.
+
+See https://forui.dev/docs/form/radio for working examples.
+
+Classes
+FRadio
+A radio button that typically allows the user to choose only one of a predefined set of options.
+FRadioMotion
+The motion-related properties for a FRadio.
+FRadioStyle
+A FRadio's style.
+Extensions
+$FRadioMotionTransformations on FRadioMotion
+Provides copyWith and lerp methods.
+$FRadioStyleTransformations on FRadioStyle
+Provides copyWith and lerp methods.
+
+
+---------------------------------------------------
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Select
+
+A select displays a list of drop-down options for the user to pick from.
+
+It is a form-field and can therefore be used in a form.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.select/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+    For multi selections, consider using a [multi select](/docs/form/multi-select).
+
+    For touch devices, a [select tile group](/docs/tile/select-tile-group) or
+    [select menu tile](/docs/tile/select-menu-tile) is generally recommended over this.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    const fruits = [
+      'Apple',
+      'Banana',
+      'Blueberry',
+      'Grapes',
+      'Lemon',
+      'Mango',
+      'Kiwi',
+      'Orange',
+      'Peach',
+      'Pear',
+      'Pineapple',
+      'Plum',
+      'Raspberry',
+      'Strawberry',
+      'Watermelon',
+    ];
+
+    class SelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.rich(
+          hint: 'Select a fruit',
+          format: (s) => s,
+          children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+        );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create select 
+```
+
+## Usage
+
+### `FSelect(...)`
+
+```dart copy
+FSelect<Locale>(
+  items: {
+    'United States': Locale('en', 'US'),
+    'Canada': Locale('en', 'CA'),
+    'Japan': Locale('ja', 'JP'),
+  },
+  controller: FSelectController<Locale>(vsync: this),
+  style: FSelectStyle.inherit(...),
+  label: const Text('Country'),
+  description: const Text('Select your country of residence'),
+  hint: 'Choose a country',
+  format: (value) => value.toUpperCase(),
+  onChange: (value) => print('Selected country: $value'),
+  onSaved: (value) => print('Saved country: $value'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUserInteraction,
+  builder: (context, style, state, child) => child,
+  prefixBuilder: (context, style, states) => Icon(FIcons.globe),
+  suffixBuilder: (context, style, states) => Icon(FIcons.arrowDown),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  contentScrollHandles: true,
+);
+```
+
+### `FSelect.rich(...)`
+
+```dart copy
+FSelect<String>.rich(
+  controller: FSelectController<String>(vsync: this),
+  style: FSelectStyle(...),
+  label: const Text('Country'),
+  description: const Text('Select your country of residence'),
+  hint: 'Choose a country',
+  format: (value) => value.toUpperCase(),
+  onChange: (value) => print('Selected country: $value'),
+  onSaved: (value) => print('Saved country: $value'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUserInteraction,
+  builder: (context, style, state, child) => child,
+  prefixBuilder: (context, style, states) => Icon(FIcons.globe),
+  suffixBuilder: (context, style, states) => Icon(FIcons.arrowDown),
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  contentDivider: FItemDivider.none,
+  contentScrollHandles: true,
+  initialValue: 'ca',
+  children: [
+    FSelectSection(
+      label: const Text('North American Countries'),
+      divider: FItemDivider.none,
+      children: [
+        FSelectItem(
+          title: const Text('United States'),
+          divider: FItemDivider.none,
+          value: 'us',
+        ),
+        FSelectItem(
+          title: Text('Canada'),
+          value: 'ca',
+        ),
+      ],
+    ),
+    FSelectItem(
+      title: Text('Japan'),
+      value: 'jp',
+    ),
+  ],
+);
+```
+
+### `FSelect.search(...)`
+
+```dart copy
+FSelect<User>.search(
+  items: {
+    'Bob Ross': User(firstName: 'Bob', lastName: 'Ross'),
+    'John Doe': User(firstName: 'John', lastName: 'Doe'),
+    'Mary Jane': User(firstName: 'Mary', lastName: 'Jane'),
+    'Peter Parker': User(firstName: 'Peter', lastName: 'Parker'),
+  },
+  controller: FSelectController<User>(),
+  style: FSelectStyle.inherit(...),
+  label: const Text('User'),
+  description: const Text('Search and select a user'),
+  builder: (context, styles, child) => child!,
+  format: (user) => '${user.firstName} ${user.lastName}',
+  hint: 'Search users...',
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  autoHide: false,
+  onChange: (value) => print('Selected country: $value'),
+  initialValue: 'value',
+  contentDivider: FItemDivider.none,
+  contentScrollHandles: false,
+  contentPhysics: const BouncingScrollPhysics(),
+  contentEmptyBuilder: (context, style) => Text('No results'),
+  filter: (query) async {
+    // Fetch users based on search query
+    return fetchUsers(query);
+  },
+  contentBuilder: (context, style, users) => [
+    for (final user in users)
+      FSelectItem(title: Text('${user.firstName} ${user.lastName}'), value: user),
+  ],
+  searchFieldProperties: FSelectSearchFieldProperties(
+    autofocus: true,
+    hint: 'Type to search...',
+  ),
+  contentLoadingBuilder: (context, style) => Text('Loading...'),
+  contentErrorBuilder: (context, error, stackTrace) => Text('Error...'),
+);
+```
+
+### `FSelect.searchBuilder(...)`
+
+```dart copy
+FSelect<User>.searchBuilder(
+  controller: FSelectController<User>(),
+  style: FSelectStyle.inherit(...),
+  label: const Text('User'),
+  description: const Text('Search and select a user'),
+  builder: (context, styles, child) => child!,
+  format: (user) => '${user.firstName} ${user.lastName}',
+  hint: 'Search users...',
+  popoverConstraints: const FAutoWidthPortalConstraints(maxHeight: 400),
+  clearable: true,
+  autoHide: false,
+  onChange: (value) => print('Selected country: $value'),
+  initialValue: 'value',
+  contentDivider: FItemDivider.none,
+  contentScrollHandles: false,
+  contentPhysics: const BouncingScrollPhysics(),
+  contentEmptyBuilder: (context, style) => Text('No results'),
+  filter: (query) async {
+    // Fetch users based on search query
+    return fetchUsers(query);
+  },
+  contentBuilder: (context, users) => [
+    for (final user in users)
+      FSelectItem(title: Text('${user.firstName} ${user.lastName}'), value: user),
+  ],
+  searchFieldProperties: FSelectSearchFieldProperties(
+    autofocus: true,
+    hint: 'Type to search...',
+  ),
+  contentLoadingBuilder: (context, style) => Text('Loading...'),
+  contentErrorBuilder: (context, error, stackTrace) => Text('Error...'),
+);
+```
+
+## Examples
+
+### Detailed
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='detailed' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class DetailedSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>(
+        hint: 'Type',
+        format: (s) => s,
+        children: [
+          FSelectItem.rich(
+            prefix: const Icon(FIcons.bug),
+            title: const Text('Bug'),
+            subtitle: const Text('An unexpected problem or behavior'),
+            value: 'Bug',
+          ),
+          FSelectItem.rich(
+            prefix: const Icon(FIcons.filePlus2),
+            title: const Text('Feature'),
+            subtitle: const Text('A new feature or enhancement'),
+            value: 'Feature',
+          ),
+          FSelectItem.rich(
+            prefix: const Icon(FIcons.messageCircleQuestionMark),
+            title: const Text('Question'),
+            subtitle: const Text('A question or clarification'),
+            value: 'Question',
+          ),
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Sections
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='section' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class SectionSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.rich(
+        hint: 'Select a timezone',
+        format: (s) => s,
+        children: [
+          FSelectSection(
+            label: const Text('North America'),
+            items: {
+              for (final item in [
+                'Eastern Standard Time (EST)',
+                'Central Standard Time (CST)',
+                'Mountain Standard Time (MST)',
+                'Pacific Standard Time (PST)',
+                'Alaska Standard Time (AKST)',
+                'Hawaii Standard Time (HST)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('South America'),
+            items: {
+              for (final item in [
+                'Argentina Time (ART)',
+                'Bolivia Time (BOT)',
+                'Brasilia Time (BRT)',
+                'Chile Standard Time (CLT)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('Europe & Africa'),
+            items: {
+              for (final item in [
+                'Greenwich Mean Time (GMT)',
+                'Central European Time (CET)',
+                'Eastern European Time (EET)',
+                'Western European Summer Time (WEST)',
+                'Central Africa Time (CAT)',
+                'Eastern Africa Time (EAT)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('Asia'),
+            items: {
+              for (final item in [
+                'Moscow Time (MSK)',
+                'India Standard Time (IST)',
+                'China Standard Time (CST)',
+                'Japan Standard Time (JST)',
+                'Korea Standard Time (KST)',
+                'Indonesia Standard Time (IST)',
+              ])
+                item: item,
+            },
+          ),
+          FSelectSection(
+            label: const Text('Australia & Pacific'),
+            items: {
+              for (final item in [
+                'Australian Western Standard Time (AWST)',
+                'Australian Central Standard Time (ACST)',
+                'Australian Eastern Standard Time (AEST)',
+                'New Zealand Standard Time (NZST)',
+                'Fiji Time (FJT)',
+              ])
+                item: item,
+            },
+          ),
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Dividers
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='divider' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5, 10} copy
+    class DividerSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.rich(
+        hint: 'Select a level',
+        contentDivider: FItemDivider.none,
+        format: (s) => s,
+        children: [
+          FSelectSection(
+            label: const Text('Level 1'),
+            divider: FItemDivider.indented,
+            items: {
+              for (final item in ['A', 'B']) item: '1$item',
+            },
+          ),
+          FSelectSection(
+            label: const Text('Level 2'),
+            items: {
+              for (final item in ['A', 'B']) item: '2$item',
+            },
+          ),
+          FSelectItem(title: Text('Level 3'), value: '3'),
+          FSelectItem(title: Text('Level 4'), value: '4'),
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+### Searchable
+
+#### Sync
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='sync' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class SyncSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.searchBuilder(
+        hint: 'Select a fruit',
+        format: (s) => s,
+        filter: (query) => query.isEmpty ? fruits : fruits.where((f) => f.toLowerCase().startsWith(query.toLowerCase())),
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem.text(fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='async' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class AsyncSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.searchBuilder(
+        hint: 'Select a fruit',
+        format: (s) => s,
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 1));
+          return query.isEmpty ? fruits : fruits.where((fruit) => fruit.toLowerCase().startsWith(query.toLowerCase()));
+        },
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async with Custom Loading
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='async-loading' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {10-13} copy
+    class AsyncLoadingSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.searchBuilder(
+        hint: 'Select a fruit',
+        format: (s) => s,
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 1));
+          return query.isEmpty ? fruits : fruits.where((fruit) => fruit.toLowerCase().startsWith(query.toLowerCase()));
+        },
+        contentLoadingBuilder: (context, style) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Here be dragons...', style: style.textFieldStyle.contentTextStyle.maybeResolve({})),
+        ),
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Async with Custom Error Handling
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='async-error' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {11-17} copy
+    class AsyncErrorSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.searchBuilder(
+        hint: 'Select a fruit',
+        format: (s) => s,
+        filter: (query) async {
+          await Future.delayed(const Duration(seconds: 1));
+          throw StateError('Error loading data');
+        },
+        contentBuilder: (context, _, fruits) => [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+        contentErrorBuilder: (context, error, trace) {
+          final style = context.theme.selectStyle.iconStyle;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(FIcons.messageCircleX, size: style.size, color: style.color),
+          );
+        },
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Behavior
+
+#### Toggleable Items
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='toggleable' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {7} copy
+    class ToggleableSelectPage extends StatefulWidget {
+      @override
+      State<ToggleableSelectPage> createState() => ToggleableSelectPageState();
+    }
+
+    class ToggleableSelectPageState extends State<ToggleableSelectPage> {
+      late final _controller = FSelectController(vsync: this, value: 'Apple', toggleable: true);
+
+      @override
+      Widget build(BuildContext context) => FSelect<String>.rich(
+        hint: 'Select a fruit',
+        format: (s) => s,
+        controller: _controller,
+        children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+
+      @override
+      void dispose() {
+        _controller.dispose();
+        super.dispose();
+      }
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+#### Clearable
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='clearable' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {6} copy
+    class ClearableSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.rich(
+        hint: 'Select a fruit',
+        format: (s) => s,
+        clearable: true, 
+        children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Custom Formatting
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='format' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {13} copy
+    class FormatSelectPage extends StatelessWidget {
+      static const users = [
+        (firstName: 'Bob', lastName: 'Ross'),
+        (firstName: 'John', lastName: 'Doe'),
+        (firstName: 'Mary', lastName: 'Jane'),
+        (firstName: 'Peter', lastName: 'Parker'),
+      ];
+
+      @override
+      Widget build(BuildContext context) => FSelect<({String firstName, String lastName})>.rich(
+        hint: 'Select a user',
+        format: (s) => s,
+        format: (user) => '${user.firstName} ${user.lastName}',
+        children: [for (final user in users) FSelectItem(title: Text(user.firstName), value: user)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### With Scroll Handles
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='scroll-handles' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {6} copy
+    class ScrollHandlesSelectPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FSelect<String>.rich(
+        hint: 'Select a fruit',
+        format: (s) => s,
+        contentScrollHandles: true,
+        children: [for (final fruit in fruits) FSelectItem(title: Text(fruit), value: fruit)],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select' variant='form' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class FormSelectPage extends StatefulWidget {
+
+      @override
+      State<FormSelectPage> createState() => _FormSelectPageState();
+    }
+
+    class _FormSelectPageState extends State<FormSelectPage> with SingleTickerProviderStateMixin {
+      static const _departments = ['Engineering', 'Marketing', 'Sales', 'Human Resources', 'Finance'];
+
+      final _formKey = GlobalKey<FormState>();
+      late final _departmentController = FSelectController<String>(vsync: this);
+
+      @override
+      Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FSelect<String>.rich(
+                controller: _departmentController,
+                label: const Text('Department'),
+                description: const Text('Choose your dream department'),
+                format: (s) => s,
+                validator: _validateDepartment,
+                children: [for (final department in _departments) FSelectItem(title: Text(department), value: department)],
+              ),
+              const SizedBox(height: 25),
+              FButton(
+                child: const Text('Submit'),
+                onPress: () {
+                  if (_formKey.currentState!.validate()) {
+                    // Form is valid, do something with department.
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+
+      String? _validateDepartment(String? department) {
+        if (department == null) {
+          return 'Please select a department';
+        }
+        return null;
+      }
+
+      @override
+      void dispose() {
+        _departmentController.dispose();
+        super.dispose();
+      }
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+widgets/select library Widgets
+Displays a list of options for the user to pick from.
+
+See https://forui.dev/docs/form/select for working examples.
+
+Classes
+FMultiSelect<T>
+A multi-select displays a list of options for the user to pick from.
+FMultiSelectController<T>
+The FMultiSelect's controller.
+FMultiSelectFieldStyle
+A FMultiSelectFieldStyle's style.
+FMultiSelectStyle
+A FMultiSelect's style.
+FMultiSelectTag
+A tag in a FMultiSelect.
+FMultiSelectTagStyle
+A FMultiSelectTag's style.
+FSelect<T>
+A select displays a list of options for the user to pick from.
+FSelectContentStyle
+An FSelect's contents style.
+FSelectController<T>
+The FSelect's controller.
+FSelectItem<T>
+A selectable item in a FSelect that can optionally be nested in a FSelectSection.
+FSelectScrollHandleStyle
+A FSelect content scroll handle's style.
+FSelectSearchFieldProperties
+The search field's properties.
+FSelectSearchStyle
+A FSelect's search field style.
+FSelectSection<T>
+A section in a FSelect that can contain multiple FSelectItems.
+FSelectSectionStyle
+A FSelectSection's style.
+FSelectStyle
+A FSelect's style.
+Mixins
+FSelectItemMixin
+A marker interface which denotes that mixed-in widgets can be used in a FSelect.
+Extensions
+$FMultiSelectFieldStyleTransformations on FMultiSelectFieldStyle
+Provides copyWith and lerp methods.
+$FMultiSelectStyleTransformations on FMultiSelectStyle
+Provides copyWith and lerp methods.
+$FMultiSelectTagStyleTransformations on FMultiSelectTagStyle
+Provides copyWith and lerp methods.
+$FSelectContentStyleTransformations on FSelectContentStyle
+Provides copyWith and lerp methods.
+$FSelectScrollHandleStyleTransformations on FSelectScrollHandleStyle
+Provides copyWith and lerp methods.
+$FSelectSearchStyleTransformations on FSelectSearchStyle
+Provides copyWith and lerp methods.
+$FSelectSectionStyleTransformations on FSelectSectionStyle
+Provides copyWith and lerp methods.
+$FSelectStyleTransformations on FSelectStyle
+Provides copyWith and lerp methods.
+Typedefs
+FMultiSelectTagBuilder<T> = Widget Function(BuildContext context, FMultiSelectController<T> controller, FMultiSelectStyle style, T value, Widget label)
+A function that builds a tag in a FMultiSelect.
+FSelectSearchContentBuilder<T> = List<FSelectItemMixin> Function(BuildContext context, String query, Iterable<T> values)
+A builder for FSelect search results.
+
+
+-----------------------------------------------------------
+
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Select Group
+
+A group of items that allow users to make a selection from a set of options.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.select_group/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+    For touch devices, a [select tile group](/docs/tile/select-tile-group) or
+    [select menu tile](/docs/tile/select-menu-tile) is generally recommended over this.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select-group' variant='default' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    enum Sidebar { recents, home, applications }
+
+    FSelectGroup<Sidebar>(
+      controller: FSelectGroupController(values: {Sidebar.recents}),
+      label: const Text('Sidebar'),
+      description: const Text('These will be shown in the sidebar.'),
+      children: [
+        FCheckbox.grouped(
+          value: Sidebar.recents,
+          label: const Text('Recents'),
+        ),
+        FCheckbox.grouped(
+          value: Sidebar.home,
+          label: const Text('Home'),
+        ),
+        FCheckbox.grouped(
+          value: Sidebar.applications,
+          label: const Text('Applications'),
+        ),
+      ],
+    );
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create select-group 
+```
+
+## Usage
+
+### `FSelectGroup(...)`
+
+```dart copy
+FSelectGroup<Value>(
+  controller: FSelectGroupController(), // or FSelectGroupController.radio()
+  style: FSelectGroupStyle(...),
+  label: const Text('Sidebar'),
+  description: const Text('Select the items you want to display in the sidebar.'),
+  onChange: (all) => print(all),
+  onSelect: (selection) => print(selection),
+  children: [
+    FCheckbox.grouped(
+      value: Value.checkbox,
+      label: const Text('Checkbox'),
+    ),
+    // or
+    FRadio.grouped(
+      value: Value.radio,
+      label: const Text('Radio'),
+    ),
+  ],
+);
+```
+
+## Examples
+
+### Checkbox Form
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='select-group' variant='checkbox-form' query={{}} height={400}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        enum Language { dart, java, rust, python }
+
+        class CheckboxForm extends StatefulWidget {
+          const CheckboxForm({super.key});
+
+          @override
+          State<CheckboxForm> createState() => CheckboxFormState();
+        }
+
+        class CheckboxFormState extends State<CheckboxForm> {
+          final _formKey = GlobalKey<FormState>();
+          final controller = FSelectGroupController<Language>();
+
+          @override
+          Widget build(BuildContext context) => Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FSelectGroup(
+                      controller: controller,
+                      label: const Text('Favorite Languages'),
+                      description: const Text('Your favorite language.'),
+                      validator: (values) => values?.isEmpty ?? true ? 'Please select at least one language.' : null,
+                      children: [
+                        FCheckbox.grouped(
+                          value: Language.dart,
+                          label: const Text('Dart'),
+                        ),
+                        FCheckbox.grouped(
+                          value: Language.java,
+                          label: const Text('Java'),
+                        ),
+                        FCheckbox.grouped(
+                          value: Language.rust,
+                          label: const Text('Rust'),
+                        ),
+                        FCheckbox.grouped(
+                          value: Language.python,
+                          label: const Text('Python'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    FButton(
+                      child: const Text('Submit'),
+                      onPress: () {
+                        if (!_formKey.currentState!.validate()) {
+                          // Handle errors here.
+                          return;
+                        }
+
+                        _formKey.currentState!.save();
+                        // Do something.
+                      },
+                    ),
+                  ],
+                ),
+              );
+
+          @override
+          void dispose() {
+            controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### Radio Form
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='select-group' variant='radio-form' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    enum Notification { all, direct, nothing }
+
+    class RadioForm extends StatefulWidget {
+      const RadioForm({super.key});
+
+      @override
+      State<RadioForm> createState() => RadioFormState();
+    }
+
+    class RadioFormState extends State<RadioForm> {
+      final _formKey = GlobalKey<FormState>();
+      final controller = FSelectGroupController<Notification>.radio();
+
+      @override
+      Widget build(BuildContext context) => Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FSelectGroup(
+                  controller: controller,
+                  label: const Text('Notifications'),
+                  description: const Text('Select the notifications.'),
+                  validator: (values) => values?.isEmpty ?? true ? 'Please select a value.' : null,
+                  children: [
+                    FRadio.grouped(
+                      value: Notification.all,
+                      label: const Text('All new messages'),
+                    ),
+                    FRadio.grouped(
+                      value: Notification.direct,
+                      label: const Text('Direct messages and mentions'),
+                    ),
+                    FRadio.grouped(
+                      value: Notification.nothing,
+                      label: const Text('Nothing'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                FButton(
+                  child: const Text('Save'),
+                  onPress: () {
+                    if (!_formKey.currentState!.validate()) {
+                      // Handle errors here.
+                      return;
+                    }
+
+                    _formKey.currentState!.save();
+                    // Do something.
+                  },
+                ),
+              ],
+            ),
+          );
+
+      @override
+      void dispose() {
+        controller.dispose();
+        super.dispose();
+      }
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+widgets/select_group library Widgets
+A group of form fields that allow users to make a selection from a set of options.
+
+See https://forui.dev/docs/form/select-group for working examples.
+
+Classes
+FSelectGroup<T>
+A set of items that are treated as a single selection.
+FSelectGroupItemData<T>
+A FSelectGroup's item data. Useful for creating your own FSelectGroupItem.
+FSelectGroupStyle
+FSelectGroup's style.
+Mixins
+FSelectGroupItem<T>
+Represents an item in a FSelectGroup.
+Extensions
+$FSelectGroupStyleTransformations on FSelectGroupStyle
+Provides copyWith and lerp methods.
+Typedefs
+FSelectGroupController<T> = FMultiValueNotifier<T>
+A FSelectGroup's controller.
+
+
+------------------------------------------------------
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Slider
+
+A sliding input component that allows users to select a value within a specified range by dragging a handle or tapping on the track.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.slider/"/>
+</LinkBadgeGroup>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create slider 
+```
+
+## Usage
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart copy
+        FSlider(
+          controller: FContinuousSliderController(
+            selection: FSliderSelection(max: 0.6),
+          ),
+          initialSelection: FSliderSelection(max: 0.6),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+### `FSlider(...)`
+
+```dart copy
+FSlider(
+  style: FSliderStyle(...),
+  layout: FLayout.rtl,
+  tooltipBuilder: (style, value) => Text('${value.toStringAsFixed(2)}%'),
+  controller: FContinuousSliderController(
+    allowedInteraction: FSliderInteraction.tap,
+    selection: FSliderSelection(max: 0.75, extent: (min: 0, max: 0.8)),
+  ),
+  onChange: (selection) {},
+  marks: const [
+    FSliderMark(value: 0, label: Text('0%')),
+    FSliderMark(value: 0.5, label: Text('50%')),
+    FSliderMark(value: 1, label: Text('100%')),
+  ],
+);
+```
+
+## Examples
+
+### Appearance
+
+#### Labelled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{label: 'Volume', description: 'Adjust the volume by dragging the slider.'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {2-3} copy
+        FSlider(
+          label: const Text('Volume'),
+          description: const Text('Adjust the volume by dragging the slider.'),
+          controller: FContinuousSliderController(selection: FSliderSelection(max: 0.6)),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{enabled: 'false', label: 'Volume', description: 'Adjust the volume by dragging the slider.'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {7} copy
+        FSlider(
+          label: const Text('Volume'),
+          description: const Text('Adjust the volume by dragging the slider.'),
+          controller: FContinuousSliderController(
+            selection: FSliderSelection(max: 0.6),
+          ),
+          enabled: false,
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Error
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{label: 'Volume', description: 'Adjust the volume by dragging the slider.', error: 'Volume is too high.'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {4} copy
+        FSlider(
+          label: const Text('Volume'),
+          description: const Text('Adjust the volume by dragging the slider.'),
+          forceErrorText: 'Volume is too high.',
+          controller: FContinuousSliderController(selection: FSliderSelection(max: 0.6)),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Tooltip
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' variant='tooltip'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {2-5} copy
+        FSlider(
+          tooltipBuilder: (style, value) {
+            final hex = (value * 100).round().toRadixString(16).padLeft(2, '0');
+            return Text('0x$hex');
+          },
+          controller: FContinuousSliderController(selection: FSliderSelection(max: 0.6)),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Marks
+
+Marks provide visual reference points on the slider track. Each mark consists of:
+
+- A tick: A visual indicator showing the mark's position
+- A label: Text describing the mark's value (optional)
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' variant='marks'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {4-8} copy
+        FSlider(
+          controller: FContinuousSliderController(selection: FSliderSelection(max: 0.35)),
+          marks: const [
+            FSliderMark(value: 0, label: Text('0%')),
+            FSliderMark(value: 0.25, tick: false),
+            FSliderMark(value: 0.5),
+            FSliderMark(value: 0.75, tick: false),
+            FSliderMark(value: 1, label: Text('100%')),
+          ],
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+### Layouts and Selections
+
+#### Discrete Values
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' variant='discrete'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {4-8} copy
+        FSlider(
+          controller: FDiscreteSliderController(selection: FSliderSelection(max: 0.25)),
+          marks: const [
+            FSliderMark(value: 0, label: Text('0%')),
+            FSliderMark(value: 0.25, tick: false),
+            FSliderMark(value: 0.5),
+            FSliderMark(value: 0.75, tick: false),
+            FSliderMark(value: 1, label: Text('100%')),
+          ],
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Range Selection
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' variant='range'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {2-4} copy
+        FSlider(
+          controller: FContinuousSliderController.range(
+            selection: FSliderSelection(min: 0.25, max: 0.75),
+          ),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Selection Boundaries
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{extent: 'true'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {5} copy
+        FSlider(
+          controller: FContinuousSliderController(
+            selection: FSliderSelection(
+              max: 0.6,
+              extent: (min: 0.25, max: 0.75),
+            ),
+          ),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Vertical Orientation
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' variant='vertical' height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {4} copy
+        FSlider(
+          label: const Text('Volume'),
+          description: const Text('Adjust the volume by dragging the slider.'),
+          layout: FLayout.btt,
+          controller: FContinuousSliderController(selection: FSliderSelection(max: 0.35)),
+          trackMainAxisExtent: 350,
+          marks: const [
+            FSliderMark(value: 0, label: Text('0%')),
+            FSliderMark(value: 0.25, tick: false),
+            FSliderMark(value: 0.5, label: Text('50%')),
+            FSliderMark(value: 0.75, tick: false),
+            FSliderMark(value: 1, label: Text('100%')),
+          ],
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+### Interactions
+
+#### Slide Track
+
+Slide anywhere on the track or thumb to select a value.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{interaction: 'slide'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {3} copy
+        FSlider(
+          controller: FContinuousSliderController(
+            allowedInteraction: FSliderInteraction.slide,
+            selection: FSliderSelection(max: 0.6),
+          ),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Slide Thumb
+
+Slide the thumb to select a value.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{interaction: 'slideThumb'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {3} copy
+        FSlider(
+          controller: FContinuousSliderController(
+            allowedInteraction: FSliderInteraction.slideThumb,
+            selection: FSliderSelection(max: 0.6),
+          ),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Tap
+
+Tap anywhere on the track to select a value.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{interaction: 'tap'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {3} copy
+        FSlider(
+          controller: FContinuousSliderController(
+            allowedInteraction: FSliderInteraction.tap,
+            selection: FSliderSelection(max: 0.6),
+          ),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Tap and Slide Thumb
+
+Tap anywhere or slide the thumb to select a value.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' query={{interaction: 'tapAndSlideThumb'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart {3} copy
+        FSlider(
+          controller: FContinuousSliderController(
+            allowedInteraction: FSliderInteraction.tapAndSlideThumb,
+            selection: FSliderSelection(max: 0.6),
+          ),
+        );
+        ```
+  </Tabs.Tab>
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='slider' variant='form' height='500'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+        ```dart copy
+        class SliderForm extends StatefulWidget {
+          const SliderForm({super.key});
+
+          @override
+          State<SliderForm> createState() => SliderFormState();
+        }
+
+        class SliderFormState extends State<SliderForm> {
+          final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+          @override
+          Widget build(BuildContext context) => Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FSlider(
+                      label: const Text('Brightness'),
+                      description: const Text('Adjust the brightness level.'),
+                      controller: FContinuousSliderController(selection: FSliderSelection(max: 0.35)),
+                      marks: const [
+                        FSliderMark(value: 0, label: Text('0%')),
+                        FSliderMark(value: 0.25, tick: false),
+                        FSliderMark(value: 0.5, label: Text('50%')),
+                        FSliderMark(value: 0.75, tick: false),
+                        FSliderMark(value: 1, label: Text('100%')),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    FButton(
+                      child: const Text('Save'),
+                      onPress: () {
+                        if (!_formKey.currentState!.validate()) {
+                          // Handle errors here.
+                          return;
+                        }
+
+                        _formKey.currentState!.save();
+                        // Do something.
+                      },
+                    ),
+                  ],
+                ),
+              );
+        }
+        ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+
+
+
+widgets/slider library Widgets
+An input where the user selects a value from within a given range.
+
+See https://forui.dev/docs/form/slider for working examples.
+
+Classes
+FContinuousSliderController
+A controller that manages a slider's active track which represents a continuous range/value.
+FDiscreteSliderController
+A controller that manages a slider's active track which represents a discrete range/value.
+FSlider
+An input where the user selects a value from within a given range.
+FSliderController
+A controller that manages a slider's active track.
+FSliderMark
+A mark in a FSlider. It is a combination of a tick - a visual indicator along the track, and a label.
+FSliderMarkStyle
+A FSlider mark's style.
+FSliderSelection
+A FSlider's active track/selection.
+FSliderStyle
+A slider's style.
+FSliderStyles
+A slider's styles.
+FSliderThumbStyle
+A slider thumb's style.
+FSliderTooltipsController
+The controller for a slider's registered tooltips.
+Enums
+FSliderInteraction
+Possible ways for a user to interact with a slider.
+Extensions
+$FSliderMarkStyleTransformations on FSliderMarkStyle
+Provides copyWith and lerp methods.
+$FSliderStylesTransformations on FSliderStyles
+Provides copyWith and lerp methods.
+$FSliderStyleTransformations on FSliderStyle
+Provides copyWith and lerp methods.
+$FSliderThumbStyleTransformations on FSliderThumbStyle
+Provides copyWith and lerp methods.
+
+-------------------------------------------------------
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Switch
+
+A toggle switch component that allows users to enable or disable a setting with a sliding motion.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.switch_/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='switch' query={{enabled: 'true'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {12-17} copy
+    class Page extends StatefulWidget {
+      const Page({super.key});
+
+      @override
+      State<Page> createState() => PageState();
+    }
+
+    class PageState extends State<Page> {
+      bool state = false;
+
+      @override
+      Widget build(BuildContext context) => FSwitch(
+        label: const Text('Airplane Mode'),
+        semanticsLabel: 'Airplane Mode',
+        value: state,
+        onChange: (value) => setState(() => state = value),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create switch 
+```
+
+## Usage
+
+### `FSwitch(...)`
+
+```dart copy
+FSwitch(
+  style: FSwitchStyle(...),
+  label: const Text('Airplane Mode'),
+  description: const Text('Turn on airplane mode to disable all wireless connections.'),
+  error: const Text('Please turn on airplane mode.'),
+  semanticsLabel: 'Airplane Mode',
+  value: true,
+  onChange: (value) {},
+  enabled: true,
+  autofocus: true,
+);
+```
+
+## Examples
+
+### Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='switch' query={{enabled: 'false'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {17} copy
+    class Page extends StatefulWidget {
+      const Page({super.key});
+
+      @override
+      State<Page> createState() => PageState();
+    }
+
+    class PageState extends State<Page> {
+      bool state = false;
+
+      @override
+      Widget build(BuildContext context) => FSwitch(
+        label: const Text('Airplane Mode'),
+        semanticsLabel: 'Airplane Mode',
+        value: state,
+        onChange: (value) => setState(() => state = value),
+        enabled: false,
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='switch' variant='form' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {54-64, 95-105} copy
+    class NotificationForm extends StatefulWidget {
+      const NotificationForm({super.key});
+
+      @override
+      State<NotificationForm> createState() => _NotificationFormState();
+    }
+
+    class _NotificationFormState extends State<NotificationForm> {
+      final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+      @override
+      Widget build(BuildContext context) {
+        final theme = context.theme;
+        return Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Email Notifications',
+                style: theme.typography.xl2.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: theme.colors.foreground,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 15),
+              FCard.raw(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Marketing Emails',
+                              style: theme.typography.base.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: theme.colors.foreground,
+                                height: 1.5,
+                              ),
+                            ),
+                            Text(
+                              'Receive emails about new products, features, and more.',
+                              style: theme.typography.sm.copyWith(color: theme.colors.mutedForeground),
+                            ),
+                          ],
+                        ),
+                      ),
+                      FormField(
+                        initialValue: false,
+                        onSaved: (value) {
+                          // Save the marketing email preference
+                        },
+                        validator: (value) => null, // No validation required for this field
+                        builder: (state) => FSwitch(
+                          value: state.value ?? false,
+                          onChange: (value) => state.didChange(value),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              FCard.raw(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Security Emails',
+                              style: theme.typography.base.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: theme.colors.foreground,
+                                height: 1.5,
+                              ),
+                            ),
+                            Text(
+                              'Receive emails about your account security.',
+                              style: theme.typography.sm.copyWith(color: theme.colors.mutedForeground),
+                            ),
+                          ],
+                        ),
+                      ),
+                      FormField(
+                        initialValue: true,
+                        onSaved: (value) {
+                          // Save the security email preference
+                        },
+                        validator: (value) => null, // No validation required for this field
+                        builder: (state) => FSwitch(
+                          value: state.value ?? false,
+                          onChange: (value) => state.didChange(value),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              FButton(
+                child: const Text('Submit'),
+                onPress: () {
+                  if (!_formKey.currentState!.validate()) {
+                    // Handle form validation errors
+                    return;
+                  }
+
+                  _formKey.currentState!.save();
+                  // Process the form submission
+                },
+              ),
+            ],
+          ),
+        );
+      }
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/switch library Widgets
+A control that allows the user to toggle between checked and unchecked.
+
+See https://forui.dev/docs/form/switch for working examples.
+
+Classes
+FSwitch
+A control that allows the user to toggle between checked and unchecked.
+FSwitchStyle
+FSwitch's style.
+Extensions
+$FSwitchStyleTransformations on FSwitchStyle
+Provides copyWith and lerp methods.
+
+
+----------------------------------------------------------------------
+
+
+import { Callout } from "nextra/components";
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Text Field
+
+A text field lets the user enter text, either with a hardware keyboard or with an onscreen keyboard.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.text_field/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+  See [`FTextFormField`](/docs/form/text-form-field) for using text fields in forms.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-field' query={{enabled: 'true'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class DefaultTextField extends StatefulWidget {
+      const DefaultTextField({super.key});
+
+      @override
+      State<DefaultTextField> createState() => _DefaultTextFieldState();
+    }
+
+    class _DefaultTextFieldState extends State<DefaultTextField> {
+      final TextEditingController _controller = TextEditingController();
+
+      @override
+      void initState() {
+        super.initState();
+      }
+
+      @override
+      Widget build(BuildContext context) => FTextField(
+        controller: _controller,
+        label: const Text('Username'),
+        hint: 'JaneDoe',
+        description: const Text('Please enter your username.'),
+        maxLines: 1,
+      );
+
+      @override
+      void dispose() {
+        _controller.dispose();
+        super.dispose();
+      }
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create text-field 
+```
+
+## Usage
+
+### `FTextField(...)`
+
+```dart copy
+FTextField(
+  controller: _controller, // TextEditingController
+  style: FTextFieldStyle(...),
+  clearable: (value) => value.text.isNotEmpty,
+  enabled: true,
+  label: const Text('Email'),
+  hint: 'john@doe.com',
+  description: const Text('Enter your email associated with your Forui account.'),
+  error: const Text('Error'),
+  keyboardType: TextInputType.emailAddress,
+  textCapitalization: TextCapitalization.none,
+  maxLines: 1,
+);
+```
+
+## Examples
+
+### States
+
+#### Enabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-field' query={{enabled: 'true'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FTextField(
+      controller: _controller, // TextEditingController
+      label: const Text('Username'),
+      hint: 'JaneDoe',
+      description: const Text('Please enter your username.'),
+      maxLines: 1,
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-field' query={{enabled: 'false'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {7} copy
+    FTextField(
+      controller: _controller, // TextEditingController
+      label: const Text('Username'),
+      hint: 'JaneDoe',
+      description: const Text('Please enter your username.'),
+      maxLines: 1,
+      enabled: false,
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Clearable
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-field' variant='clearable' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {18} copy
+    class ClearableTextField extends StatefulWidget {
+      @override
+      State<ClearableTextField> createState() => ClearableTextFieldState();
+    }
+
+    class ClearableTextFieldState extends State<ClearableTextField> {
+      late final TextEditingController _controller = TextEditingController(text: 'MyUsername');
+
+      @override
+      Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        child: FTextField(
+          controller: _controller,
+          label: const Text('Username'),
+          hint: 'JaneDoe',
+          description: const Text('Please enter your username.'),
+          maxLines: 1,
+          clearable: (value) => value.text.isNotEmpty,
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Presets
+
+#### Email
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-field' variant='email' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FTextField.email(initialValue: 'jane@doe.com');
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Password
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-field' variant='password' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FTextField.password();
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Multiline
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-field' variant='multiline' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FTextField.multiline(
+      label: const Text('Leave a review'),
+      maxLines: 4,
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+widgets/text_field library Widgets
+A text field.
+
+See https://forui.dev/docs/form/text-field for working examples.
+
+Classes
+FTextField
+A text field.
+FTextFieldStyle
+The text field style.
+FTextFormField
+A text field that is wrapped is a FormField for convenience.
+Extensions
+$FTextFieldStyleTransformations on FTextFieldStyle
+Provides copyWith and lerp methods.
+Typedefs
+FFieldBuilder<T> = Widget Function(BuildContext context, T style, Set<WidgetState> states, Widget field)
+A callback for decorating a field. It should always use the given field.
+FFieldIconBuilder<T> = Widget Function(BuildContext context, T style, Set<WidgetState> states)
+A callback for building a field's icon.
+FPasswordFieldIconBuilder<T> = Widget Function(BuildContext context, T style, ValueNotifier<bool> obscure, Set<WidgetState> states)
+A callback for building a field's icon.
+FTextFieldCounterBuilder = Widget? Function(BuildContext context, int currentLength, int? maxLength, bool focused)
+A callback for building a custom counter for a text field.
+
+
+
+-----------------------------------------------------------------
+import { Callout } from "nextra/components";
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Text Form Field
+
+A text field that can be used in forms, allowing the user to enter text, either with a hardware keyboard or with an
+onscreen keyboard.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.text_field/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+  `FTextFormField` wraps [`FTextField`](/docs/form/text-field) and provides a
+  [`FormField`](https://api.flutter.dev/flutter/widgets/FormField-class.html).
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='text-form-field' height={550} query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {9-11, 20-21, 27, 31-36, 38-42, 46-52} copy
+    class LoginForm extends StatefulWidget {
+      const LoginForm({super.key});
+
+      @override
+      State<LoginForm> createState() => _LoginFormState();
+    }
+
+    class _LoginFormState extends State<LoginForm> {
+      final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+      final TextEditingController _emailController = TextEditingController();
+      final TextEditingController _passwordController = TextEditingController();
+
+      @override
+      void initState() {
+        super.initState();
+      }
+
+      @override
+      void dispose() {
+        _emailController.dispose();
+        _passwordController.dispose();
+        super.dispose();
+      }
+
+      @override
+      Widget build(BuildContext context) => Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FTextFormField.email(
+              controller: _emailController,
+              hint: 'janedoe@foruslabs.com',
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => (value?.contains('@') ?? false) ? null : 'Please enter a valid email.',
+            ),
+            const SizedBox(height: 10),
+            FTextFormField.password(
+              controller: _passwordController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (value) => 8 <= (value?.length ?? 0) ? null : 'Password must be at least 8 characters long.',
+            ),
+            const SizedBox(height: 20),
+            FButton(
+              child: const Text('Login'),
+              onPress: () {
+                if (!_formKey.currentState!.validate()) {
+                  return; // Form is invalid.
+                }
+
+                // Form is valid, do something.
+              },
+            ),
+          ],
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create text-field
+```
+
+## Usage
+
+### `FTextFormField(...)`
+
+```dart copy
+FTextFormField(
+  controller: _controller, // TextEditingController
+  style: FTextFieldStyle(...),
+  clearable: (value) => value.text.isNotEmpty,
+  enabled: true,
+  onSaved: (value) {},
+  onReset: () => print('Reset'),
+  validator: (value) => true,
+  label: const Text('Email'),
+  hint: 'john@doe.com',
+  description: const Text('Enter your email associated with your Forui account.'),
+  forceErrorText: 'Error'
+  errorBuilder: (context, error) => const Text(error),
+  keyboardType: TextInputType.emailAddress,
+  textCapitalization: TextCapitalization.none,
+  maxLines: 1,
+);
+```
+
+### `FTextFormField.email(...)`
+
+```
+FTextFormField.email(
+  controller: _controller, // TextEditingController
+  clearable: (value) => value.text.isNotEmpty,
+  enabled: true,
+  onSaved: (value) {},
+  onReset: () => print('Reset'),
+  validator: (value) => true,
+  label: const Text('Email'),
+  hint: 'john@doe.com',
+  description: const Text('Enter your email associated with your Forui account.'),
+  forceErrorText: 'Error'
+  errorBuilder: (context, error) => const Text(error),
+  keyboardType: TextInputType.emailAddress,
+  textCapitalization: TextCapitalization.none,
+  maxLines: 1,
+);
+```
+
+### `FTextFormField.password(...)`
+
+```dart copy
+FTextFormField.password(
+  controller: _controller, // TextEditingController
+  clearable: (value) => value.text.isNotEmpty,
+  enabled: true,
+  onSaved: (value) {},
+  onReset: () => print('Reset'),
+  validator: (value) => true,
+  label: const Text('Password'),
+  hint: 'Enter password',
+  description: const Text('Enter your password.'),
+  forceErrorText: 'Error'
+  errorBuilder: (context, error) => const Text(error),
+  keyboardType: TextInputType.visiblePassword,
+  textCapitalization: TextCapitalization.none,
+  maxLines: 1,
+  obscureTextController: ValueNotifier(false),
+);
+```
+
+### `FTextFormField.multiline(...)`
+
+```dart copy
+FTextFormField.multiline(
+  controller: _controller, // TextEditingController
+  clearable: (value) => value.text.isNotEmpty,
+  enabled: true,
+  onSaved: (value) {},
+  onReset: () => print('Reset'),
+  validator: (value) => true,
+  label: const Text('Description'),
+  hint: 'Enter description',
+  description: const Text('Enter your description.'),
+  forceErrorText: 'Error'
+  errorBuilder: (context, error) => const Text(error),
+  keyboardType: TextInputType.multiline,
+  textCapitalization: TextCapitalization.none,
+  maxLines: null,
+);
+```
+
+
+
+
+
+
+
+
+widgets/text_field library Widgets
+A text field.
+
+See https://forui.dev/docs/form/text-field for working examples.
+
+Classes
+FTextField
+A text field.
+FTextFieldStyle
+The text field style.
+FTextFormField
+A text field that is wrapped is a FormField for convenience.
+Extensions
+$FTextFieldStyleTransformations on FTextFieldStyle
+Provides copyWith and lerp methods.
+Typedefs
+FFieldBuilder<T> = Widget Function(BuildContext context, T style, Set<WidgetState> states, Widget field)
+A callback for decorating a field. It should always use the given field.
+FFieldIconBuilder<T> = Widget Function(BuildContext context, T style, Set<WidgetState> states)
+A callback for building a field's icon.
+FPasswordFieldIconBuilder<T> = Widget Function(BuildContext context, T style, ValueNotifier<bool> obscure, Set<WidgetState> states)
+A callback for building a field's icon.
+FTextFieldCounterBuilder = Widget? Function(BuildContext context, int currentLength, int? maxLength, bool focused)
+A callback for building a custom counter for a text field.
+
+
+
+--------------------------------------------------------
+
+import {Callout, Tabs} from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Time Field
+
+A time field allows a time to be selected from a picker or input field.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.time_field/"/>
+</LinkBadgeGroup>
+
+<div className="pb-5">
+    <Callout type="info">
+        It is recommended to use [FTimeField.picker](#ftimefieldpicker) on touch devices and [FTimeField.new](#ftimefield)
+         on non-primarily touch devices.
+    </Callout>
+</div>
+
+The input field supports both arrow key navigation:
+
+- Up/Down arrows: Increment/decrement values
+- Left/Right arrows: Move between time segments
+
+The input field does not support the following locales that use non-western numerals & scripts that require composing,
+it will default to English:
+
+- Arabic (العربية)
+- Assamese (অসমীয়া)
+- Bengali (বাংলা)
+- Persian/Farsi (فارسی)
+- Marathi (मराठी)
+- Burmese (မြန်မာ)
+- Nepali (नेपाली)
+- Pashto (پښتو)
+- Tamil (தமிழ்)
+- Amharic (አማርኛ)
+- Kannada (ಕನ್ನಡ)
+- Korean (한국어)
+- Punjabi (ਪੰਜਾਬੀ)
+- Thai (ไทย)
+
+The following locales will default to Chinese (zh):
+
+- Chinese (Hong Kong) (繁體中文)
+- Chinese (Taiwan) (繁體中文)
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-field' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        const FTimeField(
+          label: Text('Appointment Time'),
+          description: Text('Select a time for your appointment.'),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create time-field 
+```
+
+## Usage
+
+### `FTimeField(...)`
+
+```dart copy
+FTimeField(
+  controller: FTimeFieldController(
+    vsync: this,
+    initialTime: FTime(12, 30),
+    validator: (time) => time != null && time < const FTime(14, 30) ? 'Time must be in the future' : null,
+  ),
+  style: FTimeFieldStyle(...),
+  initialTime: FTime(12, 30),
+  textAlign: TextAlign.start,
+  textAlignVertical: TextAlignVertical.center,
+  autofocus: false,
+  expands: false,
+  onEditingComplete: () => print('Editing complete'),
+  onSubmit: (time) => print('Time submitted: $time'),
+  mouseCursor: SystemMouseCursors.text,
+  canRequestFocus: true,
+  builder: (context, styles, child) => child!,
+  prefixBuilder: (context, styles, child) => Icon(FIcons.clock2),
+  suffixBuilder: null,
+  label: Text('Select Time'),
+  description: Text('Choose a time'),
+  enabled: true,
+  onChange: (time) => print('Time changed: $time'),
+  onSaved: (time) => print('Time saved: $time'),
+  onReset: () => print('Reset'),
+  autovalidateMode: AutovalidateMode.onUnfocus,
+);
+```
+
+### `FTimeField.picker(...)`
+
+```dart copy
+FTimeField.picker(
+  controller: FTimeFieldController(
+    vsync: this,
+    initialTime: FTime(12, 30),
+    validator: (time) => time != null && time < const FTime(14, 30) ? 'Time must be in the future' : null,
+  ),
+  initialTime: FTime(12, 30),
+  format: DateFormat.jms(),
+  textAlign: TextAlign.start,
+  textAlignVertical: TextAlignVertical.center,
+  expands: false,
+  mouseCursor: SystemMouseCursors.text,
+  canRequestFocus: true,
+  hint: 'Select a time',
+  spacing: FPortalSpacing(4),
+  shift: FPortalShift.flip,
+  offset: Offset.zero,
+  hourInterval: 1,
+  minuteInterval: 1,
+  label: Text('Picker Time'),
+  description: Text('Select a time from the calendar'),
+  onChange: (time) => print('Time changed: $time'),
+  builder: (context, styles, child) => child!,
+  prefixBuilder: (context, styles, child) => Icon(Icons.calendar_today),
+  suffixBuilder: null,
+);
+```
+
+## Examples
+
+### 24 Hours
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-field'  query={{hour24: 'true'}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {2} copy
+        const FTimeField(
+          hour24: true,
+          label: Text('Appointment Time'),
+          description: Text('Select a time for your appointment.'),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Picker Only
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-field' variant='picker' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        const FTimeField.picker(
+          label: Text('Appointment Time'),
+          description: Text('Select a time for your appointment.'),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Custom Validation
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-field' variant='validator' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        class ValidatorTimeFieldPage extends StatefulWidget {
+          @override
+          State<ValidatorTimeFieldPage> createState() => _ValidationTimeFieldPageState();
+        }
+
+        class _ValidationTimeFieldPageState extends State<ValidatorTimeFieldPage> with SingleTickerProviderStateMixin {
+          late final FTimeFieldController _controller;
+
+          @override
+          void initState() {
+            super.initState();
+            _controller = FTimeFieldController(vsync: this, validator: _validate);
+          }
+
+          String? _validate(FTime? time) => time == FTime(12) ? 'Time cannot be noon.' : null;
+
+          @override
+          Widget build(BuildContext context) => FTimeField(
+                controller: _controller,
+                label: const Text('Appointment Time'),
+              );
+
+          @override
+          void dispose() {
+            _controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### Form
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-field' variant='form' query={{}} height={600}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        class FormTimeFieldPage extends StatefulWidget {
+          @override
+          State<FormTimeFieldPage> createState() => _FormTimeFieldPageState();
+        }
+
+        class _FormTimeFieldPageState extends State<FormTimeFieldPage> with TickerProviderStateMixin {
+          final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+          late final FTimeFieldController _startTimeController;
+          late final FTimeFieldController _endTimeController;
+
+          @override
+          void initState() {
+            super.initState();
+            _startTimeController = FTimeFieldController(
+              vsync: this,
+              validator: _validateStartTime,
+            );
+            _endTimeController = FTimeFieldController(
+              vsync: this,
+              validator: _validateEndTime,
+            );
+          }
+
+          String? _validateStartTime(FTime? time) {
+            if (time != null && time < FTime.now()) {
+              return 'Start time must be in the future.';
+            }
+            return null;
+          }
+
+          String? _validateEndTime(FTime? time) {
+            if (_startTimeController.value != null && time < _startTimeController.value!) {
+              return 'End time must be after start time.';
+            }
+            return null;
+          }
+
+          @override
+          Widget build(BuildContext context) => Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  FTimeField(
+                    controller: _startTimeController,
+                    label: const Text('Start Time'),
+                    description: const Text('Select a start time.'),
+                    autovalidateMode: AutovalidateMode.disabled,
+                  ),
+                  const SizedBox(height: 20),
+                  FTimeField(
+                    controller: _endTimeController,
+                    label: const Text('End Time'),
+                    description: const Text('Select an end time.'),
+                    autovalidateMode: AutovalidateMode.disabled,
+                  ),
+                  const SizedBox(height: 25),
+                  FButton(
+                    child: const Text('Submit'),
+                    onPress: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Form is valid, process the dates
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+
+          @override
+          void dispose() {
+            _startTimeController.dispose();
+            _endTimeController.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+
+
+
+
+
+widgets/time_field library Widgets
+A time field allows a time to be selected from a picker or input field.
+
+See https://forui.dev/docs/form/time-field for working examples.
+
+Classes
+FTimeField
+A time field allows a time to be selected from a picker or input field.
+FTimeFieldController
+The time field's controller.
+FTimeFieldStyle
+A time field's style.
+Extensions
+$FTimeFieldStyleTransformations on FTimeFieldStyle
+Provides copyWith and lerp methods.
+
+
+
+------------------------------------------------------------------
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Time Picker
+
+A time picker that allows a time to be selected.
+
+The picker supports arrow key navigation:
+
+- Up/Down arrows: Increment/decrement selected value
+- Left/Right arrows: Move between wheels
+
+Recommended for touch devices.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.time_picker/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-picker' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        class Foo extends StatefulWidget {
+          Foo();
+
+          @override
+          State<Foo> createState() => _FooState();
+        }
+
+        class _FooState extends State<Foo> {
+          late final FTimePickerController _controller = FTimePickerController(initial: FTime.now());
+
+          @override
+          Widget build(BuildContext context) => FTimePicker(controller: _controller);
+
+          @override
+          void dispose() {
+            _controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create time-picker 
+```
+
+## Usage
+
+### `FTimePicker(...)`
+
+```dart copy
+const FTimePicker(
+  controller: FTimePickerController(),
+  style: FTimePickerStyle(...),
+  onChange: (time) {},
+  hour24: true,
+  hourInterval: 1,
+  minuteInterval: 1,
+);
+```
+
+## Examples
+
+### 24 Hour Clock
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-picker' query={{hour24: 'true'}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {12} copy
+        class Foo extends StatefulWidget {
+          Foo();
+
+          @override
+          State<Foo> createState() => _FooState();
+        }
+
+        class _FooState extends State<Foo> {
+          late final FTimePickerController _controller = FTimePickerController(initial: FTime.now());
+
+          @override
+          Widget build(BuildContext context) => FTimePicker(controller: _controller, hour24: true);
+
+          @override
+          void dispose() {
+            _controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### With Custom Intervals
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-picker' variant='interval'/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {12} copy
+        class Foo extends StatefulWidget {
+          Foo();
+
+          @override
+          State<Foo> createState() => _FooState();
+        }
+
+        class _FooState extends State<Foo> {
+          late final FTimePickerController _controller = FTimePickerController(initial: FTime.now());
+
+          @override
+          Widget build(BuildContext context) => FTimePicker(controller: _controller, hourInterval: 2, minuteInterval: 5);
+
+          @override
+          void dispose() {
+            _controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+### Animated
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='time-picker' variant='animated' height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        class Foo extends StatefulWidget {
+          Foo();
+
+          @override
+          State<Foo> createState() => _FooState();
+        }
+
+        class _FooState extends State<Foo> {
+          static final _random = Random();
+          late final FTimePickerController _controller = FTimePickerController(initial: FTime.now());
+
+          @override
+          Widget build(BuildContext context) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 300, width: 250, child: FTimePicker(controller: _controller)),
+              FButton(
+                child: const Text('Funny button'),
+                onPress: () => _controller.animateTo(FTime(_random.nextInt(24), _random.nextInt(60))),
+              ),
+            ],
+          );
+
+          @override
+          void dispose() {
+            _controller.dispose();
+            super.dispose();
+          }
+        }
+        ```
+    </Tabs.Tab>
+
+</Tabs>
+
+
+
+
+
+widgets/time_picker library Widgets
+A time picker that allows a time to be selected. It is composed of multiple wheels.
+
+Recommended for touch devices.
+
+See https://forui.dev/docs/form/time-picker for working examples.
+
+Classes
+FTimePicker
+A time picker that allows a time to be selected.
+FTimePickerController
+A FTimePicker's controller.
+FTimePickerStyle
+The style of a time picker.
+Extensions
+$FTimePickerStyleTransformations on FTimePickerStyle
+Provides copyWith and lerp methods.
+
+-------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

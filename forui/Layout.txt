@@ -1,0 +1,686 @@
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Divider
+
+Visually or semantically separates content.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.divider/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='divider' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    final theme = context.theme;
+    final colors = theme.colors;
+    final typography = theme.typography;
+
+    Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Flutter Forui',
+            style: typography.xl2.copyWith(
+              color: colors.foreground,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            'An open-source widget library.',
+            style: typography.sm.copyWith(color: colors.mutedForeground),
+          ),
+          const FDivider(),
+          SizedBox(
+            height: 30,
+            child: Row(
+              children: [
+                Text(
+                  'Blog',
+                  style: typography.sm.copyWith(color: colors.foreground),
+                ),
+                const FDivider(axis : Axis.vertical),
+                Text(
+                  'Docs',
+                  style: typography.sm.copyWith(color: colors.foreground),
+                ),
+                const FDivider(axis : Axis.vertical),
+                Text(
+                  'Source',
+                  style: typography.sm.copyWith(color: colors.foreground),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+     );
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create dividers
+```
+
+## Usage
+
+### `FDivider(...)`
+
+```dart copy
+const FDivider(
+  style: FDividerStyle(...),
+  axis : Axis.vertical,
+);
+```
+
+widgets/divider library Widgets
+A divider.
+
+See https://forui.dev/docs/layout/divider for working examples.
+
+Classes
+FDivider
+A visual separator used to create division between content.
+FDividerStyle
+The divider style.
+FDividerStyles
+The FDivider styles.
+Extensions
+$FDividerStylesTransformations on FDividerStyles
+Provides copyWith and lerp methods.
+$FDividerStyleTransformations on FDividerStyle
+Provides copyWith and lerp methods.
+
+
+----------------------------------------------------------------------
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Resizable
+
+A box which children can be resized along either the horizontal or vertical axis.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.resizable/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='resizable' query={{}} height={700}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class TimeOfDay extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(color: context.theme.colors.border),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: FResizable(
+          axis: Axis.vertical,
+          crossAxisExtent: 300,
+          children: [
+            FResizableRegion(
+              initialExtent: 250,
+              minExtent: 100,
+              builder: (_, data, __) => Label(data: data, icon: FIcons.sunrise, label: 'Morning'),
+            ),
+            FResizableRegion(
+              initialExtent: 100,
+              minExtent: 100,
+              builder: (_, data, __) => Label(data: data, icon: FIcons.sun, label: 'Afternoon'),
+            ),
+            FResizableRegion(
+              initialExtent: 250,
+              minExtent: 100,
+              builder: (_, data, __) => Label(data: data, icon: FIcons.sunset, label: 'Evening'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    class Label extends StatelessWidget {
+      static final DateFormat format = DateFormat.jm(); // Requires package:intl
+
+      final FResizableRegionData data;
+      final IconData icon;
+      final String label;
+
+      const Label({required this.data, required this.icon, required this.label, super.key});
+
+      @override
+      Widget build(BuildContext context) {
+        final FThemeData(:colors, :typography) = context.theme;
+        final start = DateTime.fromMillisecondsSinceEpoch(
+          (data.offsetPercentage.min * Duration.millisecondsPerDay).round(),
+          isUtc: true,
+        );
+
+        final end = DateTime.fromMillisecondsSinceEpoch(
+          (data.offsetPercentage.max * Duration.millisecondsPerDay).round(),
+          isUtc: true,
+        );
+
+        return Align(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, size: 15, color: colors.foreground),
+                  const SizedBox(width: 3),
+                  Text(label, style: typography.sm.copyWith(color: colors.foreground)),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Text(
+                '${format.format(start)} - ${format.format(end)}',
+                style: typography.sm.copyWith(color: colors.foreground),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create resizable
+```
+
+## Usage
+
+### `FResizable(...)`
+
+```dart copy
+FResizable(
+  controller: FResizableController.cascade(
+    onResizeUpdate: (regions) => print(regions),
+    onResizeEnd: (regions) => print(regions),
+  ),
+  style: FResizableStyle(...),
+  axis: Axis.vertical,
+  divider: FResizableDivider.dividerWithThumb,
+  crossAxisExtent: 400,
+  onChange: (regions) => print('Regions changed: $regions'),
+  children: [
+    FResizableRegion(
+      initialExtent: 200,
+      minExtent: 100,
+      builder: (context, data, child) => child!,
+      child: const Placeholder(),
+    ),
+  ],
+);
+```
+
+## Examples
+
+### Without Cascading
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='resizable' variant='no-cascading' query={{}} height={700}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {10} copy
+    class TimeOfDay extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(color: context.theme.colors.border),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: FResizable(
+          axis: Axis.vertical,
+          controller: FResizableController(),
+          crossAxisExtent: 300,
+          children: [
+            FResizableRegion(
+              initialExtent: 200,
+              minExtent: 100,
+              builder: (_, data, __) => Label(data: data, icon: FIcons.sunrise, label: 'Morning'),
+            ),
+            FResizableRegion(
+              initialExtent: 200,
+              minExtent: 100,
+              builder: (_, data, __) => Label(data: data, icon: FIcons.sun, label: 'Afternoon'),
+            ),
+            FResizableRegion(
+              initialExtent: 200,
+              minExtent: 100,
+              builder: (_, data, __) => Label(data: data, icon: FIcons.sunset, label: 'Evening'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    class Label extends StatelessWidget {
+      static final DateFormat format = DateFormat.jm(); // Requires package:intl
+
+      final FResizableRegionData data;
+      final IconData icon;
+      final String label;
+
+      const Label({required this.data, required this.icon, required this.label, super.key});
+
+      @override
+      Widget build(BuildContext context) {
+        final FThemeData(:colors, :typography) = context.theme;
+        final start = DateTime.fromMillisecondsSinceEpoch(
+          (data.offsetPercentage.min * Duration.millisecondsPerDay).round(),
+          isUtc: true,
+        );
+
+        final end = DateTime.fromMillisecondsSinceEpoch(
+          (data.offsetPercentage.max * Duration.millisecondsPerDay).round(),
+          isUtc: true,
+        );
+
+        return Align(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(icon, size: 15, color: colors.foreground),
+                  const SizedBox(width: 3),
+                  Text(label, style: typography.sm.copyWith(color: colors.foreground)),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Text(
+                '${format.format(start)} - ${format.format(end)}',
+                style: typography.sm.copyWith(color: colors.foreground),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Horizontal
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='resizable' variant='horizontal' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {7} copy
+    DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: context.theme.colors.border),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: FResizable(
+        axis: Axis.horizontal,
+        crossAxisExtent: 300,
+        children: [
+          FResizableRegion(
+            initialExtent: 100,
+            minExtent: 100,
+            builder: (context, data, _) => Align(
+                child: Text('Sidebar', style: context.theme.typography.sm),
+              ),
+          ),
+          FResizableRegion(
+            initialExtent: 300,
+            minExtent: 100,
+            builder: (context, data, _) => Align(
+              child: Text('Content', style: context.theme.typography.sm),
+            ),
+          ),
+        ],
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Divider with No Thumb
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='resizable' variant='no-thumb' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {8} copy
+    DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: context.theme.colors.border),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: FResizable(
+        axis: Axis.horizontal,
+        divider: FResizableDivider.divider,
+        crossAxisExtent: 300,
+        children: [
+          FResizableRegion(
+            initialExtent: 100,
+            minExtent: 100,
+            builder: (context, data, _) => Align(
+                child: Text('Sidebar', style: context.theme.typography.sm),
+              ),
+          ),
+          FResizableRegion(
+            initialExtent: 300,
+            minExtent: 100,
+            builder: (context, data, _) => Align(
+              child: Text('Content', style: context.theme.typography.sm),
+            ),
+          ),
+        ],
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Without Divider
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='resizable' variant='no-divider' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {8} copy
+    DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: context.theme.colors.border),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: FResizable(
+        axis: Axis.horizontal,
+        divider: FResizableDivider.none,
+        crossAxisExtent: 300,
+        children: [
+          FResizableRegion(
+            initialExtent: 100,
+            minExtent: 100,
+            builder: (context, data, _) => Align(
+                child: Text('Sidebar', style: context.theme.typography.sm),
+              ),
+          ),
+          FResizableRegion(
+            initialExtent: 300,
+            minExtent: 100,
+            builder: (context, data, _) => Align(
+              child: Text('Content', style: context.theme.typography.sm),
+            ),
+          ),
+        ],
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+widgets/resizable library Widgets
+A resizable which children can be resized along either the horizontal or vertical main axis.
+
+See https://forui.dev/docs/layout/resizable for working examples.
+
+Classes
+FResizable
+A resizable allows its children to be resized along either the horizontal or vertical main axis.
+FResizableController
+A controller that manages the resizing of regions in a FResizable.
+FResizableDividerStyle
+The style of the dividers between FResizableRegions.
+FResizableDividerThumbStyle
+The style of the dividers' thumbs between FResizableRegions.
+FResizableRegion
+A resizable region that can be resized along the parent FResizable's axis. It should always be in a FResizable.
+FResizableRegionData
+A FResizableRegion's data.
+FResizableStyle
+A FResizable's style.
+Enums
+FResizableDivider
+The appearance of dividers between FResizableRegions.
+Extensions
+$FResizableDividerStyleTransformations on FResizableDividerStyle
+Provides copyWith and lerp methods.
+$FResizableDividerThumbStyleTransformations on FResizableDividerThumbStyle
+Provides copyWith and lerp methods.
+$FResizableStyleTransformations on FResizableStyle
+Provides copyWith and lerp methods.
+
+
+
+----------------------------------------------------------------
+import { Callout } from 'nextra/components';
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Scaffold
+
+Creates a visual scaffold for Forui widgets.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.scaffold/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='scaffold' query={{}} height={600}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    final headers = [
+      const FHeader(title: Text('Home')),
+      const FHeader(title: Text('Categories')),
+      const FHeader(title: Text('Search')),
+      FHeader(
+        title: const Text('Settings'),
+        suffixes: [
+          FHeaderAction(
+            icon: Icon(FIcons.ellipsis),
+            onPress: () {},
+          ),
+        ],
+      ),
+    ];
+
+    final contents = [
+      const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('Home Placeholder')],
+      ),
+      const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('Categories Placeholder')],
+      ),
+      const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('Search Placeholder')],
+      ),
+      Column(
+        children: [
+          const SizedBox(height: 5),
+          FCard(
+            title: const Text('Account'),
+            subtitle: const Text('Make changes to your account here. Click save when you are done.'),
+            child: Column(
+              children: [
+                const FTextField(
+                  label: Text('Name'),
+                  hint: 'John Renalo',
+                ),
+                const SizedBox(height: 10),
+                const FTextField(
+                  label: Text('Email'),
+                  hint: 'john@doe.com',
+                ),
+                const SizedBox(height: 16),
+                FButton(
+                  onPress: () {},
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    class _Application extends StatefulWidget {
+      const _Application({super.key});
+
+      @override
+      State<_Application> createState() => _ApplicationState();
+    }
+
+    class _ApplicationState extends State<_Application> {
+      int index = 3;
+
+      @override
+      Widget build(BuildContext context) => FScaffold(
+        header: headers[index],
+        child: contents[index],
+        footer: FBottomNavigationBar(
+          index: index,
+          onChange: (index) => setState(() => this.index = index),
+          children: const [
+            FBottomNavigationBarItem(
+              icon: Icon(FIcons.house),
+              label: Text('Home'),
+            ),
+            FBottomNavigationBarItem(
+              icon: Icon(FIcons.layoutGrid),
+              label: Text('Categories'),
+            ),
+            FBottomNavigationBarItem(
+              icon: Icon(FIcons.search),
+              label: Text('Search'),
+            ),
+            FBottomNavigationBarItem(
+              icon: Icon(FIcons.settings),
+              label: Text('Settings'),
+            ),
+          ],
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create scaffold
+```
+
+## Usage
+
+<Callout type="info">
+    A scaffold may include a sidebar. A working example can be found [here](/docs/navigation/sidebar).
+</Callout>
+
+### `FScaffold(...)`
+
+```dart copy
+FScaffold(
+  scaffoldStyle: FScaffoldStyle(...),
+  toasterStyle: FToasterStyle(...),
+  systemOverlayStyle: SystemUiOverlayStyle(...),
+  header: FHeader(
+    title: const Text('Settings'),
+    suffixes: [
+      FHeaderAction(
+        icon: Icon(FIcons.ellipsis),
+        onPress: () {},
+      ),
+    ],
+  ),
+  childPad: true,
+  child: Column(
+    children: [
+      FCard(
+        title: const Text('Notification'),
+        subtitle: const Text('You have 3 unread messages.'),
+        child: FButton(onPress: () {}, child: const Text('Read messages')),
+      ),
+    ],
+  ),
+  sidebar: FSidebar(children: const []),
+  footer: FBottomNavigationBar(children: const []),
+);
+```
+
+
+
+widgets/scaffold library Widgets
+A scaffold.
+
+See https://forui.dev/docs/layout/scaffold for working examples.
+
+Classes
+FScaffold
+A layout structure that contains a header, content, and footer.
+FScaffoldStyle
+The scaffold style.
+Extensions
+$FScaffoldStyleTransformations on FScaffoldStyle
+Provides copyWith and lerp methods.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

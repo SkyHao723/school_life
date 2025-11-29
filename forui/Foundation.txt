@@ -1,0 +1,744 @@
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Collapsible
+
+A collapsible widget that animates between visible and hidden states.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.foundation/FCollapsible-class.html"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='collapsible' query={{}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class Demo extends StatefulWidget {
+      const Demo({super.key});
+
+      @override
+      State<Demo> createState() => _DemoState();
+    }
+
+    class _DemoState extends State<Demo> with SingleTickerProviderStateMixin {
+      late final AnimationController _controller;
+      late final Animation<double> _animation;
+      bool _expanded = false;
+
+      @override
+      void initState() {
+        super.initState();
+        _controller = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+        _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+      }
+
+      @override
+      void dispose() {
+        _controller.dispose();
+        super.dispose();
+      }
+
+      void _toggle() {
+        setState(() {
+          _expanded = !_expanded;
+        });
+        _controller.toggle();
+      }
+
+      @override
+      Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FButton(onPress: _toggle, child: Text(_expanded ? 'Collapse' : 'Expand')),
+          const SizedBox(height: 16),
+          AnimatedBuilder(
+            animation: _animation,
+            builder:
+                (context, child) => FCollapsible(
+                  value: _animation.value,
+                  child: FCard(
+                    title: const Text('Lorem ipsum'),
+                    child: const Text(
+                      'Sed ut perspiciatis unde omnis iste natus error sit voluptatem '
+                      'accusantium doloremque laudantium, totam rem aperiam, eaque ipsa '
+                      'quae ab illo inventore veritatis et quasi architecto beatae vitae '
+                      'dicta sunt explicabo.',
+                    ),
+                  ),
+                ),
+          ),
+        ],
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## Usage
+
+### `FCollapsible(...)`
+
+```dart copy
+FCollapsible(
+  value: 1.0, // 0.0 for collapsed, 1.0 for expanded.
+  child: const Text('child'),
+);
+```
+
+
+
+
+
+
+
+FCollapsible class
+A widget that animates between visible and hidden states.
+
+The child is completely clipped when the value is 0. When the value is 1, the child is fully visible. It is recommended to lerp between 0 and 1 to create a smooth animation.
+
+See:
+
+https://forui.dev/docs/foundation/collapsible for working examples.
+Inheritance
+Object DiagnosticableTree Widget StatelessWidget FCollapsible
+Constructors
+FCollapsible({required double value, required Widget child, Key? key})
+Creates a FCollapsible.
+const
+Properties
+child → Widget
+The child of the collapsible.
+final
+hashCode → int
+The hash code for this object.
+no setterinherited
+key → Key?
+Controls how one widget replaces another widget in the tree.
+finalinherited
+runtimeType → Type
+A representation of the runtime type of the object.
+no setterinherited
+value → double
+The value of the collapsible.
+final
+Methods
+build(BuildContext context) → Widget
+Describes the part of the user interface represented by this widget.
+override
+createElement() → StatelessElement
+Creates a StatelessElement to manage this widget's location in the tree.
+inherited
+debugDescribeChildren() → List<DiagnosticsNode>
+Returns a list of DiagnosticsNode objects describing this node's children.
+inherited
+debugFillProperties(DiagnosticPropertiesBuilder properties) → void
+Add additional properties associated with the node.
+override
+noSuchMethod(Invocation invocation) → dynamic
+Invoked when a nonexistent method or property is accessed.
+inherited
+toDiagnosticsNode({String? name, DiagnosticsTreeStyle? style}) → DiagnosticsNode
+Returns a debug representation of the object that is used by debugging tools and by DiagnosticsNode.toStringDeep.
+inherited
+toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) → String
+A string representation of this object.
+inherited
+toStringDeep({String prefixLineOne = '', String? prefixOtherLines, DiagnosticLevel minLevel = DiagnosticLevel.debug, int wrapWidth = 65}) → String
+Returns a string representation of this node and its descendants.
+inherited
+toStringShallow({String joiner = ', ', DiagnosticLevel minLevel = DiagnosticLevel.debug}) → String
+Returns a one-line detailed description of the object.
+inherited
+toStringShort() → String
+A short, textual description of this widget.
+inherited
+Operators
+operator ==(Object other) → bool
+The equality operator.
+inherited
+
+
+
+
+
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Focused Outline
+
+An outline around a focused widget that does not affect its layout.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.foundation/FFocusedOutline-class.html"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='focused-outline' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FFocusedOutline(
+      focused: true,
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.theme.colors.primary,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+        child: Text(
+          'Focused',
+          style: context.theme.typography.base.copyWith(
+            color: context.theme.colors.primaryForeground,
+          ),
+        ),
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+FFocusedOutline class
+An outline around a focused widget that does not affect its layout.
+
+See:
+
+https://forui.dev/docs/foundation/focused-outline for working examples.
+FFocusedOutlineStyle for customizing an outline.
+Inheritance
+Object DiagnosticableTree Widget RenderObjectWidget SingleChildRenderObjectWidget FFocusedOutline
+Constructors
+FFocusedOutline({required bool focused, required Widget? child, FFocusedOutlineStyle style(FFocusedOutlineStyle style)?, Key? key})
+Creates a FFocusedOutline.
+const
+Properties
+child → Widget?
+The widget below this widget in the tree.
+finalinherited
+focused → bool
+True if the child should be outlined.
+final
+hashCode → int
+The hash code for this object.
+no setterinherited
+key → Key?
+Controls how one widget replaces another widget in the tree.
+finalinherited
+runtimeType → Type
+A representation of the runtime type of the object.
+no setterinherited
+style → FFocusedOutlineStyle Function(FFocusedOutlineStyle style)?
+The style.
+final
+Methods
+createElement() → SingleChildRenderObjectElement
+RenderObjectWidgets always inflate to a RenderObjectElement subclass.
+inherited
+createRenderObject(BuildContext context) → RenderObject
+Creates an instance of the RenderObject class that this RenderObjectWidget represents, using the configuration described by this RenderObjectWidget.
+override
+debugDescribeChildren() → List<DiagnosticsNode>
+Returns a list of DiagnosticsNode objects describing this node's children.
+inherited
+debugFillProperties(DiagnosticPropertiesBuilder properties) → void
+Add additional properties associated with the node.
+override
+didUnmountRenderObject(covariant RenderObject renderObject) → void
+This method is called when a RenderObject that was previously associated with this widget is removed from the render tree. The provided RenderObject will be of the same type as the one created by this widget's createRenderObject method.
+inherited
+noSuchMethod(Invocation invocation) → dynamic
+Invoked when a nonexistent method or property is accessed.
+inherited
+toDiagnosticsNode({String? name, DiagnosticsTreeStyle? style}) → DiagnosticsNode
+Returns a debug representation of the object that is used by debugging tools and by DiagnosticsNode.toStringDeep.
+inherited
+toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) → String
+A string representation of this object.
+inherited
+toStringDeep({String prefixLineOne = '', String? prefixOtherLines, DiagnosticLevel minLevel = DiagnosticLevel.debug, int wrapWidth = 65}) → String
+Returns a string representation of this node and its descendants.
+inherited
+toStringShallow({String joiner = ', ', DiagnosticLevel minLevel = DiagnosticLevel.debug}) → String
+Returns a one-line detailed description of the object.
+inherited
+toStringShort() → String
+A short, textual description of this widget.
+inherited
+updateRenderObject(BuildContext context, covariant _Outline outline) → void
+Copies the configuration described by this RenderObjectWidget to the given RenderObject, which will be of the same type as returned by this object's createRenderObject.
+override
+Operators
+operator ==(Object other) → bool
+The equality operator.
+inherited
+
+
+
+
+
+
+
+
+
+----------------------------------------------
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Portal
+
+A portal renders a portal widget that "floats" on top of a child widget.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.foundation/FPortal-class.html"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+  This widget is typically used to create other high-level widgets, e.g., [popover](../overlay/popover) or
+  [tooltip](../overlay/tooltip). You should prefer those high-level widgets unless you're creating a custom widget.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='portal' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class PortalPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FPortal(
+        spacing: const FPortalSpacing(8),
+        viewInsets: const EdgeInsets.all(5),
+        portalBuilder: (context, _) => Container(
+          decoration: BoxDecoration(
+            color: context.theme.colors.background,
+            border: Border.all(color: context.theme.colors.border),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+          child: SizedBox(
+            width: 288,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dimensions', style: context.theme.typography.base),
+                const SizedBox(height: 7),
+                Text(
+                  'Set the dimensions for the layer.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                for (final (label, value) in [('Width', '100%'), ('Max. Width', '300px')]) ...[
+                  Row(
+                    children: [
+                      Expanded(child: Text(label, style: context.theme.typography.sm)),
+                      Expanded(flex: 2, child: FTextField(initialText: value)),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ],
+            ),
+          ),
+        ),
+        builder: (context, controller, _) => FButton(onPress: controller.toggle, child: const Text('Portal')),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## Usage
+
+### `FPortal(...)`
+
+```dart copy
+FPortal(
+  controller: OverlayPortalController(),
+  spacing: FPortalSpacing.zero,
+  shift: FPortalShift.flip,
+  offset: Offset.zero,
+  portalConstraints: const FAutoWidthPortalConstraints(),
+  portalAnchor: Alignment.topCenter,
+  childAnchor: Alignment.bottomCenter,
+  viewInsets: EdgeInsets.zero,
+  barrier: Container(color: Colors.blue),
+  portalBuilder: (context, controller) => const Text('portal'),
+  builder: (context, controller, child) => child!,
+  child: const Text('child'),
+);
+```
+
+
+
+
+
+FPortal class
+A portal renders a portal widget that "floats" on top of a child widget.
+
+Similar to an OverlayPortal, it requires an Overlay ancestor. Unlike an OverlayPortal, the portal is aligned relative to the child.
+
+See:
+
+FPortalShift for shifting strategies when a portal overflows outside of the viewport.
+OverlayPortalController for controlling the portal's visibility.
+OverlayPortal for the underlying widget.
+Inheritance
+Object DiagnosticableTree Widget StatefulWidget FPortal
+Constructors
+FPortal({required Widget portalBuilder(BuildContext context, OverlayPortalController controller), OverlayPortalController? controller, FPortalConstraints constraints = const FPortalConstraints(), AlignmentGeometry portalAnchor = Alignment.topCenter, AlignmentGeometry childAnchor = Alignment.bottomCenter, FPortalSpacing spacing = FPortalSpacing.zero, Offset shift(Size size, FPortalChildBox childBox, FPortalBox portalBox) = FPortalShift.flip, Offset offset = Offset.zero, EdgeInsetsGeometry? viewInsets, Widget? barrier, ValueWidgetBuilder<OverlayPortalController> builder = _builder, Widget? child, Key? key})
+Creates a portal.
+const
+Properties
+barrier → Widget?
+An optional barrier widget that is displayed behind the portal.
+final
+builder → ValueWidgetBuilder<OverlayPortalController>
+An optional builder which returns the child widget that the portal is aligned to.
+final
+child → Widget?
+The child which the portal is aligned to.
+final
+childAnchor → AlignmentGeometry
+The point on the child widget that connects with the portal (floating content), at the portal's anchor.
+final
+constraints → FPortalConstraints
+The constraints.
+final
+controller → OverlayPortalController?
+The controller that shows and hides the portal. It initially hides the portal.
+final
+hashCode → int
+The hash code for this object.
+no setterinherited
+key → Key?
+Controls how one widget replaces another widget in the tree.
+finalinherited
+offset → Offset
+The offset to adjust the portal by. Defaults to Offset.zero.
+final
+portalAnchor → AlignmentGeometry
+The point on the portal (floating content) that connects with the child, at the child's anchor.
+final
+portalBuilder → Widget Function(BuildContext context, OverlayPortalController controller)
+The portal builder which returns the floating content.
+final
+runtimeType → Type
+A representation of the runtime type of the object.
+no setterinherited
+shift → Offset Function(Size size, FPortalChildBox childBox, FPortalBox portalBox)
+The shifting strategy used to shift a portal when it overflows out of the viewport. Defaults to FPortalShift.flip.
+final
+spacing → FPortalSpacing
+The spacing between the child's anchor and portal's anchor. Defaults to FPortalSpacing.zero.
+final
+viewInsets → EdgeInsetsGeometry?
+The insets of the view. In other words, the minimum distance between the edges of the view and the edges of the portal. Defaults to MediaQueryData.viewPadding.
+final
+Methods
+createElement() → StatefulElement
+Creates a StatefulElement to manage this widget's location in the tree.
+inherited
+createState() → State<FPortal>
+Creates the mutable state for this widget at a given location in the tree.
+override
+debugDescribeChildren() → List<DiagnosticsNode>
+Returns a list of DiagnosticsNode objects describing this node's children.
+inherited
+debugFillProperties(DiagnosticPropertiesBuilder properties) → void
+Add additional properties associated with the node.
+override
+noSuchMethod(Invocation invocation) → dynamic
+Invoked when a nonexistent method or property is accessed.
+inherited
+toDiagnosticsNode({String? name, DiagnosticsTreeStyle? style}) → DiagnosticsNode
+Returns a debug representation of the object that is used by debugging tools and by DiagnosticsNode.toStringDeep.
+inherited
+toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) → String
+A string representation of this object.
+inherited
+toStringDeep({String prefixLineOne = '', String? prefixOtherLines, DiagnosticLevel minLevel = DiagnosticLevel.debug, int wrapWidth = 65}) → String
+Returns a string representation of this node and its descendants.
+inherited
+toStringShallow({String joiner = ', ', DiagnosticLevel minLevel = DiagnosticLevel.debug}) → String
+Returns a one-line detailed description of the object.
+inherited
+toStringShort() → String
+A short, textual description of this widget.
+inherited
+Operators
+operator ==(Object other) → bool
+The equality operator.
+inherited
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------
+
+
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Tappable
+
+An area that responds to touch.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.foundation/FTappable-class.html"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+  This widget is typically used to create other high-level widgets, e.g., [button](../form/button). You should prefer
+  those high-level widgets unless you're creating a custom widget.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='tappable' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FTappable(
+      builder:
+          (context, data, child) => Container(
+            decoration: BoxDecoration(
+              color:
+                  data.contains(WidgetState.hovered) ? context.theme.colors.secondary : context.theme.colors.background,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: context.theme.colors.border),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+            child: child!,
+          ),
+      child: const Text('Tappable'),
+      onPress: () {},
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+## Usage
+
+### `FTappable(...)`
+
+```dart copy
+const FTappable(
+  style: FTappableStyle(),
+  semanticsLabel: 'Label',
+  excludeSemantics: false,
+  selected: false,
+  autofocus: false,
+  focusNode: FocusNode(),
+  onFocusChange: (focused) {},
+  onHoverChange: (hovered) {},
+  onStateChange: (delta) {},
+  behavior: HitTestBehavior.translucent,
+  onPress: () {},
+  onLongPress: () {},
+  onSecondaryPress: () {},
+  onSecondaryLongPress: () {},
+  shortcuts: { SingleActivator(LogicalKeyboardKey.enter): ActivateIntent() },
+  actions: { ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {}) },
+  builder: (context, state, child) => child!,
+  child: const Text('Tappable'),
+);
+```
+
+### `FTappable.static(...)`
+
+A variant of `FTappable` without any animation. This is similar to using `FTappableMotion.none`.
+
+```dart copy
+FTappable.static(
+  style: FTappableStyle(),
+  semanticsLabel: 'Label',
+  excludeSemantics: false,
+  selected: false,
+  autofocus: false,
+  focusNode: FocusNode(),
+  onFocusChange: (focused) {},
+  onHoverChange: (hovered) {},
+  onStateChange: (delta) {},
+  behavior: HitTestBehavior.translucent,
+  onPress: () {},
+  onLongPress: () {},
+  onSecondaryPress: () {},
+  onSecondaryLongPress: () {},
+  shortcuts: { SingleActivator(LogicalKeyboardKey.enter): ActivateIntent() },
+  actions: { ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {}) },
+  builder: (context, state, child) => child!,
+  child: const Text('Tappable'),
+);
+```
+
+## Custom Bounce Animation
+
+```dart copy
+// Default animation.
+FTappableMotion(bounceTween: FTappableMotion.defaultBounceTween);
+
+// No animation.
+FTappableMotion(bounceTween: FTappableMotion.noBounceTween);
+
+// Custom tween.
+FTappableMotion(bounceTween: Tween(begin: 1.0, end: 0.97));
+```
+
+
+
+
+
+
+
+
+
+
+FTappable class
+An area that responds to touch.
+
+It is typically used to create other high-level widgets, i.e., FButton. Unless you are creating a custom widget, you should use those high-level widgets instead.
+
+Inheritance
+Object DiagnosticableTree Widget StatefulWidget FTappable
+Constructors
+FTappable({FTappableStyle style(FTappableStyle style)?, FFocusedOutlineStyle focusedOutlineStyle(FFocusedOutlineStyle style)?, String? semanticsLabel, bool excludeSemantics, bool autofocus, FocusNode? focusNode, ValueChanged<bool>? onFocusChange, ValueChanged<bool>? onHoverChange, ValueChanged<FWidgetStatesDelta>? onStateChange, bool selected, HitTestBehavior behavior, VoidCallback? onPress, VoidCallback? onLongPress, VoidCallback? onSecondaryPress, VoidCallback? onSecondaryLongPress, Map<ShortcutActivator, Intent>? shortcuts, Map<Type, Action<Intent>>? actions, ValueWidgetBuilder<Set<WidgetState>> builder, Widget? child, Key? key})
+Creates an FTappable.
+const
+factory
+FTappable.static({FTappableStyle style(FTappableStyle style)?, FFocusedOutlineStyle focusedOutlineStyle(FFocusedOutlineStyle style)?, String? semanticsLabel, bool excludeSemantics = false, bool autofocus = false, FocusNode? focusNode, ValueChanged<bool>? onFocusChange, ValueChanged<bool>? onHoverChange, ValueChanged<FWidgetStatesDelta>? onStateChange, bool selected = false, HitTestBehavior behavior = HitTestBehavior.translucent, VoidCallback? onPress, VoidCallback? onLongPress, VoidCallback? onSecondaryPress, VoidCallback? onSecondaryLongPress, Map<Type, Action<Intent>>? actions, ValueWidgetBuilder<Set<WidgetState>> builder = _builder, Widget? child, Map<ShortcutActivator, Intent>? shortcuts, Key? key})
+Creates a FTappable without animation.
+const
+Properties
+actions → Map<Type, Action<Intent>>?
+The actions. Defaults to calling onPress when ActivateIntent is invoked and onPress is not null.
+final
+autofocus → bool
+True if this widget will be selected as the initial focus when no other node in its scope is currently focused.
+final
+behavior → HitTestBehavior
+The tappable's hit test behavior. Defaults to HitTestBehavior.translucent.
+final
+builder → ValueWidgetBuilder<Set<WidgetState>>
+The builder used to create a child with the current state.
+final
+child → Widget?
+An optional child.
+final
+excludeSemantics → bool
+Whether to replace all child semantics with this node. Defaults to false.
+final
+focusedOutlineStyle → FFocusedOutlineStyle Function(FFocusedOutlineStyle style)?
+The style used when the tappable is focused. This tappable will not be outlined if null.
+final
+focusNode → FocusNode?
+An optional focus node to use as the focus node for this widget.
+final
+hashCode → int
+The hash code for this object.
+no setterinherited
+key → Key?
+Controls how one widget replaces another widget in the tree.
+finalinherited
+onFocusChange → ValueChanged<bool>?
+Handler called when the focus changes.
+final
+onHoverChange → ValueChanged<bool>?
+Handler called when the hover changes.
+final
+onLongPress → VoidCallback?
+A callback for when the widget is long pressed.
+final
+onPress → VoidCallback?
+A callback for when the widget is pressed.
+final
+onSecondaryLongPress → VoidCallback?
+A callback for when the widget is pressed with a secondary button (usually right-click on desktop).
+final
+onSecondaryPress → VoidCallback?
+A callback for when the widget is pressed with a secondary button (usually right-click on desktop).
+final
+onStateChange → ValueChanged<FWidgetStatesDelta>?
+Handler called when there are any changes to a tappable's WidgetStates.
+final
+runtimeType → Type
+A representation of the runtime type of the object.
+no setterinherited
+selected → bool
+True if this tappable is currently selected. Defaults to false.
+final
+semanticsLabel → String?
+The semantic label used by accessibility frameworks.
+final
+shortcuts → Map<ShortcutActivator, Intent>
+The shortcuts. Defaults to calling ActivateIntent if onPress is not null.
+final
+style → FTappableStyle Function(FTappableStyle style)?
+The style.
+final
+Methods
+createElement() → StatefulElement
+Creates a StatefulElement to manage this widget's location in the tree.
+inherited
+createState() → State<FTappable>
+Creates the mutable state for this widget at a given location in the tree.
+override
+debugDescribeChildren() → List<DiagnosticsNode>
+Returns a list of DiagnosticsNode objects describing this node's children.
+inherited
+debugFillProperties(DiagnosticPropertiesBuilder properties) → void
+Add additional properties associated with the node.
+override
+noSuchMethod(Invocation invocation) → dynamic
+Invoked when a nonexistent method or property is accessed.
+inherited
+toDiagnosticsNode({String? name, DiagnosticsTreeStyle? style}) → DiagnosticsNode
+Returns a debug representation of the object that is used by debugging tools and by DiagnosticsNode.toStringDeep.
+inherited
+toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) → String
+A string representation of this object.
+inherited
+toStringDeep({String prefixLineOne = '', String? prefixOtherLines, DiagnosticLevel minLevel = DiagnosticLevel.debug, int wrapWidth = 65}) → String
+Returns a string representation of this node and its descendants.
+inherited
+toStringShallow({String joiner = ', ', DiagnosticLevel minLevel = DiagnosticLevel.debug}) → String
+Returns a one-line detailed description of the object.
+inherited
+toStringShort() → String
+A short, textual description of this widget.
+inherited
+Operators
+operator ==(Object other) → bool
+The equality operator.
+inherited
+
+

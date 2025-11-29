@@ -1,0 +1,2328 @@
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Dialog
+
+A modal dialog interrupts the user with important content and expects a response.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.dialog"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='dialog' query={{vertical: "false"}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        FButton(
+          mainAxisSize: MainAxisSize.min,
+          onPress: () => showFDialog(
+            context: context,
+            builder: (context, style, animation) => FDialog(
+              style: style,
+              animation: animation,
+              direction: Axis.horizontal,
+              title: const Text('Are you absolutely sure?'),
+              body: const Text('This action cannot be undone. This will permanently delete your account and remove your data from our servers.'),
+              actions: [
+                FButton(style: FButtonStyle.outline(), onPress: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                FButton(onPress: () => Navigator.of(context).pop(), child: const Text('Continue')),
+              ],
+            ),
+          ),
+          child: const Text('Show Dialog'),
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create dialog 
+```
+
+## Usage
+
+### `showFDialog(...)`
+
+```dart copy
+showFDialog<T>(
+  context: context,
+  builder: (context, style, animation) => FDialog(...),
+  useRootNavigator: false,
+  routeStyle: FDialogRouteStyle(...),
+  style: FDialogStyle(...),
+  barrierLabel: 'Label',
+  barrierDismissible: true,
+  routeSettings: RouteSettings(...),
+  transitionAnimationController: AnimationController(...),
+  anchorPoint: Offset.zero,
+  useSafeArea: false,
+);
+```
+
+### `FDialog(...)`
+
+```dart copy
+FDialog(
+  style: FDialogStyle(...),
+  animation: Animation<double>(...),
+  direction: Axis.horizontal,
+  title: const Text('Are you absolutely sure?'),
+  body: const Text('This action cannot be undone. This will permanently delete your account and remove your data from our servers.'),
+  actions: [
+    FButton(style: FButtonStyle.outline(), onPress: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+    FButton(onPress: () => Navigator.of(context).pop(), child: const Text('Continue')),
+  ],
+);
+```
+
+### `FDialog.adaptive(...)`
+
+```dart copy
+FDialog.adaptive(
+  style: FDialogStyle(...),
+  animation: Animation<double>(...),
+  title: const Text('Are you absolutely sure?'),
+  body: const Text('This action cannot be undone. This will permanently delete your account and remove your data from our servers.'),
+  actions: [
+    FButton(style: FButtonStyle.outline(), onPress: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+    FButton(onPress: () => Navigator.of(context).pop(), child: const Text('Continue')),
+  ],
+);
+```
+
+### `FDialog.raw(...)`
+
+```dart copy
+FDialog.raw(
+  style: FDialogStyle(...),
+  animation: Animation<double>(...),
+  builder: (context, style) => const Placeholder(),
+);
+```
+
+## Examples
+
+### Horizontal Layout
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='dialog' query={{vertical: "false"}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {12} copy
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IntrinsicWidth(
+          child: FButton(
+            child: const Text('Show Dialog'),
+            onPress: () => showFDialog(
+              context: context,
+              builder: (context, style, animation) => FDialog(
+                style: style,
+                animation: animation,
+                direction: Axis.horizontal,
+                title: const Text('Are you absolutely sure?'),
+                body: const Text('This action cannot be undone. This will permanently delete your account and remove your data from our servers.'),
+                actions: [
+                  FButton(style: FButtonStyle.outline(), onPress: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                  FButton(onPress: () => Navigator.of(context).pop(), child: const Text('Continue')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Vertical Layout
+
+We recommend using the vertical layout on mobile devices.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='dialog' query={{vertical: "true"}} height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart copy
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IntrinsicWidth(
+            child: FButton(
+              child: const Text('Show Dialog'),
+              onPress: () => showFDialog(
+                context: context,
+                builder: (context, style, animation) => FDialog(
+                  style: style,
+                  animation: animation,
+                  title: const Text('Are you absolutely sure?'),
+                  body: const Text('This action cannot be undone. This will permanently delete your account and remove your data from our servers.'),
+                  actions: [
+                    FButton(onPress: () => Navigator.of(context).pop(), child: const Text('Continue')),
+                    FButton(style: FButtonStyle.outline(), onPress: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+### Blurred Barrier
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='dialog' variant='blurred' height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart {7-12, 15} copy
+      Column(
+        children: [
+          IntrinsicWidth(
+            child: FButton(
+              child: const Text('Show Dialog'),
+              onPress: () => showFDialog(
+                routeStyle: context.theme.dialogRouteStyle.copyWith(
+                  barrierFilter: (animation) => ImageFilter.compose(
+                    outer: ImageFilter.blur(sigmaX: animation * 5, sigmaY: animation * 5),
+                    inner: ColorFilter.mode(context.theme.colors.barrier, BlendMode.srcOver),
+                  ),
+                ),
+                context: context,
+                builder: (context, style, animation) => FDialog(
+                  style: style,
+                  animation: animation,
+                  title: const Text('Are you absolutely sure?'),
+                  body: const Text('This action cannot be undone. This will permanently delete your account and remove your data from our servers.'),
+                  actions: [
+                    FButton(onPress: () => Navigator.of(context).pop(), child: const Text('Continue')),
+                    FButton(style: FButtonStyle.outline(), onPress: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/dialog library Widgets
+A modal dialog.
+
+See https://forui.dev/docs/overlay/dialog for working examples.
+
+Classes
+FDialog
+A modal dialog.
+FDialogContentStyle
+FDialog content's style.
+FDialogMotion
+Motion-related properties for FDialog.
+FDialogRoute<T>
+A route that shows a dialog popup.
+FDialogRouteMotion
+Motion-related properties for FDialogRoute.
+FDialogRouteStyle
+FDialogRoute's style.
+FDialogStyle
+FDialog's style.
+Extensions
+$FDialogContentStyleTransformations on FDialogContentStyle
+Provides copyWith and lerp methods.
+$FDialogMotionTransformations on FDialogMotion
+Provides copyWith and lerp methods.
+$FDialogRouteMotionTransformations on FDialogRouteMotion
+Provides copyWith and lerp methods.
+$FDialogRouteStyleTransformations on FDialogRouteStyle
+Provides copyWith and lerp methods.
+$FDialogStyleTransformations on FDialogStyle
+Provides copyWith and lerp methods.
+Functions
+showFDialog<T>({required BuildContext context, required Widget builder(BuildContext context, FDialogStyle style, Animation<double> animation), bool useRootNavigator = false, FDialogRouteStyle routeStyle(FDialogRouteStyle style)?, FDialogStyle style(FDialogStyle style)?, String? barrierLabel, bool barrierDismissible = true, RouteSettings? routeSettings, AnimationController? transitionAnimationController, Offset? anchorPoint, bool useSafeArea = false}) → Future<T?>
+Shows a dialog.
+
+
+
+------------------------------------------------------------
+
+
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Sheet
+
+A modal sheet is an alternative to a menu or a dialog and prevents the user from interacting with the rest of the app.
+It navigates to a new page each time.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.sheet/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+    A closely related widget is a [persistent sheet](/docs/overlay/persistent-sheet), which shows information that
+    supplements the primary content of the app without preventing the user from interacting with the app.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='modal-sheet' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class ModalSheet extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FButton(
+            child: const Text('Left'),
+            onPress: () => showFSheet(
+              context: context,
+              side: FLayout.ltr,
+              builder: (context) => const Form(side: FLayout.ltr),
+            ),
+          ),
+          const SizedBox(height: 5),
+          FButton(
+            child: const Text('Top'),
+            onPress: () => showFSheet(
+              context: context,
+              side: FLayout.ttb,
+              builder: (context) => const Form(side: FLayout.ttb),
+            ),
+          ),
+          const SizedBox(height: 5),
+          FButton(
+            child: const Text('Right'),
+            onPress: () => showFSheet(
+              context: context,
+              side: FLayout.rtl,
+              builder: (context) => const Form(side: FLayout.rtl),
+            ),
+          ),
+          const SizedBox(height: 5),
+          FButton(
+            child: const Text('Bottom'),
+            onPress: () => showFSheet(
+              context: context,
+              side: FLayout.btt,
+              builder: (context) => const Form(side: FLayout.btt),
+            ),
+          ),
+        ],
+      );
+    }
+
+    class Form extends StatelessWidget {
+      final FLayout side;
+
+      const Form({required this.side, super.key});
+
+      @override
+      Widget build(BuildContext context) => Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: context.theme.colors.background,
+          border: side.vertical
+              ? Border.symmetric(horizontal: BorderSide(color: context.theme.colors.border))
+              : Border.symmetric(vertical: BorderSide(color: context.theme.colors.border)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8.0),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Account',
+                  style: context.theme.typography.xl2.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.theme.colors.foreground,
+                    height: 1.5,
+                  ),
+                ),
+                Text(
+                  'Make changes to your account here. Click save when you are done.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: 450,
+                  child: Column(
+                    children: [
+                      const FTextField(
+                        label: Text('Name'),
+                        hint: 'John Renalo',
+                      ),
+                      const SizedBox(height: 10),
+                      const FTextField(
+                        label: Text('Email'),
+                        hint: 'john@doe.com',
+                      ),
+                      const SizedBox(height: 16),
+                      FButton(
+                        onPress: () => Navigator.of(context).pop(),
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create modal-sheet
+```
+
+## Usage
+
+### `showFSheet(...)`
+
+```dart copy
+showFSheet(
+  context: context,
+  style: FModalSheetStyle(...),
+  side: FLayout.ltr,
+  useRootNavigator: true,
+  useSafeArea: false,
+  mainAxisMaxRatio: null,
+  constraints: const BoxConstraints(maxWidth: 450, maxHeight: 450),
+  barrierDismissible: true,
+  draggable: true,
+  builder: (context) => const Placeholder(),
+  onClosing: () {},
+);
+```
+
+## Examples
+
+### Blurred Barrier
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='modal-sheet' variant='blurred' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {7-12} copy
+    class ModalSheet extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => Center(
+        child: FButton(
+          child: const Text('Open'),
+          onPress: () => showFSheet(
+            style: context.theme.modalSheetStyle.copyWith(
+              barrierFilter: (animation) => ImageFilter.compose(
+                outer: ImageFilter.blur(sigmaX: animation * 5, sigmaY: animation * 5),
+                inner: ColorFilter.mode(context.theme.colors.barrier, BlendMode.srcOver),
+              ),
+            ),
+            context: context,
+            side: FLayout.ltr,
+            builder: (context) => const Form(side: FLayout.ltr),
+          ),
+        ),
+      );
+    }
+
+    class Form extends StatelessWidget {
+      final FLayout side;
+
+      const Form({required this.side, super.key});
+
+      @override
+      Widget build(BuildContext context) => Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: context.theme.colors.background,
+          border: side.vertical
+              ? Border.symmetric(horizontal: BorderSide(color: context.theme.colors.border))
+              : Border.symmetric(vertical: BorderSide(color: context.theme.colors.border)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8.0),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Account',
+                  style: context.theme.typography.xl2.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.theme.colors.foreground,
+                    height: 1.5,
+                  ),
+                ),
+                Text(
+                  'Make changes to your account here. Click save when you are done.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: 450,
+                  child: Column(
+                    children: [
+                      const FTextField(
+                        label: Text('Name'),
+                        hint: 'John Renalo',
+                      ),
+                      const SizedBox(height: 10),
+                      const FTextField(
+                        label: Text('Email'),
+                        hint: 'john@doe.com',
+                      ),
+                      const SizedBox(height: 16),
+                      FButton(
+                        onPress: () => Navigator.of(context).pop(),
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### With `DraggableScrollableSheet`
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='modal-sheet' query={{}} height={400} variant='draggable'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FButton(
+      child: const Text('Click me'),
+      onPress: () => showFSheet(
+        context: context,
+        side: FLayout.btt,
+        mainAxisMaxRatio: null,
+        builder: (context) => DraggableScrollableSheet(
+          expand: false,
+          builder: (context, controller) => ScrollConfiguration(
+            // This is required to enable dragging on desktop.
+            // See https://github.com/flutter/flutter/issues/101903 for more information.
+            behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.trackpad,
+            }),
+            child: FTileGroup.builder(
+              count: 25,
+              scrollController: controller,
+              tileBuilder: (context, index) => FTile(title: Text('Tile $index')),
+            ),
+          ),
+        ),
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/sheet library Widgets
+A sheet is a panel that slides in from the edge of a screen.
+
+See:
+
+https://forui.dev/docs/overlay/sheet for working examples of a modal sheet.
+https://forui.dev/docs/overlay/persistent-sheet for working examples of a persistent sheet.
+Classes
+FModalSheetMotion
+The motion-related properties for a modal sheet.
+FModalSheetRoute<T>
+A route that represents a modal sheet. showFSheet should be preferred in most cases.
+FModalSheetStyle
+A modal sheet's style.
+FPersistentSheetController
+A sheet controller.
+FPersistentSheetMotion
+The motion-related properties for a persistent sheet.
+FPersistentSheetStyle
+A persistent sheet's style.
+FSheetMotion
+The motion-related properties for a sheet.
+FSheets
+Sheets that are displayed above its child. It is part of FScaffold, which should be preferred in most cases.
+FSheetStyle
+A sheet's style.
+Extensions
+$FModalSheetMotionTransformations on FModalSheetMotion
+Provides copyWith and lerp methods.
+$FModalSheetStyleTransformations on FModalSheetStyle
+Provides copyWith and lerp methods.
+$FPersistentSheetMotionTransformations on FPersistentSheetMotion
+Provides copyWith and lerp methods.
+$FPersistentSheetStyleTransformations on FPersistentSheetStyle
+Provides copyWith and lerp methods.
+Functions
+showFPersistentSheet({required BuildContext context, required FLayout side, required Widget builder(BuildContext context, FPersistentSheetController controller), FPersistentSheetStyle style(FPersistentSheetStyle)?, double? mainAxisMaxRatio = 9 / 16, BoxConstraints constraints = const BoxConstraints(), bool draggable = true, Offset? anchorPoint, bool useSafeArea = false, bool keepAliveOffstage = false, VoidCallback? onClosing, Key? key}) → FPersistentSheetController
+Shows a persistent sheet that appears above the current widget. It should have a FSheets or FScaffold ancestor.
+showFSheet<T>({required BuildContext context, required WidgetBuilder builder, required FLayout side, bool useRootNavigator = false, FModalSheetStyle style(FModalSheetStyle style)?, double? mainAxisMaxRatio = 9 / 16, String? barrierLabel, bool barrierDismissible = true, BoxConstraints constraints = const BoxConstraints(), bool draggable = true, RouteSettings? routeSettings, AnimationController? transitionAnimationController, Offset? anchorPoint, bool useSafeArea = false, VoidCallback? onClosing}) → Future<T?>
+Shows a modal sheet that appears from the given side.
+
+
+--------------------------------------------------------------------
+
+
+
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Persistent Sheet
+
+A persistent sheet is displayed above another widget while still allowing users to interact with the widget below.
+It is part of [FScaffold](/docs/layout/scaffold), which should be preferred in most cases.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.sheet/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+    A closely related widget is a [modal sheet](/docs/overlay/sheet) which prevents the user from interacting with the
+    rest of the app.
+</Callout>
+
+<Callout type="warning">
+    All calls to `showFPersistentSheet(...)` should be made inside widgets that have either `FScaffold` or `FSheets` as
+    their ancestor.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='persistent-sheet' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class Sheets extends StatefulWidget {
+      @override
+      State<Sheets> createState() => _State();
+    }
+
+    class _State extends State<Sheets> {
+      final Map<FLayout, FPersistentSheetController> _controllers = {};
+
+      @override
+      Widget build(BuildContext context) {
+        VoidCallback onPress(FLayout side) => () {
+          for (final MapEntry(:key, :value) in _controllers.entries) {
+            if (key != side && value.status.isCompleted) {
+              return;
+            }
+          }
+
+          var controller = _controllers[side];
+          if (controller == null) {
+            controller = _controllers[side] ??= showFPersistentSheet(
+              context: context,
+              side: FLayout.ltr,
+              builder: (context, controller) => Form(side: side),
+            );
+          } else {
+            controller.toggle();
+          }
+        };
+
+        return FScaffold( // This can be replaced with FSheets
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 5,
+            children: [
+              FButton(
+                onPress: onPress(FLayout.ltr),
+                child: const Text('Left'),
+              ),
+              FButton(
+                onPress: onPress(FLayout.ttb),
+                child: const Text('Top'),
+              ),
+              FButton(
+                onPress: onPress(FLayout.rtl),
+                child: const Text('Right'),
+              ),
+              FButton(
+                onPress: onPress(FLayout.btt),
+                child: const Text('Bottom'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      @override
+      void dispose() {
+        for (final controller in _controllers.values) {
+          controller.dispose();
+        }
+        super.dispose();
+      }
+    }
+
+    class Form extends StatelessWidget {
+      final FLayout side;
+
+      const Form({required this.side, super.key});
+
+      @override
+      Widget build(BuildContext context) => Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: context.theme.colors.background,
+          border: side.vertical
+              ? Border.symmetric(horizontal: BorderSide(color: context.theme.colors.border))
+              : Border.symmetric(vertical: BorderSide(color: context.theme.colors.border)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8.0),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Account',
+                  style: context.theme.typography.xl2.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.theme.colors.foreground,
+                    height: 1.5,
+                  ),
+                ),
+                Text(
+                  'Make changes to your account here. Click save when you are done.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: 450,
+                  child: Column(
+                    children: [
+                      const FTextField(
+                        label: Text('Name'),
+                        hint: 'John Renalo',
+                      ),
+                      const SizedBox(height: 10),
+                      const FTextField(
+                        label: Text('Email'),
+                        hint: 'john@doe.com',
+                      ),
+                      const SizedBox(height: 16),
+                      FButton(
+                        onPress: () => Navigator.of(context).pop(),
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create persistent-sheet
+```
+
+## Usage
+
+### `showFPersistentSheet(...)`
+
+```dart copy
+showFPersistentSheet(
+  context: context,
+  style: FPersistentSheetStyle(...),
+  side: FLayout.ltr,
+  useSafeArea: false,
+  keepAliveOffstage: true,
+  mainAxisMaxRatio: null,
+  constraints: const BoxConstraints(maxWidth: 450, maxHeight: 450),
+  draggable: true,
+  builder: (context, controller) => const Placeholder(),
+);
+```
+
+## Examples
+
+### With `KeepAliveOffstage`
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='persistent-sheet' query={{keepAliveOffstage: true}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {23} copy
+    class Sheets extends StatefulWidget {
+      @override
+      State<Sheets> createState() => _State();
+    }
+
+    class _State extends State<Sheets> {
+      final Map<FLayout, FPersistentSheetController> _controllers = {};
+
+      @override
+      Widget build(BuildContext context) {
+        VoidCallback onPress(FLayout side) => () {
+          for (final MapEntry(:key, :value) in _controllers.entries) {
+            if (key != side && value.status.isCompleted) {
+              return;
+            }
+          }
+
+          var controller = _controllers[side];
+          if (controller == null) {
+            controller = _controllers[side] ??= showFPersistentSheet(
+              context: context,
+              side: FLayout.ltr,
+              keepAliveOffstage: true,
+              builder: (context, controller) => Form(side: side),
+            );
+          } else {
+            controller.toggle();
+          }
+        };
+
+        return FScaffold( // This can be replaced with FSheets
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 5,
+            children: [
+              FButton(
+                onPress: onPress(FLayout.ltr),
+                child: const Text('Left'),
+              ),
+              FButton(
+                onPress: onPress(FLayout.ttb),
+                child: const Text('Top'),
+              ),
+              FButton(
+                onPress: onPress(FLayout.rtl),
+                child: const Text('Right'),
+              ),
+              FButton(
+                onPress: onPress(FLayout.btt),
+                child: const Text('Bottom'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      @override
+      void dispose() {
+        for (final controller in _controllers.values) {
+          controller.dispose();
+        }
+        super.dispose();
+      }
+    }
+
+    class Form extends StatelessWidget {
+      final FLayout side;
+
+      const Form({required this.side, super.key});
+
+      @override
+      Widget build(BuildContext context) => Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: context.theme.colors.background,
+          border: side.vertical
+              ? Border.symmetric(horizontal: BorderSide(color: context.theme.colors.border))
+              : Border.symmetric(vertical: BorderSide(color: context.theme.colors.border)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8.0),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Account',
+                  style: context.theme.typography.xl2.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.theme.colors.foreground,
+                    height: 1.5,
+                  ),
+                ),
+                Text(
+                  'Make changes to your account here. Click save when you are done.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: 450,
+                  child: Column(
+                    children: [
+                      const FTextField(
+                        label: Text('Name'),
+                        hint: 'John Renalo',
+                      ),
+                      const SizedBox(height: 10),
+                      const FTextField(
+                        label: Text('Email'),
+                        hint: 'john@doe.com',
+                      ),
+                      const SizedBox(height: 16),
+                      FButton(
+                        onPress: () => Navigator.of(context).pop(),
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### With `DraggableScrollableSheet`
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='persistent-sheet' query={{}} height={400} variant='draggable'/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class DraggableSheets extends StatefulWidget {
+      @override
+      State<DraggableSheets> createState() => _State();
+    }
+
+    class _State extends State<DraggableSheets> {
+      FPersistentSheetController? controller;
+
+      @override
+      Widget build(BuildContext context) => FScaffold(
+        child: FButton(
+          child: const Text('Click me'),
+          onPress: () {
+            if (controller != null) {
+              controller!.toggle();
+              return;
+            }
+
+            controller = showFPersistentSheet(
+              context: context,
+              side: FLayout.btt,
+              mainAxisMaxRatio: null,
+              builder: (context, _) => DraggableScrollableSheet(
+                expand: false,
+                builder: (context, controller) => ScrollConfiguration(
+                  // This is required to enable dragging on desktop.
+                  // See https://github.com/flutter/flutter/issues/101903 for more information.
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.trackpad,
+                    },
+                  ),
+                  child: FTileGroup.builder(
+                    count: 25,
+                    scrollController: controller,
+                    tileBuilder: (context, index) => FTile(title: Text('Tile $index')),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
+      @override
+      void dispose() {
+        controller?.dispose();
+        super.dispose();
+      }
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/sheet library Widgets
+A sheet is a panel that slides in from the edge of a screen.
+
+See:
+
+https://forui.dev/docs/overlay/sheet for working examples of a modal sheet.
+https://forui.dev/docs/overlay/persistent-sheet for working examples of a persistent sheet.
+Classes
+FModalSheetMotion
+The motion-related properties for a modal sheet.
+FModalSheetRoute<T>
+A route that represents a modal sheet. showFSheet should be preferred in most cases.
+FModalSheetStyle
+A modal sheet's style.
+FPersistentSheetController
+A sheet controller.
+FPersistentSheetMotion
+The motion-related properties for a persistent sheet.
+FPersistentSheetStyle
+A persistent sheet's style.
+FSheetMotion
+The motion-related properties for a sheet.
+FSheets
+Sheets that are displayed above its child. It is part of FScaffold, which should be preferred in most cases.
+FSheetStyle
+A sheet's style.
+Extensions
+$FModalSheetMotionTransformations on FModalSheetMotion
+Provides copyWith and lerp methods.
+$FModalSheetStyleTransformations on FModalSheetStyle
+Provides copyWith and lerp methods.
+$FPersistentSheetMotionTransformations on FPersistentSheetMotion
+Provides copyWith and lerp methods.
+$FPersistentSheetStyleTransformations on FPersistentSheetStyle
+Provides copyWith and lerp methods.
+Functions
+showFPersistentSheet({required BuildContext context, required FLayout side, required Widget builder(BuildContext context, FPersistentSheetController controller), FPersistentSheetStyle style(FPersistentSheetStyle)?, double? mainAxisMaxRatio = 9 / 16, BoxConstraints constraints = const BoxConstraints(), bool draggable = true, Offset? anchorPoint, bool useSafeArea = false, bool keepAliveOffstage = false, VoidCallback? onClosing, Key? key}) → FPersistentSheetController
+Shows a persistent sheet that appears above the current widget. It should have a FSheets or FScaffold ancestor.
+showFSheet<T>({required BuildContext context, required WidgetBuilder builder, required FLayout side, bool useRootNavigator = false, FModalSheetStyle style(FModalSheetStyle style)?, double? mainAxisMaxRatio = 9 / 16, String? barrierLabel, bool barrierDismissible = true, BoxConstraints constraints = const BoxConstraints(), bool draggable = true, RouteSettings? routeSettings, AnimationController? transitionAnimationController, Offset? anchorPoint, bool useSafeArea = false, VoidCallback? onClosing}) → Future<T?>
+Shows a modal sheet that appears from the given side.
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Popover
+
+A popover displays rich content in a portal that is aligned to a child.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.popover/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover' query={{alignment: 'topCenter'}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class _Popover extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FPopover(
+        controller: controller,
+        popoverAnchor: Alignment.bottomLeft,
+        childAnchor: Alignment.bottomRight,
+        popoverBuilder: (context, controller) => Padding(
+          padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+          child: SizedBox(
+            width: 288,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dimensions', style: context.theme.typography.base),
+                const SizedBox(height: 7),
+                Text(
+                  'Set the dimensions for the layer.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                for (final (label, value) in [
+                  ('Width', '100%'),
+                  ('Max. Width', '300px'),
+                  ('Height', '25px'),
+                  ('Max. Height', 'none'),
+                ]) ...[
+                  Row(
+                    children: [
+                      Expanded(child: Text(label, style: context.theme.typography.sm)),
+                      Expanded(flex: 2, child: FTextField(initialText: value)),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ],
+            ),
+          ),
+        ),
+        builder: (context, controller, child) => IntrinsicWidth(
+          child: FButton(style: FButtonStyle.outline(), onPress: controller.toggle, child: const Text('Open popover')),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create popover 
+```
+
+## Usage
+
+### `FPopover(...)`
+
+```dart copy
+FPopover(
+  controller: FPopoverController(vsync: this),
+  style: FPopoverStyle(...),
+  popoverAnchor: Alignment.topCenter,
+  childAnchor: Alignment.bottomCenter,
+  constraints: const FPortalConstraints(),
+  spacing: const FPortalSpacing(4),
+  shift: FPortalShift.flip,
+  offset: Offset.zero,
+  groupId: 'popover-group',
+  hideRegion: FPopoverHideRegion.excludeChild,
+  onTapHide: () {},
+  popoverBuilder: (context, controller) => const Placeholder(),
+  builder: (context, controller, child) => const Placeholder(),
+  child: const Placeholder(),
+);
+```
+
+## Examples
+
+### Horizontal Alignment
+
+You can change how the popover is aligned to the button.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover' query={{axis: 'horizontal'}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5-6} copy
+    class _Popover extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FPopover(
+        controller: controller,
+        popoverAnchor: Alignment.bottomLeft,
+        childAnchor: Alignment.bottomRight,
+        popoverBuilder: (context, controller) => Padding(
+          padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+          child: SizedBox(
+            width: 288,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dimensions', style: context.theme.typography.base),
+                const SizedBox(height: 7),
+                Text(
+                  'Set the dimensions for the layer.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                for (final (label, value) in [
+                  ('Width', '100%'),
+                  ('Max. Width', '300px'),
+                  ('Height', '25px'),
+                  ('Max. Height', 'none'),
+                ]) ...[
+                  Row(
+                    children: [
+                      Expanded(child: Text(label, style: context.theme.typography.sm)),
+                      Expanded(flex: 2, child: FTextField(initialText: value)),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ],
+            ),
+          ),
+        ),
+        builder: (context, controller, child) => IntrinsicWidth(
+          child: FButton(style: FButtonStyle.outline(), onPress: controller.toggle, child: const Text('Open popover')),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Tapping Outside Does Not Close Popover
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover' query={{alignment: 'topCenter', hideRegion: 'none'}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5} copy
+    class _Popover extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FPopover(
+        controller: controller,
+        hideRegion: FPopoverHideRegion.none,
+        popoverBuilder: (context, style) => Padding(
+          padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+          child: SizedBox(
+            width: 288,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dimensions', style: context.theme.typography.base),
+                const SizedBox(height: 7),
+                Text(
+                  'Set the dimensions for the layer.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                for (final (label, value) in [
+                  ('Width', '100%'),
+                  ('Max. Width', '300px'),
+                  ('Height', '25px'),
+                  ('Max. Height', 'none'),
+                ]) ...[
+                  Row(
+                    children: [
+                      Expanded(child: Text(label, style: context.theme.typography.sm)),
+                      Expanded(flex: 2, child: FTextField(initialText: value)),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ],
+            ),
+          ),
+        ),
+        builder: (context, controller, child) => IntrinsicWidth(
+          child: FButton(style: FButtonStyle.outline(), onPress: controller.toggle, child: const Text('Open popover')),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Blurred Barrier
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover' variant='blurred' height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {19-26} copy
+    class BlurredPopoverPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Layer Properties', style: context.theme.typography.xl.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              const FTextField(initialText: 'Header Component'),
+              const SizedBox(height: 16),
+              const FTextField(initialText: 'Navigation Bar'),
+              const SizedBox(height: 30),
+            ],
+          ),
+          FPopover(
+            style: context.theme.popoverStyle.copyWith(
+            barrierFilter: (animation) => ImageFilter.compose(
+              outer: ImageFilter.blur(sigmaX: animation * 5, sigmaY: animation * 5),
+              inner: ColorFilter.mode(
+                Color.lerp(Colors.transparent, Colors.black.withValues(alpha: 0.2), animation)!,
+                BlendMode.srcOver,
+              ),
+            ),
+            popoverAnchor: Alignment.topCenter,
+            childAnchor: Alignment.bottomCenter,
+            popoverBuilder: (context, controller) => Padding(
+              padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+              child: SizedBox(
+                width: 288,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Dimensions', style: context.theme.typography.base),
+                    const SizedBox(height: 7),
+                    Text(
+                      'Set the dimensions for the layer.',
+                      style: context.theme.typography.sm.copyWith(
+                        color: context.theme.colors.mutedForeground,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    for (final (label, value) in [
+                      ('Width', '100%'),
+                      ('Max. Width', '300px'),
+                      ('Height', '25px'),
+                      ('Max. Height', 'none'),
+                    ]) ...[
+                      Row(
+                        children: [
+                          Expanded(child: Text(label, style: context.theme.typography.sm)),
+                          Expanded(flex: 2, child: FTextField(initialText: value)),
+                        ],
+                      ),
+                      const SizedBox(height: 7),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            builder: (context, controller, child) => IntrinsicWidth(
+              child: FButton(style: FButtonStyle.outline(), onPress: controller.toggle, child: const Text('Open popover')),
+            ),
+          ),
+        ],
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+### Flip along Axis
+
+The popover can be flipped along the overflowing axis to stay within the viewport boundaries.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover' query={{alignment: 'bottomCenter', shift: 'flip'}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5} copy
+    class _Popover extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FPopover(
+        controller: controller,
+        shift: FPortalShift.flip,
+        popoverBuilder: (context, _) => Padding(
+          padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+          child: SizedBox(
+            width: 288,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dimensions', style: context.theme.typography.base),
+                const SizedBox(height: 7),
+                Text(
+                  'Set the dimensions for the layer.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                for (final (label, value) in [
+                  ('Width', '100%'),
+                  ('Max. Width', '300px'),
+                  ('Height', '25px'),
+                  ('Max. Height', 'none'),
+                ]) ...[
+                  Row(
+                    children: [
+                      Expanded(child: Text(label, style: context.theme.typography.sm)),
+                      Expanded(flex: 2, child: FTextField(initialText: value)),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ],
+            ),
+          ),
+        ),
+        builder: (context, controller, child) => FButton(
+          style: FButtonStyle.outline(),
+          mainAxisSize: MainAxisSize.min,
+          onPress: controller.toggle,
+          child: const Text('Open popover'),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### Shift along Axis
+
+The popover can be shifted along the overflowing axis to stay within the viewport boundaries.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover' query={{shift: 'along'}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5} copy
+    class _Popover extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FPopover(
+        controller: controller,
+        shift: FPortalShift.along,
+        popoverBuilder: (context, controller) => Padding(
+          padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+          child: SizedBox(
+            width: 288,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dimensions', style: context.theme.typography.base),
+                const SizedBox(height: 7),
+                Text(
+                  'Set the dimensions for the layer.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                for (final (label, value) in [
+                  ('Width', '100%'),
+                  ('Max. Width', '300px'),
+                  ('Height', '25px'),
+                  ('Max. Height', 'none'),
+                ]) ...[
+                  Row(
+                    children: [
+                      Expanded(child: Text(label, style: context.theme.typography.sm)),
+                      Expanded(flex: 2, child: FTextField(initialText: value)),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ],
+            ),
+          ),
+        ),
+        builder: (context, controller, child) => FButton(
+          style: FButtonStyle.outline(),
+          mainAxisSize: MainAxisSize.min,
+          onPress: controller.toggle,
+          child: const Text('Open popover'),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+### No Shifting
+
+The popover is not shifted to stay within the viewport boundaries, even if it overflows.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover' query={{shift: 'none'}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {5} copy
+    class _Popover extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FPopover(
+        controller: controller,
+        shift: FPortalShift.none,
+        popoverBuilder: (context, controller) => Padding(
+          padding: const EdgeInsets.only(left: 20, top: 14, right: 20, bottom: 10),
+          child: SizedBox(
+            width: 288,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Dimensions', style: context.theme.typography.base),
+                const SizedBox(height: 7),
+                Text(
+                  'Set the dimensions for the layer.',
+                  style: context.theme.typography.sm.copyWith(
+                    color: context.theme.colors.mutedForeground,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                for (final (label, value) in [
+                  ('Width', '100%'),
+                  ('Max. Width', '300px'),
+                  ('Height', '25px'),
+                  ('Max. Height', 'none'),
+                ]) ...[
+                  Row(
+                    children: [
+                      Expanded(child: Text(label, style: context.theme.typography.sm)),
+                      Expanded(flex: 2, child: FTextField(initialText: value)),
+                    ],
+                  ),
+                  const SizedBox(height: 7),
+                ],
+              ],
+            ),
+          ),
+        ),
+        builder: (context, controller, child) => FButton(
+          style: FButtonStyle.outline(),
+          mainAxisSize: MainAxisSize.min,
+          onPress: controller.toggle,
+          child: const Text('Open popover'),
+        ),
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+
+
+widgets/popover library Widgets
+A popover displays rich content in a portal that is aligned to a target.
+
+See https://forui.dev/docs/overlay/popover for working examples.
+
+Classes
+FPopover
+A popover displays rich content in a portal that is aligned to a child.
+FPopoverController
+A controller that controls whether a FPopover is shown or hidden.
+FPopoverMotion
+Motion-related properties for FPopover.
+FPopoverStyle
+A FPopover's style.
+Enums
+FPopoverHideRegion
+The regions that can be tapped to hide a popover.
+Extensions
+$FPopoverMotionTransformations on FPopoverMotion
+Provides copyWith and lerp methods.
+$FPopoverStyleTransformations on FPopoverStyle
+Provides copyWith and lerp methods.
+
+
+
+
+-----------------------------------------------------------
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Popover Menu
+
+A popover menu displays a menu in a portal aligned to a child.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.popover_menu/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover-menu' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class PopoverMenuPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FHeader(
+        title: const Text('Edit Notes'),
+        suffixes: [
+          FPopoverMenu(
+            menuAnchor: Alignment.topRight,
+            childAnchor: Alignment.bottomRight,
+            menu: [
+              FItemGroup(
+                children: [
+                  FItem(prefix: const Icon(FIcons.user), title: const Text('Personalization'), onPress: () {}),
+                  FItem(prefix: const Icon(FIcons.paperclip), title: const Text('Add attachments'), onPress: () {}),
+                  FItem(prefix: const Icon(FIcons.qrCode), title: const Text('Scan Document'), onPress: () {}),
+                ],
+              ),
+              FItemGroup(
+                children: [
+                  FItem(prefix: const Icon(FIcons.list), title: const Text('List View'), onPress: () {}),
+                  FItem(prefix: const Icon(FIcons.layoutGrid), title: const Text('Grid View'), onPress: () {}),
+                ],
+              ),
+            ],
+            builder: (context, controller, child) => FHeaderAction(icon: const Icon(FIcons.ellipsis), onPress: controller.toggle),
+          ),
+        ],
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create popover-menu 
+```
+
+## Usage
+
+### `FPopoverMenu(...)`
+
+```dart copy
+FPopoverMenu(
+  popoverController: FPopoverController(vsync: this),
+  scrollController: ScrollController(),
+  style: FPopoverMenuStyle(...),
+  cacheExtent: 100,
+  maxHeight: 200,
+  dragStartBehavior: DragStartBehavior.start,
+  menuAnchor: Alignment.topCenter,
+  childAnchor: Alignment.bottomCenter,
+  spacing: FPortalSpacing.zero,
+  shift: FPortalShift.flip,
+  offset: Offset.zero,
+  groupId: 'popover-menu-group',
+  hideRegion: FPopoverHideRegion.excludeChild,
+  onTapHide: () {},
+  traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+  menuBuilder: (context, controller, menu) => [FItemGroup(children: [])],
+  menu: [
+    FItemGroup(
+      children: [],
+    ),
+  ],
+  builder: (context, controller, child) => const Placeholder(),
+  child: const Placeholder(),
+);
+```
+
+### `FPopoverMenu.tiles(...)`
+
+```dart copy
+FPopoverMenu.tiles(
+  popoverController: FPopoverController(vsync: this),
+  scrollController: ScrollController(),
+  style: FPopoverMenuStyle(...),
+  cacheExtent: 100,
+  maxHeight: 200,
+  dragStartBehavior: DragStartBehavior.start,
+  menuAnchor: Alignment.topCenter,
+  childAnchor: Alignment.bottomCenter,
+  spacing: FPortalSpacing.zero,
+  shift: FPortalShift.flip,
+  offset: Offset.zero,
+  groupId: 'popover-menu-group',
+  hideRegion: FPopoverHideRegion.excludeChild,
+  traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+  menuBuilder: (context, controller, menu) => [FTileGroup(children: [])],
+  menu: [
+    FTileGroup(
+      children: [],
+    ),
+  ],
+  builder: (context, controller, child) => const Placeholder(),
+  child: const Placeholder(),
+);
+```
+
+## Examples
+
+### Tiles
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='popover-menu' variant='tiles' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {6} copy
+    class PopoverMenuPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FHeader(
+        title: const Text('Edit Notes'),
+        suffixes: [
+          FPopoverMenu.tiles(
+            menuAnchor: Alignment.topRight,
+            childAnchor: Alignment.bottomRight,
+            menu: [
+              FTileGroup(
+                children: [
+                  FTile(prefix: const Icon(FIcons.user), title: const Text('Personalization'), onPress: () {}),
+                  FTile(prefix: const Icon(FIcons.paperclip), title: const Text('Add attachments'), onPress: () {}),
+                  FTile(prefix: const Icon(FIcons.qrCode), title: const Text('Scan Document'), onPress: () {}),
+                ],
+              ),
+              FTileGroup(
+                children: [
+                  FTile(prefix: const Icon(FIcons.list), title: const Text('List View'), onPress: () {}),
+                  FTile(prefix: const Icon(FIcons.layoutGrid), title: const Text('Grid View'), onPress: () {}),
+                ],
+              ),
+            ],
+            builder: (context, controller, child) => FHeaderAction(icon: const Icon(FIcons.ellipsis), onPress: controller.toggle),
+          ),
+        ],
+      );
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+
+
+
+widgets/popover_menu library Widgets
+A popover menu displays a menu in a portal aligned to a child.
+
+See https://forui.dev/docs/overlay/popover-menu for working examples.
+
+Classes
+FPopoverMenu
+A popover menu displays a menu in a portal aligned to a child.
+FPopoverMenuStyle
+A FPopoverMenuStyle's style.
+Extensions
+$FPopoverMenuStyleTransformations on FPopoverMenuStyle
+Provides copyWith and lerp methods.
+
+
+-------------------------------------------------------------
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Tooltip
+
+A tooltip displays information related to a widget when focused, hovered over, or long pressed.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.tooltip/"/>
+</LinkBadgeGroup>
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='tooltip' height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FTooltip(
+      tipBuilder: (context, controller) => const Text('Add to library'),
+      child: FButton(
+        style: FButtonStyle.outline(),
+        mainAxisSize: MainAxisSize.min,
+        onPress: () {},
+        child: Text('Long press/Hover'),
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create tooltip 
+```
+
+## Usage
+
+### `FTooltip(...)`
+
+```dart copy
+FTooltip(
+  controller: _controller, // FTooltipController
+  style: FTooltipStyle(...),
+  hover: true,
+  longPress: true,
+  tipAnchor: Alignment.bottomCenter,
+  childAnchor: Alignment.topCenter,
+  shift: FPortalShift.flip,
+  tipBuilder: (context, controller) => const Text('Tooltip'),
+  builder: (context, controller, child) => const Text('Tooltip'),
+  child: const Placeholder(),
+);
+```
+
+## Examples
+
+### Horizontal Alignment
+
+You can change how the tooltip is aligned to the button.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='tooltip' query={{axis: 'horizontal'}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2-3} copy
+    FTooltip(
+      tipAnchor: Alignment.topLeft,
+      childAnchor: Alignment.topRight,
+      tipBuilder: (context, controller) => const Text('Add to library'),
+      child: FButton(
+        style: FButtonStyle.outline(),
+        mainAxisSize: MainAxisSize.min,
+        onPress: () {},
+        child: Text('Long press/Hover'),
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Long Press Only
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='tooltip' query={{hover: 'false'}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2-3} copy
+    FTooltip(
+      hover: false,
+      longPress: true,
+      tipBuilder: (context, controller) => const Text('Add to library'),
+      child: FButton(
+        style: FButtonStyle.outline(),
+        mainAxisSize: MainAxisSize.min,
+        onPress: () {},
+        child: Text('Long press'),
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+widgets/tooltip library Widgets
+A tooltip displays information related to an widget when focused, hovered over on desktop, and long pressed on Android and iOS.
+
+See https://forui.dev/docs/overlay/tooltip for working examples.
+
+Classes
+FTooltip
+A tooltip displays information related to a widget when focused, hovered over, or long pressed.
+FTooltipController
+A controller that controls whether a FTooltip is shown or hidden.
+FTooltipMotion
+Motion-related properties for FTooltip.
+FTooltipStyle
+A FTooltip's style.
+Extensions
+$FTooltipMotionTransformations on FTooltipMotion
+Provides copyWith and lerp methods.
+$FTooltipStyleTransformations on FTooltipStyle
+Provides copyWith and lerp methods.
+
+
+
+
+
+-------------------------------------------------------------------
+
+
+
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Toast
+
+An opinionated toast that temporarily displays a succinct message. 
+
+<Callout type="info">
+    To show a toast, use the `showFToast(...)` or `showRawFToast(...)` functions. The function must be called from a
+    widget that is a descendant of a `FToaster` or `FScaffold` widget.
+</Callout>
+
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.toast/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='toast' query={{}} height={500}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class ToastPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FToaster(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 5,
+            children: [
+              for (final (alignment, description) in [
+                (FToastAlignment.topLeft, 'Top Left'),
+                (FToastAlignment.topRight, 'Top Right'),
+                (FToastAlignment.bottomLeft, 'Bottom Left'),
+                (FToastAlignment.bottomRight, 'Bottom Right'),
+              ])
+                FButton(
+                  onPress: () => showFToast(
+                    context: context,
+                    alignment: alignment,
+                    title: const Text('Event has been created'),
+                    description: const Text('Friday, May 23, 2025 at 9:00 AM'),
+                    suffixBuilder: (context, entry, _) => IntrinsicHeight(
+                      child: FButton(
+                        style: context.theme.buttonStyles.primary.copyWith(
+                          contentStyle: context.theme.buttonStyles.primary.contentStyle.copyWith(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7.5),
+                            textStyle: FWidgetStateMap.all(
+                              context.theme.typography.xs.copyWith(color: context.theme.colors.primaryForeground),
+                            ),
+                          ),
+                        ),
+                        onPress: entry.dismiss,
+                        child: const Text('Undo'),
+                      ),
+                    ),
+                  ),
+                  child: Text('Show $description Toast'),
+                ),
+            ],
+          ),
+        )
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create toast
+```
+
+## Usage
+
+### `showFToast(...)`
+
+```dart copy
+showRawFToast(
+  context: context,
+  style: FToastStyle(...),
+  alignment: FToastAlignment.topRight,
+  swipeToDismiss: [AxisDirection.left, AxisDirection.down],
+  duration: const Duration(seconds: 10),
+  onDismiss: () {},
+  icon: const Icon(FIcons.triangleAlert),
+  title: const Text('Download Complete'),
+  description: const Text('Your file has been downloaded.'),
+  suffix: FButton(
+    onPress: () => entry.dismiss(),
+    child: const Text('Undo'),
+  ),
+  showDismissButton: true,
+  onDismiss: () {},
+);
+```
+
+### `showRawFToast(...)`
+
+```dart copy
+showRawFToast(
+  context: context,
+  style: FToastStyle(...),
+  alignment: FToastAlignment.topRight,
+  swipeToDismiss: [AxisDirection.left, AxisDirection.down],
+  duration: const Duration(seconds: 10),
+  onDismiss: () {},
+  builder: (context, entry) => FCard(
+    title: Text('Download Complete'),
+    subtitle: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 10,
+      children: [
+        Text('Your file has been downloaded.'),
+        FButton(
+          onPress: () => entry.dismiss(),
+          child: const Text('Dismiss'),
+        ),
+      ],
+    ),
+  ),
+);
+```
+
+## Examples
+
+### Appearance
+
+#### No Auto-Dismiss
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='toast' variant='no-auto-dismiss' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {9} copy
+    class NoAutoDismissToastPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FToaster(
+        child: Center(
+          child: FButton(
+            mainAxisSize: MainAxisSize.min,
+            onPress: () => showFToast(
+              context: context,
+              duration: null,
+              icon: const Icon(FIcons.triangleAlert),
+              title: const Text('Event start time cannot be earlier than 8am'),
+            ),
+            child: const Text('Show Toast'),
+          ),
+        ),
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Raw
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='toast' variant='raw' query={{}} height={620}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    class RawToastPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) {
+        final cardStyle = context.theme.cardStyle.copyWith(
+          contentStyle: context.theme.cardStyle.contentStyle.copyWith(
+            titleTextStyle: context.theme.typography.sm.copyWith(
+              color: context.theme.colors.primary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        );
+
+        return FToaster(
+          child: Center(
+            child: FButton(
+              mainAxisSize: MainAxisSize.min,
+              onPress: () => showRawFToast(
+                context: context,
+                duration: null,
+                builder: (context, toast) => FCard(
+                  style: cardStyle,
+                  title: const Text('Event has been created'),
+                  subtitle: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      'This is a more detailed description that provides comprehensive context and additional information '
+                      'about the notification, explaining what happened and what the user might expect next.',
+                    ),
+                  ),
+                  child: FButton(onPress: () => toast.dismiss(), child: const Text('undo')),
+                ),
+              ),
+              child: const Text('Show Toast'),
+            ),
+          )
+        );
+      }
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Behavior
+
+#### Always Expanded
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='toast' variant='behavior' query={{behavior: 'always'}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {4} copy
+    class ToastPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FScaffold(
+        toasterStyle: context.theme.toasterStyle.copyWith(expandBehavior: FToasterExpandBehavior.always),
+        child: Builder(
+          builder: (context) => Center(
+            child: FButton(
+              mainAxisSize: MainAxisSize.min,
+              onPress: () => showFToast(context: context, title: const Text('Event has been created')),
+              child: const Text('Show Toast'),
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Expansion Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='toast' variant='behavior' query={{behavior: 'disabled'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {4} copy
+    class ToastPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FScaffold(
+        toasterStyle: context.theme.toasterStyle.copyWith(expandBehavior: FToasterExpandBehavior.disabled),
+        child: Builder(
+          builder: (context) => Center(
+            child: FButton(
+              mainAxisSize: MainAxisSize.min,
+              onPress: () => showFToast(context: context, title: const Text('Event has been created')),
+              child: const Text('Show Toast'),
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Swipe to Dismiss
+
+By default, toasts are dismissible by horizontally swiping towards the closest edge of the screen.
+
+
+#### Down
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='toast' variant='swipe' query={{down: true}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {10} copy
+    class ToastPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FScaffold(
+        child: Builder(
+          builder: (context) => Center(
+            child: FButton(
+              mainAxisSize: MainAxisSize.min,
+              onPress: () => showFToast(
+                context: context,
+                swipeToDismiss: [AxisDirection.down],
+                title: const Text('Event has been created'),
+              ),
+              child: const Text('Show Toast'),
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+#### Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='toast' variant='swipe' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {11} copy
+    class ToastPage extends StatelessWidget {
+      @override
+      Widget build(BuildContext context) => FScaffold(
+        child: Builder(
+          builder: (context) => Center(
+            child: FButton(
+              mainAxisSize: MainAxisSize.min,
+              onPress: () => showFToast(
+                context: context,
+                swipeToDismiss: [],
+                title: const Text('Event has been created'),
+              ),
+              child: const Text('Show Toast'),
+            ),
+          ),
+        ),
+      );
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+
+
+widgets/toast library Widgets
+An opinionated toast that temporarily displays a succinct message.
+
+See https://forui.dev/docs/overlay/toast for working examples.
+
+Classes
+FToast
+A toast.
+FToaster
+An opinionated toast widget.
+FToasterMotion
+The motion-related properties for FToaster that affect all toasts.
+FToasterState
+A FToaster's state.
+FToasterStyle
+FToaster's style.
+FToastMotion
+The motion-related properties for FToaster that affect individual toasts.
+FToastStyle
+The toast's style.
+Enums
+FToastAlignment
+The toast's alignment.
+FToasterExpandBehavior
+A toaster's expansion behavior.
+Mixins
+FToasterEntry
+An entry in a toaster.
+Extensions
+$FToasterMotionTransformations on FToasterMotion
+Provides copyWith and lerp methods.
+$FToasterStyleTransformations on FToasterStyle
+Provides copyWith and lerp methods.
+$FToastMotionTransformations on FToastMotion
+Provides copyWith and lerp methods.
+$FToastStyleTransformations on FToastStyle
+Provides copyWith and lerp methods.
+Functions
+showFToast({required BuildContext context, required Widget title, FToastStyle style(FToastStyle style)?, Widget? icon, Widget? description, Widget suffixBuilder(BuildContext context, FToasterEntry entry)?, FToastAlignment? alignment, List<AxisDirection>? swipeToDismiss, Duration? duration = const Duration(seconds: 5), VoidCallback? onDismiss}) → FToasterEntry
+Displays a FToast in a toaster.
+showRawFToast({required BuildContext context, required Widget builder(BuildContext context, FToasterEntry entry), FToastStyle style(FToastStyle style)?, FToastAlignment? alignment, List<AxisDirection>? swipeToDismiss, Duration? duration = const Duration(seconds: 5), VoidCallback? onDismiss}) → FToasterEntry
+Displays a raw toast in a toaster.
+
+
+
+----------------------------------------------------------------

@@ -1,0 +1,1430 @@
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Accordion
+
+A vertically stacked set of interactive headings that reveal associated content sections when clicked. Each section can be expanded or collapsed independently.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.accordion/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='accordion' query={{controller: 'default'}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        Column(
+          children: [
+            FAccordion(
+              controller: FAccordionController(),
+              children: [
+                FAccordionItem(
+                  title: const Text('Production Information'),
+                  child: Text('''
+Our flagship product combines cutting-edge technology with sleek design. Built with premium materials, it offers unparalleled performance and reliability.
+
+Key features include advanced processing capabilities, and an intuitive user interface designed for both beginners and experts.
+                  '''),
+                ),
+                FAccordionItem(
+                  initiallyExpanded: true,
+                  title: const Text('Shipping Details'),
+                  child: Text('''
+We offer worldwide shipping through trusted courier partners. Standard delivery takes 3-5 business days, while express shipping ensures delivery within 1-2 business days.
+
+All orders are carefully packaged and fully insured. Track your shipment in real-time through our dedicated tracking portal.
+                  '''),
+                ),
+                FAccordionItem(
+                  title: const Text('Return Policy'),
+                  child: Text('''
+We stand behind our products with a comprehensive 30-day return policy. If you're not completely satisfied, simply return the item in its original condition.
+
+Our hassle-free return process includes free return shipping and full refunds processed within 48 hours of receiving the returned item.
+                  '''),
+                ),
+              ],
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create accordion 
+```
+
+## Usage
+
+### `FAccordion(...)`
+
+```dart copy
+FAccordion(
+  controller: FAccordionController(min: 1, max: 2),
+  style: FAccordionStyle(...),
+  children: [
+    FAccordionItem(
+      title: const Text('Is it accessible?'),
+      child: const Text('Yes. It follows WAI-ARIA design patterns.'),
+    ),
+  ],
+);
+```
+
+### With Multi-select Behaviour
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='accordion' query={{controller: 'max'}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {5} copy
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FAccordion(
+              controller: FAccordionController(),
+              children: [
+                FAccordionItem(
+                  title: const Text('Is it accessible?'),
+                  child: const Text('Yes. It follows WAI-ARIA design patterns.'),
+                ),
+                FAccordionItem(
+                  initiallyExpanded: true,
+                  title: const Text('Is it Styled?'),
+                  child: const Text('Yes. It includes default styles matching other components.'),
+                ),
+                FAccordionItem(
+                  title: const Text('Is it Animated?'),
+                  child: const Text('Yes. Animations are enabled by default but can be disabled.'),
+                ),
+              ],
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/accordion library Widgets
+A vertically stacked set of interactive headings that each reveal a section of content.
+
+See https://forui.dev/docs/data/accordion for working examples.
+
+Classes
+FAccordion
+A vertically stacked set of interactive headings, each revealing a section of content.
+FAccordionController
+A controller shows and hides items in an FAccordion.
+FAccordionItem
+An interactive heading that reveals a section of content.
+FAccordionMotion
+Motion-related properties for FAccordion.
+FAccordionStyle
+The FAccordion's style.
+Mixins
+FAccordionItemMixin
+A marker interface which denotes that mixed-in widgets can be used in a FAccordion.
+Extensions
+$FAccordionMotionTransformations on FAccordionMotion
+Provides copyWith and lerp methods.
+$FAccordionStyleTransformations on FAccordionStyle
+Provides copyWith and lerp methods.
+
+
+-------------------------------------------------------------------------
+
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Avatar
+
+A circular image component that displays user profile pictures with a fallback option. The Avatar component provides a consistent way to represent users in your application, displaying profile images with fallbacks to initials or icons when images are unavailable.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.avatar/"/>
+    <LinkBadge label="Source Code" href="https://github.com/forus-labs/forui/blob/main/lib/src/widgets/avatar/avatar.dart"/>
+</LinkBadgeGroup>
+
+## Overview
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+      <Widget name='avatar' variant='default' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart copy
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // With valid image
+          FAvatar(
+            image: const NetworkImage('https://raw.githubusercontent.com/forus-labs/forui/main/samples/assets/avatar.png'),
+            fallback: const Text('MN'),
+          ),
+          const SizedBox(width: 10),
+
+          // With invalid image and fallback
+          FAvatar(
+            image: const NetworkImage(''),
+            fallback: const Text('MN'),
+          ),
+          const SizedBox(width: 10),
+
+          // With invalid image without fallback
+          FAvatar(image: const NetworkImage('')),
+        ],
+      );
+      ```
+
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create avatar 
+```
+
+## Usage
+
+### Basic Usage
+
+Display a user's profile picture with a fallback to their initials.
+
+```dart copy
+FAvatar(
+  style: FAvatarStyle(...),
+  image: const NetworkImage('https://example.com/profile.jpg'),
+  fallback: const Text('JD'),
+);
+```
+
+### Custom Fallback
+
+Customize the fallback content that appears when the image fails to load.
+
+```dart copy
+FAvatar(
+  style: FAvatarStyle(...),
+  image: const NetworkImage('https://example.com/profile.jpg'),
+  fallback: Icon(FIcons.user, color: context.theme.colors.mutedForeground),
+);
+```
+
+### Raw Constructor
+
+Use the raw constructor for complete customization of the avatar content.
+
+```dart copy
+// Raw constructor with icon
+FAvatar.raw(
+  style: FAvatarStyle(...),
+  child: Icon(FIcons.baby, color: theme.colors.mutedForeground),
+);
+
+// Raw constructor with text
+FAvatar.raw(child: const Text('MN'));
+
+// Raw constructor with custom widget
+FAvatar.raw(
+  child: Container(
+    decoration: BoxDecoration(
+      color: theme.colors.primary,
+      shape: BoxShape.circle,
+    ),
+    child: const Icon(FIcons.star, color: Colors.white),
+  ),
+);
+```
+
+## Examples
+
+### Different Sizes
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='avatar' variant='sizes' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FAvatar(
+              size: 24,
+              image: const NetworkImage('https://example.com/small.jpg'),
+              fallback: const Text('S'),
+            ),
+            const SizedBox(width: 10),
+            FAvatar(
+              size: 32,
+              image: const NetworkImage('https://example.com/medium.jpg'),
+              fallback: const Text('M'),
+            ),
+            const SizedBox(width: 10),
+            FAvatar(
+              size: 48,
+              image: const NetworkImage('https://example.com/large.jpg'),
+              fallback: const Text('L'),
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Grouped Avatars
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='avatar' variant='group' query={{}}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        Stack(
+          children: [
+            FAvatar(
+              image: const NetworkImage('https://example.com/user1.jpg'),
+              fallback: const Text('U1'),
+            ),
+            Positioned(
+              left: 20,
+              child: FAvatar(
+                image: const NetworkImage('https://example.com/user2.jpg'),
+                fallback: const Text('U2'),
+              ),
+            ),
+            Positioned(
+              left: 40,
+              child: FAvatar(
+                image: const NetworkImage('https://example.com/user3.jpg'),
+                fallback: const Text('U3'),
+              ),
+            ),
+          ],
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/avatar library Widgets
+An image element with a fallback for representing the user.
+
+See https://forui.dev/docs/data/avatar for working examples.
+
+Classes
+FAvatar
+An image element with a fallback for representing the user.
+FAvatarStyle
+FAvatar's style.
+Extensions
+$FAvatarStyleTransformations on FAvatarStyle
+Provides copyWith and lerp methods.
+----------------------------------------------------------------
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Badge
+
+A badge draws attention to specific information, such as labels and counts. Use badges to display status, notifications, or small pieces of information that need to stand out.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.badge/"/>
+    <LinkBadge label="Source Code" href="https://github.com/forus-labs/forui/blob/main/lib/src/widgets/badge/badge.dart"/>
+</LinkBadgeGroup>
+
+## Overview
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+      <Widget name='badge' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart copy
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FBadge(child: const Text('New')),
+          const SizedBox(width: 8),
+          FBadge(
+            style: FBadgeStyle.secondary(),
+            child: const Text('3'),
+          ),
+        ],
+      );
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create badges 
+```
+
+## Usage
+
+### `FBadge(...)`
+
+```dart copy
+FBadge(
+  style: FBadgeStyle.primary(),
+  child: const Text('Badge'),
+);
+```
+
+### `FBadge.raw(...)`
+
+```dart copy
+FBadge.raw(
+  style: FBadgeStyle.primary(),
+  builder: (context, style) => Text('Badge'),
+);
+```
+
+## Examples
+
+### Primary
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+      <Widget name='badge' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart copy
+      FBadge(label: const Text('Badge'));
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+### Secondary
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+      <Widget name='badge' query={{style: 'secondary'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart {3} copy
+      FBadge(
+        label: const Text('Badge'),
+        style: FBadgeStyle.secondary(),
+      );
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+### Outline
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+      <Widget name='badge' query={{style: 'outline'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart {3} copy
+      FBadge(
+        label: const Text('Badge'),
+        style: FBadgeStyle.outline(),
+      );
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+### Destructive
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+      <Widget name='badge' query={{style: 'destructive'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart {3} copy
+      FBadge(
+        label: const Text('Badge'),
+        style: FBadgeStyle.destructive(),
+      );
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+
+widgets/badge library Widgets
+A badge. Badges are typically used to draw attention to specific information, such as labels and counts.
+
+See https://forui.dev/docs/data/badge for working examples.
+
+Classes
+FBadge
+A badge. Badges are typically used to draw attention to specific information, such as labels and counts.
+FBadgeContentStyle
+FBadge content's style.
+FBadgeStyle
+A FBadge's style.
+FBadgeStyles
+The FBadgeStyles.
+FBaseBadgeStyle
+A FBadge's style.
+Extensions
+$FBadgeContentStyleTransformations on FBadgeContentStyle
+Provides copyWith and lerp methods.
+$FBadgeStylesTransformations on FBadgeStyles
+Provides copyWith and lerp methods.
+$FBadgeStyleTransformations on FBadgeStyle
+Provides copyWith and lerp methods.
+
+
+----------------------------------------------------------------
+
+import { Callout, Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Calendar
+
+A calendar component for selecting and editing dates.
+
+The calendar supports swipe gestures on mobile platforms, allowing users to navigate between pages by swiping left or right.
+
+A [`FCalendarController`](https://pub.dev/documentation/forui/latest/forui.widgets.calendar/FCalendarController-class.html)
+controls the date selection behavior, including single date, multiple dates, and date range selection.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.calendar/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+    `FCalendar` and all `FCalendarController`s return `DateTime`s in UTC timezone, truncated to the nearest day.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='calendar' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FCalendar(
+          controller: FCalendarController.date(initialSelection: selected),
+          start: DateTime(2000),
+          end: DateTime(2030),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create calendar 
+```
+
+## Usage
+
+### `FCalendar(...)`
+
+```dart copy
+FCalendar(
+  controller: FCalendarController.date(
+    initialSelection: DateTime(2024, 9, 13),
+    selectable: (date) => allowedDates.contains(date),
+  ),
+  style: FCalendarStyle(...),
+  dayBuilder: (context, data, child) => child!,
+  start: DateTime(2024),
+  end: DateTime(2030),
+  today: DateTime(2024, 7, 14),
+  initialType: FCalendarPickerType.yearMonth,
+  initialMonth: DateTime(2024, 9),
+  onMonthChange: (date) => print(date),
+  onPress: (date) => print(date),
+  onLongPress: (date) => print(date),
+);
+```
+
+## Examples
+
+### Single Date
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='calendar' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {2} copy
+        FCalendar(
+          controller: FCalendarController.date(),
+          start: DateTime(2000),
+          end: DateTime(2030),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Multiple Dates with Initial Selections
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='calendar' variant='dates' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {2-4} copy
+        FCalendar(
+          controller: FCalendarController.dates(
+            initialSelections: {DateTime(2024, 7, 17), DateTime(2024, 7, 20)},
+          ),
+          start: DateTime(2000),
+          today: DateTime(2024, 7, 15),
+          end: DateTime(2030),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Unselectable Dates
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='calendar' variant='unselectable' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+      ```dart {4} copy
+      FCalendar(
+        controller: FCalendarController.dates(
+          initialSelections: {DateTime(2024, 7, 17), DateTime(2024, 7, 20)},
+          selectable: (date) => !{DateTime(2024, 7, 18), DateTime(2024, 7, 19)}.contains(date),
+        ),
+        start: DateTime(2000),
+        today: DateTime(2024, 7, 15),
+        end: DateTime(2030),
+      );
+      ```
+    </Tabs.Tab>
+</Tabs>
+
+### Range Selection with Initial Range
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='calendar' variant='range' query={{}} height={500}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart {2-4} copy
+        FCalendar(
+          controller: FCalendarController.range(
+            initialSelection: (DateTime(2024, 7, 17), DateTime(2024, 7, 20)),
+          ),
+          start: DateTime(2000),
+          today: DateTime(2024, 7, 15),
+          end: DateTime(2030),
+        );
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+
+
+
+widgets/calendar library Widgets
+A calendar.
+
+See https://forui.dev/docs/calendar for working examples.
+
+Classes
+FCalendar
+A calendar.
+FCalendarController<T>
+A controller that controls date selection in a calendar.
+FCalendarDayPickerStyle
+A day picker's style.
+FCalendarEntryStyle
+A calendar entry's style.
+FCalendarHeaderStyle
+The calendar header's style.
+FCalendarStyle
+The calendar's style.
+Enums
+FCalendarPickerType
+The current picker type.
+Extensions
+$FCalendarDayPickerStyleTransformations on FCalendarDayPickerStyle
+Provides copyWith and lerp methods.
+$FCalendarEntryStyleTransformations on FCalendarEntryStyle
+Provides copyWith and lerp methods.
+$FCalendarHeaderStyleTransformations on FCalendarHeaderStyle
+Provides copyWith and lerp methods.
+$FCalendarStyleTransformations on FCalendarStyle
+Provides copyWith and lerp methods.
+Typedefs
+FCalendarDayData = ({bool current, DateTime date, bool selectable, bool selected, FCalendarDayPickerStyle style, bool today})
+A calendar day's data.
+
+
+
+----------------------------------------------------------------------
+
+
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Card
+
+A flexible container component that displays content with an optional title, subtitle, and child widget. Cards are commonly used to group related information and actions.
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.card/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+      <Widget name='card' query={{}}  height={400}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+      ```dart copy
+      FCard(
+        image: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(path('avatar.png')),
+              fit: BoxFit.cover,
+            ),
+          ),
+          height: 200,
+        ),
+        title: const Text('Gratitude'),
+        subtitle: const Text('Being thankful and showing appreciation for kindness.'),
+      );
+      ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create card 
+```
+
+## Usage
+
+### `FCard(...)`
+
+```dart copy
+FCard(
+  style: FCardStyle(...),
+  title: const Text('Notification'),
+  subtitle: const Text('You have 3 unread messages.'),
+  child: FButton(child: const Text('Read messages'), onPress: () {}),
+);
+```
+
+### `FCard.raw(...)`
+
+```dart copy
+FCard.raw(
+  style: FCardStyle(...),
+  child: const Placeholder(),
+);
+```
+
+
+
+widgets/card library Widgets
+A card.
+
+See https://forui.dev/docs/data/card for working examples.
+
+Classes
+FCard
+A card.
+FCardContentStyle
+FCard content's style.
+FCardStyle
+FCard's style.
+Extensions
+$FCardContentStyleTransformations on FCardContentStyle
+Provides copyWith and lerp methods.
+$FCardStyleTransformations on FCardStyle
+Provides copyWith and lerp methods.
+
+
+
+
+----------------------------------------------------------------
+
+
+import {Callout} from "nextra/components";
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Item
+
+An item is typically used to group related information together.
+
+<Callout type="info">
+    This widget is typically used to create more complex widgets rather than being used directly.
+</Callout>
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.item/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item' variant='default' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FItem(
+      prefix: Icon(FIcons.user),
+      title: const Text('Personalization'),
+      suffix: Icon(FIcons.chevronRight),
+      onPress: () { },
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create item
+```
+
+## Usage
+
+### `FItem(...)`
+
+```dart copy
+FItem(
+  style: FFItemStyle(...),
+  prefix: Icon(FIcons.user),
+  title: const Text('Title'),
+  subtitle: const Text('Subtitle'),
+  details: const Text('Details'),
+  suffix: Icon(FIcons.chevronRight),
+  semanticsLabel: 'Label',
+  enabled: true,
+  selected: false,
+  onFocusChange: (focused) {},
+  onHoverChange: (hovered) {},
+  onStateChange: (delta) {},
+  onPress: () {},
+  onLongPress: () {},
+  shortcuts: { SingleActivator(LogicalKeyboardKey.enter): ActivateIntent() },
+  actions: { ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {}) },
+);
+```
+
+### `FItem.raw(...)`
+
+```dart copy
+FItem.raw(
+  style: FItemStyle(...),
+  prefix: Icon(FIcons.user),
+  child: const Text('Title'),
+  semanticsLabel: 'Label',
+  enabled: true,
+  selected: false,
+  onFocusChange: (focused) {},
+  onHoverChange: (hovered) {},
+  onStateChange: (delta) {},
+  onPress: () {},
+  onLongPress: () {},
+  shortcuts: { SingleActivator(LogicalKeyboardKey.enter): ActivateIntent() },
+  actions: { ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {}) },
+);
+```
+
+## Examples
+
+### Untappable
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item' variant='default' query={{tappable: false}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FItem(
+      prefix: Icon(FIcons.user),
+      title: const Text('Personalization'),
+      suffix: Icon(FIcons.chevronRight),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Disabled
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item' variant='default' query={{enabled: false}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FItem(
+      enabled: false,
+      prefix: Icon(FIcons.user),
+      title: const Text('Personalization'),
+      suffix: Icon(FIcons.chevronRight),
+      onPress: () { },
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### With Subtitle
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item' variant='subtitle' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {4} copy
+    FItem(
+      prefix: Icon(FIcons.bell),
+      title: const Text('Notifications'),
+      subtitle: const Text('Banners, Sounds, Badges'),
+      suffix: Icon(FIcons.chevronRight),
+      onPress: () {},
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### With Details
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item' variant='details' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {4} copy
+    FItem(
+      prefix: Icon(FIcons.wifi),
+      title: const Text('WiFi'),
+      details: const Text('Forus Labs (5G)'),
+      suffix: Icon(FIcons.chevronRight),
+      onPress: () {},
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+
+
+
+widgets/item library Widgets
+An item that is typically used to group related information together.
+
+See https://forui.dev/docs/data/item for working examples.
+
+Classes
+FInheritedItemData
+An FInheritedItemData is used to provide data about the item's position in the current nesting level, i.e. FTileGroup.
+FItem
+An item that is typically used to group related information together.
+FItemContentStyle
+An FItem content's style.
+FItemData
+The item's data.
+FItemGroup
+An item group that groups multiple FItemMixins together.
+FItemGroupStyle
+An FItemGroup's style.
+FItemGroupStyleData
+An inherited widget that provides the FItemGroupStyle to its descendants.
+FItemStyle
+A FItem's style.
+FRawItemContentStyle
+An FItem raw content's style.
+Enums
+FItemDivider
+The divider between items in a group.
+Mixins
+FItemGroupMixin
+A marker interface which denotes that mixed-in widgets can group items and be used in a FItemGroup.merge.
+FItemMixin
+A marker interface which denotes that mixed-in widgets is an item.
+Extensions
+$FItemContentStyleTransformations on FItemContentStyle
+Provides copyWith and lerp methods.
+$FItemGroupStyleTransformations on FItemGroupStyle
+Provides copyWith and lerp methods.
+$FItemStyleTransformations on FItemStyle
+Provides copyWith and lerp methods.
+$FRawItemContentStyleTransformations on FRawItemContentStyle
+Provides copyWith and lerp methods.
+
+
+
+
+
+-------------------------------------------------------------------
+
+import {Callout} from "nextra/components";
+import { Tabs } from 'nextra/components';
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Item Group
+
+An item group that typically groups related information together.
+
+<Callout type="info">
+    This widget is typically used to create more complex widgets rather than being used directly.
+</Callout>
+
+<LinkBadgeGroup>
+    <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.item/"/>
+</LinkBadgeGroup>
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item-group' variant='default' query={{}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FItemGroup(
+      children: [
+        FItem(
+          prefix: Icon(FIcons.user),
+          title: const Text('Personalization'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+        FItem(
+          prefix: Icon(FIcons.wifi),
+          title: const Text('WiFi'),
+          details: const Text('Forus Labs (5G)'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create item-group
+```
+
+## Usage
+
+### `FItemGroup(...)`
+
+```dart copy
+FItemGroup(
+  scrollController: ScrollController(),
+  style: FItemGroupStyle(...),
+  cacheExtent: 100,
+  maxHeight: 200,
+  dragStartBehavior: DragStartBehavior.start,
+  physics: const ClampingScrollPhysics(),
+  semanticsLabel: 'Settings',
+  divider: FItemDivider.indented,
+  children: [
+    FItem(title: const Text('Item'),
+  ],
+);
+```
+
+### `FItemGroup.builder(...)`
+
+```dart copy
+FItemGroup.builder(
+  scrollController: ScrollController(),
+  style: FItemGroupStyle(...),
+  cacheExtent: 100,
+  maxHeight: 200,
+  dragStartBehavior: DragStartBehavior.start,
+  physics: const ClampingScrollPhysics(),
+  semanticsLabel: 'Settings',
+  divider: FItemDivider.indented,
+  itemBuilder: (context, index) => index < 10 ? FItem(title: Text('Item $index')) : null,
+  count: 100,
+);
+```
+
+### `FItemGroup.merge(...)`
+
+```dart copy
+FItemGroup.merge(
+  scrollController: ScrollController(),
+  cacheExtent: 100,
+  maxHeight: 200,
+  dragStartBehavior: DragStartBehavior.start,
+  physics: const ClampingScrollPhysics(),
+  semanticsLabel: 'Settings',
+  divider: FItemDivider.indented,
+  children: [
+    FItemGroup(
+      children: [],
+    )
+  ],
+);
+```
+
+## Examples
+
+### Behavior
+
+#### Scrollable
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item-group' variant='scrollable' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FItemGroup(
+      maxHeight: 150,
+      children: [
+        FItem(
+          prefix: Icon(FIcons.user),
+          title: const Text('Personalization'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+        FItem(
+          prefix: Icon(FIcons.mail),
+          title: const Text('Mail'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+        FItem(
+          prefix: Icon(FIcons.wifi),
+          title: const Text('WiFi'),
+          details: const Text('Forus Labs (5G)'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+        FItem(
+          prefix: Icon(FIcons.alarmClock),
+          title: const Text('Alarm Clock'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+        FItem(
+          prefix: Icon(FIcons.qrCode),
+          title: const Text('QR code'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Lazy Scrollable
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item-group' variant='lazy' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FItemGroup.builder(
+      maxHeight: 200,
+      count: 200,
+      itemBuilder: (context, index) => FItem(
+        title: Text('Item $index'),
+        suffix: Icon(FIcons.chevronRight),
+        onPress: () {},
+      ),
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Merge Multiple Groups
+
+This function merges multiple `FItemGroupMixin`s into a single group. It is useful for representing a group with
+several sections.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item-group' variant='merge' query={{}} height={300}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart copy
+    FItemGroup.merge(
+      children: [
+        FItemGroup(
+          children: [
+            FItem(
+              prefix: Icon(FIcons.user),
+              title: const Text('Personalization'),
+              suffix: Icon(FIcons.chevronRight),
+              onPress: () {},
+            ),
+            FItem(
+              prefix: Icon(FIcons.wifi),
+              title: const Text('WiFi'),
+              details: const Text('Forus Labs (5G)'),
+              suffix: Icon(FIcons.chevronRight),
+              onPress: () {},
+            ),
+          ],
+        ),
+        FItemGroup(
+          children: [
+            FItem(
+              prefix: const Icon(FIcons.list),
+              title: const Text('List View'),
+              suffix: const Icon(FIcons.chevronRight),
+              onPress: () {},
+            ),
+            FItem(
+              prefix: const Icon(FIcons.grid2x2),
+              title: const Text('Grid View'),
+              suffix: const Icon(FIcons.chevronRight),
+              onPress: () {},
+            ),
+          ],
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Appearance
+
+#### Full Divider
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item-group' variant='default' query={{divider: 'full'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart {2} copy
+    FItemGroup(
+      divider: FItemDivider.full,
+      children: [
+        FItem(
+          prefix: Icon(FIcons.user),
+          title: const Text('Personalization'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+        FItem(
+          prefix: Icon(FIcons.wifi),
+          title: const Text('WiFi'),
+          details: const Text('Forus Labs (5G)'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Indented Divider
+
+<Tabs items={['Preview', 'Code']}>
+  <Tabs.Tab>
+    <Widget name='item-group' variant='default' query={{divider: 'indented'}}/>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```dart 23} copy
+    FItemGroup(
+      divider: FItemDivider.indented,
+      children: [
+        FItem(
+          prefix: Icon(FIcons.user),
+          title: const Text('Personalization'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+        FItem(
+          prefix: Icon(FIcons.wifi),
+          title: const Text('WiFi'),
+          details: const Text('Forus Labs (5G)'),
+          suffix: Icon(FIcons.chevronRight),
+          onPress: () {},
+        ),
+      ],
+    );
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+
+
+widgets/item library Widgets
+An item that is typically used to group related information together.
+
+See https://forui.dev/docs/data/item for working examples.
+
+Classes
+FInheritedItemData
+An FInheritedItemData is used to provide data about the item's position in the current nesting level, i.e. FTileGroup.
+FItem
+An item that is typically used to group related information together.
+FItemContentStyle
+An FItem content's style.
+FItemData
+The item's data.
+FItemGroup
+An item group that groups multiple FItemMixins together.
+FItemGroupStyle
+An FItemGroup's style.
+FItemGroupStyleData
+An inherited widget that provides the FItemGroupStyle to its descendants.
+FItemStyle
+A FItem's style.
+FRawItemContentStyle
+An FItem raw content's style.
+Enums
+FItemDivider
+The divider between items in a group.
+Mixins
+FItemGroupMixin
+A marker interface which denotes that mixed-in widgets can group items and be used in a FItemGroup.merge.
+FItemMixin
+A marker interface which denotes that mixed-in widgets is an item.
+Extensions
+$FItemContentStyleTransformations on FItemContentStyle
+Provides copyWith and lerp methods.
+$FItemGroupStyleTransformations on FItemGroupStyle
+Provides copyWith and lerp methods.
+$FItemStyleTransformations on FItemStyle
+Provides copyWith and lerp methods.
+$FRawItemContentStyleTransformations on FRawItemContentStyle
+Provides copyWith and lerp methods.
+
+-----------------------------------------------------------------
+
+import { Tabs } from 'nextra/components';
+import { Callout } from "nextra/components";
+import { Widget } from '@/components/demo/widget.tsx';
+import LinkBadge from '@/components/ui/link-badge/link-badge.tsx';
+import LinkBadgeGroup from '@/components/ui/link-badge/link-badge-group.tsx';
+
+# Line Calendar
+
+A compact calendar component that displays dates in a horizontally scrollable line, ideal for date selection in limited space.
+
+<LinkBadgeGroup>
+  <LinkBadge label="API Reference" href="https://pub.dev/documentation/forui/latest/forui.widgets.line_calendar/"/>
+</LinkBadgeGroup>
+
+<Callout type="info">
+  Hold `Shift` while scrolling to navigate through dates on desktop and web.
+</Callout>
+
+<Tabs items={['Preview', 'Code']}>
+    <Tabs.Tab>
+        <Widget name='line-calendar' query={{}} height={200}/>
+    </Tabs.Tab>
+    <Tabs.Tab>
+        ```dart copy
+        FLineCalendar(initialSelection: DateTime.now().subtract(const Duration(days: 1)));
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+## CLI
+
+To generate and customize this style:
+
+```shell copy
+dart run forui style create line-calendar 
+```
+
+## Usage
+
+### `FLineCalendar(...)`
+
+```dart copy
+FLineCalendar(
+  controller: FCalendarController.date(),
+  style: FLineCalendarStyle(...),
+  initialScrollAlignment: AlignmentDirectional.center,
+  physics: const AlwaysScrollableScrollPhysics(),
+  cacheExtent: 100,
+  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+  builder: (context, data, child) => child!,
+  onChange: (date) => print('Selected date: $date'),
+  toggleable: true,
+  start: DateTime(1900),
+  end: DateTime(2050),
+  initialScroll: DateTime.now(),
+  initialSelection: DateTime.now(),
+  today: DateTime.now(),
+);
+```
+
+widgets/line_calendar library Widgets
+A line calendar displays dates in a single horizontal, scrollable line.
+
+See https://forui.dev/docs/data/line-calendar for working examples.
+
+Classes
+FLineCalendar
+A line calendar displays dates in a single horizontal, scrollable line.
+FLineCalendarStyle
+FLineCalendar's style.
+Extensions
+$FLineCalendarStyleTransformations on FLineCalendarStyle
+Provides copyWith and lerp methods.
+Typedefs
+FLineCalendarItemData = ({DateTime date, Set<WidgetState> states, FLineCalendarStyle style, bool today})
+The state of a line calendar item used to build a line calendar item.
+
+------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
