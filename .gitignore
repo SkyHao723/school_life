@@ -43,3 +43,34 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Additional custom ignore patterns
+# Add any files or folders you want to exclude from git tracking
+
+# Ignore personal configuration files
+config.local
+.env
+*.env.local
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore logs directory
+/logs/
+*.log
+
+# Ignore build outputs
+/dist/
+/out/
+/build/
+
+# Ignore IDE specific files
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

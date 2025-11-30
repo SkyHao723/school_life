@@ -17,13 +17,16 @@ class PostScreen extends StatefulWidget {
   State<PostScreen> createState() => _PostScreenState();
 }
 
-class _PostScreenState extends State<PostScreen> {
+class _PostScreenState extends State<PostScreen> with SingleTickerProviderStateMixin {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   List<String> _selectedTags = [];
   bool _isAnonymous = false;
   List<XFile> _selectedImages = [];
   bool _isLoading = false;
+  
+  // 添加控制器
+  late final _tagController = FMultiSelectController<String>(vsync: this);
 
   // 标签选项
   final List<String> _availableTags = ['吐槽', '安利', '提问'];
@@ -35,6 +38,7 @@ class _PostScreenState extends State<PostScreen> {
   void dispose() {
     _titleController.dispose();
     _contentController.dispose();
+    _tagController.dispose(); // 释放控制器
     super.dispose();
   }
 
@@ -125,6 +129,14 @@ class _PostScreenState extends State<PostScreen> {
     return uploadedUrls;
   }
 
+  // 验证标签选择
+  String? _validateTags(Set<String> tags) {
+    if (tags.isEmpty) {
+      return '请选择至少一个标签';
+    }
+    return null;
+  }
+
   Future<void> _submitPost() async {
     // 检查必填字段
     if (_titleController.text.trim().isEmpty) {
@@ -155,13 +167,14 @@ class _PostScreenState extends State<PostScreen> {
       return;
     }
 
-    if (_selectedTags.isEmpty) {
+    // 验证标签
+    if (_validateTags(_tagController.value) != null) {
       if (mounted) {
         // 显示Toast提示
         showFToast(
           context: context,
           icon: const Icon(FIcons.circleX),
-          title: const Text('请选择至少一个标签'),
+          title: Text(_validateTags(_tagController.value)!),
           alignment: FToastAlignment.topCenter,
           duration: const Duration(seconds: 3),
         );
@@ -215,7 +228,7 @@ class _PostScreenState extends State<PostScreen> {
         userId: currentUser.id,
         title: _titleController.text.trim(),
         content: _contentController.text.trim(),
-        tags: List<String>.from(_selectedTags), // 创建副本以防修改
+        tags: _tagController.value.toList(), // 使用控制器的值
         isAnonymous: _isAnonymous,
         imagePaths: imageUrls.where((url) => url != null).cast<String>().toList(),
         createdAt: DateTime.now(),
@@ -389,28 +402,33 @@ class _PostScreenState extends State<PostScreen> {
                     const SizedBox(height: 16),
                     
                     // 标签选择
-                    const Text('标签', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      children: _availableTags.map((tag) {
-                        final bool isSelected = _selectedTags.contains(tag);
-                        return FButton(
-                          style: isSelected 
-                              ? FButtonStyle.primary() 
-                              : FButtonStyle.secondary(),
-                          onPress: () {
-                            setState(() {
-                              if (isSelected) {
-                                _selectedTags.remove(tag);
-                              } else {
-                                _selectedTags.add(tag);
-                              }
-                            });
-                          },
-                          child: Text(tag, style: const TextStyle(fontSize: 14)),
-                        );
-                      }).toList(),
+                    FMultiSelect<String>.rich(
+                      controller: _tagController,
+                      label: const Text('标签'),
+                      description: const Text('请选择帖子标签'),
+                      hint: const Text('选择标签'),
+                      format: (s) => Text(s),
+                      validator: _validateTags,
+                      children: [
+                        FSelectItem(
+                          prefix: const Icon(FIcons.messageCircleX),
+                          title: const Text('吐槽'),
+                          subtitle: const Text('分享你的不满和抱怨'),
+                          value: '吐槽',
+                        ),
+                        FSelectItem(
+                          prefix: const Icon(FIcons.heart),
+                          title: const Text('安利'),
+                          subtitle: const Text('推荐你觉得好的东西'),
+                          value: '安利',
+                        ),
+                        FSelectItem(
+                          prefix: const Icon(FIcons.messageCircleQuestionMark),
+                          title: const Text('提问'),
+                          subtitle: const Text('提出你的疑问和困惑'),
+                          value: '提问',
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     

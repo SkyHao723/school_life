@@ -10,7 +10,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = AuthService();
-    final user = authService.currentUserValue;
+    final user = authService.currentUser;
     
     return FScaffold(
       child: SafeArea(
@@ -95,7 +95,7 @@ class SettingsScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => 
-                                      const StudentVerificationScreen(),
+                                      StudentVerificationScreen(), // 修复：移除const
                                 ),
                               );
                             },

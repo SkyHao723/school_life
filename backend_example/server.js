@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const csv = require('csv-parser'); // 添加CSV解析库
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,6 +32,8 @@ const db = new sqlite3.Database('./users.db', (err) => {
       password TEXT NOT NULL,
       username TEXT,
       is_student BOOLEAN DEFAULT FALSE,
+      student_id TEXT,
+      name TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`, (err) => {
       if (err) {
@@ -75,6 +78,42 @@ const db = new sqlite3.Database('./users.db', (err) => {
     });
   }
 });
+
+// 读取CSV文件中的学生数据
+const loadStudentDataFromCSV = () => {
+  return new Promise((resolve, reject) => {
+    const students = [];
+    const csvFilePath = path.join(__dirname, 'student_data_simple.csv');
+    
+    // 检查CSV文件是否存在
+    if (!fs.existsSync(csvFilePath)) {
+      console.warn('学生数据CSV文件不存在，使用默认学生数据');
+      resolve([
+        { studentId: '20230001', name: '张三' },
+        { studentId: '20230002', name: '李四' },
+        { studentId: '20230003', name: '王五' }
+      ]);
+      return;
+    }
+    
+    fs.createReadStream(csvFilePath)
+      .pipe(csv())
+      .on('data', (row) => {
+        students.push({
+          studentId: row.student_id,
+          name: row.name
+        });
+      })
+      .on('end', () => {
+        console.log('成功加载学生数据，共', students.length, '条记录');
+        resolve(students);
+      })
+      .on('error', (error) => {
+        console.error('读取学生数据CSV文件出错:', error);
+        reject(error);
+      });
+  });
+};
 
 // API状态检查路由
 app.get('/api/status', (req, res) => {
@@ -410,7 +449,7 @@ app.post('/api/auth/login', (req, res) => {
 
 // 获取用户信息接口
 app.get('/api/user/profile', authenticateToken, (req, res) => {
-  db.get(`SELECT id, phone, username, is_student, created_at FROM users WHERE id = ?`, 
+  db.get(`SELECT id, phone, username, is_student, student_id, name, created_at FROM users WHERE id = ?`, 
     [req.user.id], (err, user) => {
       if (err) {
         return res.status(500).json({ 
@@ -434,32 +473,62 @@ app.get('/api/user/profile', authenticateToken, (req, res) => {
 });
 
 // 申请学生认证接口
-app.post('/api/user/verify-student', authenticateToken, (req, res) => {
-  // 实际项目中这里应该处理学生认证申请
-  // 比如保存学生证件照片、学号等信息
+app.post('/api/user/verify-student', authenticateToken, async (req, res) => {
+  const { studentId, name } = req.body;
   
-  // 模拟审核通过
-  db.run(`UPDATE users SET is_student = ? WHERE id = ?`, 
-    [true, req.user.id], function(err) {
-      if (err) {
-        return res.status(500).json({ 
-          success: false, 
-          message: '认证申请失败' 
-        });
-      }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ 
-          success: false, 
-          message: '用户不存在' 
-        });
-      }
-      
-      res.json({
-        success: true,
-        message: '学生认证成功'
+  // 验证必填字段
+  if (!studentId || !name) {
+    return res.status(400).json({ 
+      success: false, 
+      message: '学号和姓名不能为空' 
+    });
+  }
+  
+  try {
+    // 从CSV文件加载学生数据
+    const validStudents = await loadStudentDataFromCSV();
+    
+    // 验证学生信息（检查学号和姓名是否匹配）
+    const isValidStudent = validStudents.some(student => 
+      student.studentId === studentId && student.name === name
+    );
+    
+    if (!isValidStudent) {
+      return res.status(400).json({ 
+        success: false, 
+        message: '学号或姓名不正确' 
       });
-  });
+    }
+    
+    // 更新用户信息并设置为学生
+    db.run(`UPDATE users SET is_student = ?, student_id = ?, name = ? WHERE id = ?`, 
+      [true, studentId, name, req.user.id], function(err) {
+        if (err) {
+          return res.status(500).json({ 
+            success: false, 
+            message: '认证申请失败' 
+          });
+        }
+        
+        if (this.changes === 0) {
+          return res.status(404).json({ 
+            success: false, 
+            message: '用户不存在' 
+          });
+        }
+        
+        res.json({
+          success: true,
+          message: '学生认证成功'
+        });
+    });
+  } catch (error) {
+    console.error('学生认证过程中出错:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: '认证过程中发生错误' 
+    });
+  }
 });
 
 // 用户登出接口
@@ -557,9 +626,9 @@ app.get('/api/posts', (req, res) => {
     const total = countResult.total;
     const totalPages = Math.ceil(total / limit);
     
-    // 查询帖子列表
+    // 查询帖子列表，包含用户信息
     db.all(`
-      SELECT p.*, u.username 
+      SELECT p.*, u.username, u.name as user_real_name, u.is_student as user_is_student
       FROM posts p 
       JOIN users u ON p.user_id = u.id 
       ORDER BY p.created_at DESC 
@@ -579,7 +648,9 @@ app.get('/api/posts', (req, res) => {
             return {
               ...post,
               user_id: null,
-              username: '匿名用户'
+              username: '匿名用户',
+              user_real_name: null,
+              user_is_student: null
             };
           }
           return post;
@@ -603,12 +674,12 @@ app.get('/api/posts', (req, res) => {
   });
 });
 
-// 获取单个帖子接口
+// 获取单个帖子详情接口
 app.get('/api/posts/:id', (req, res) => {
   const postId = req.params.id;
   
   db.get(`
-    SELECT p.*, u.username 
+    SELECT p.*, u.username, u.name as user_real_name, u.is_student as user_is_student
     FROM posts p 
     JOIN users u ON p.user_id = u.id 
     WHERE p.id = ?`,
@@ -632,14 +703,15 @@ app.get('/api/posts/:id', (req, res) => {
       if (post.is_anonymous) {
         post.user_id = null;
         post.username = '匿名用户';
+        post.user_real_name = null;
+        post.user_is_student = null;
       }
       
       res.json({
         success: true,
         data: { post }
       });
-    }
-  );
+  });
 });
 
 // 启动服务器

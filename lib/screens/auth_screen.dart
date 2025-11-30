@@ -138,17 +138,16 @@ class _AuthScreenState extends State<AuthScreen> {
       });
       
       try {
-        final response = await _authService.login(
-          _loginPhoneController.text.trim(),
-          _loginPasswordController.text,
+        final success = await _authService.login(
+          phone: _loginPhoneController.text.trim(),
+          password: _loginPasswordController.text,
         );
         
         setState(() {
           _isLoading = false;
         });
         
-        final success = response['success'] as bool?;
-        if (success == true) {
+        if (success) {
           // 登录成功，显示提示并跳转到主屏幕
           _showToast('登录成功');
           // 延迟跳转，让用户看到成功提示
@@ -158,7 +157,7 @@ class _AuthScreenState extends State<AuthScreen> {
             }
           });
         } else {
-          _showToast(response['message'] as String? ?? '登录失败', isError: true);
+          _showToast('登录失败', isError: true);
         }
       } on Exception catch (e) {
         setState(() {
@@ -194,18 +193,17 @@ class _AuthScreenState extends State<AuthScreen> {
       });
       
       try {
-        final response = await _authService.register(
-          _registerPhoneController.text.trim(),
-          _registerPasswordController.text,
-          _verificationCodeController.text,
+        final success = await _authService.register(
+          phone: _registerPhoneController.text.trim(),
+          password: _registerPasswordController.text,
+          verificationCode: _verificationCodeController.text,
         );
         
         setState(() {
           _isLoading = false;
         });
         
-        final success = response['success'] as bool?;
-        if (success == true) {
+        if (success) {
           // 注册成功，显示成功消息
           _showToast('注册成功! 请使用新账户登录');
           
@@ -218,7 +216,7 @@ class _AuthScreenState extends State<AuthScreen> {
             }
           });
         } else {
-          _showToast(response['message'] as String? ?? '注册失败', isError: true);
+          _showToast('注册失败', isError: true);
         }
       } on Exception catch (e) {
         setState(() {

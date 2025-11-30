@@ -20,7 +20,8 @@
     "sqlite3": "^5.1.6",
     "bcrypt": "^5.1.0",
     "jsonwebtoken": "^9.0.1",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "csv-parser": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

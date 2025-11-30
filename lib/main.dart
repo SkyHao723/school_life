@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: '校园生活',
         debugShowCheckedModeBanner: false,
-        home: authService.isAuthenticatedValue 
+        home: authService.isAuthenticated 
             ? const MainScreen() 
             : const AuthScreen(), // 根据认证状态决定显示哪个屏幕
         routes: {
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case '/':
               return MaterialPageRoute(builder: (_) => 
-                  authService.isAuthenticatedValue ? const MainScreen() : const AuthScreen());
+                  authService.isAuthenticated ? const MainScreen() : const AuthScreen());
             case '/main':
               return MaterialPageRoute(builder: (_) => const MainScreen());
             case '/auth':
@@ -72,7 +72,7 @@ class AuthWrapper extends StatelessWidget {
     final authService = AuthService();
     
     // 根据认证状态决定显示哪个页面
-    if (authService.isAuthenticatedValue) {
+    if (authService.isAuthenticated) {
       return const MainScreen();
     } else {
       return const AuthScreen();

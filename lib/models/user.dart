@@ -1,33 +1,33 @@
-/// 用户数据模型
+/// User data model
 class User {
-  /// 用户ID
+  /// UserID
   final int id;
   
-  /// 手机号
+  /// Phone number
   final String phone;
   
-  /// 密码
+  /// Password
   final String password;
   
-  /// 是否为认证学生（拥有发布权限）
+  /// Whether the user is a verified student (with posting permissions)
   final bool isStudent;
   
-  /// 学号
+  /// Student ID
   final String? studentId;
   
-  /// 姓名
+  /// Name
   final String? name;
   
-  /// 学院
+  /// College
   final String? college;
   
-  /// 专业
+  /// Major
   final String? major;
   
-  /// 入学年份
+  /// Enrollment year
   final String? enrollmentYear;
   
-  /// 账户创建时间
+  /// Account creation time
   final DateTime createdAt;
 
   User({
@@ -43,7 +43,7 @@ class User {
     required this.createdAt,
   });
 
-  /// 从Map创建用户对象
+  /// Create a User object from a Map
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'],
@@ -59,23 +59,25 @@ class User {
     );
   }
 
-  /// 从JSON创建用户对象
+  /// Create a User object from JSON
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      phone: json['phone'],
-      password: json['password'],
-      isStudent: json['isStudent'] == true,
-      studentId: json['studentId'],
-      name: json['name'],
-      college: json['college'],
-      major: json['major'],
-      enrollmentYear: json['enrollmentYear'],
-      createdAt: DateTime.parse(json['createdAt']),
+      id: json['id'] as int? ?? 0,
+      phone: json['phone'] as String? ?? '',
+      password: json['password'] as String? ?? '',
+      isStudent: json['isStudent'] as bool? ?? false,
+      studentId: json['studentId'] as String?,
+      name: json['name'] as String?,
+      college: json['college'] as String?,
+      major: json['major'] as String?,
+      enrollmentYear: json['enrollmentYear'] as String?,
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt'] as String) 
+          : DateTime.now(),
     );
   }
 
-  /// 将用户对象转换为Map
+  /// Convert a User object to a Map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -91,7 +93,7 @@ class User {
     };
   }
   
-  /// 将用户对象转换为JSON
+  /// Convert a User object to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
